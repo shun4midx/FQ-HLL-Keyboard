@@ -17,12 +17,12 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public View onCreateInputView() {
-        KeyboardView keyboardView = (KeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout, null);
-        Keyboard keyboard = new Keyboard(this, R.xml.custom_keypad);
-        keyboardView.setKeyboard(keyboard);
+        kv = (KeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout, null);
+        keyboard = new Keyboard(this, R.xml.custom_keypad);
+        kv.setKeyboard(keyboard);
 
-        keyboardView.setOnKeyboardActionListener(this);
-        return keyboardView;
+        kv.setOnKeyboardActionListener(this);
+        return kv;
     }
 
 
@@ -37,12 +37,12 @@ public class CustomKeyboardApp extends InputMethodService
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
         InputConnection ic = getCurrentInputConnection();
-        switch(primaryCode){
-            case Keyboard.KEYCODE_DELETE :
+        switch (primaryCode) {
+            case Keyboard.KEYCODE_DELETE:
                 ic.deleteSurroundingText(1, 0);
                 break;
-            case 16:
-                caps = !caps;
+            case -1: // CAPS key
+                caps = !keyboard.isShifted();
                 keyboard.setShifted(caps);
                 kv.invalidateAllKeys();
                 break;
@@ -50,11 +50,11 @@ public class CustomKeyboardApp extends InputMethodService
                 ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
                 break;
             default:
-                char code = (char)primaryCode;
-                if(Character.isLetter(code) && caps){
+                char code = (char) primaryCode;
+                if (Character.isLetter(code) && caps) {
                     code = Character.toUpperCase(code);
                 }
-                ic.commitText(String.valueOf(code),1);
+                ic.commitText(String.valueOf(code), 1);
         }
     }
 

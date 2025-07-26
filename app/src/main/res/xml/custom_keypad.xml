@@ -40,7 +40,7 @@
 		<Key android:codes="108" android:keyLabel="l" android:keyWidth="15%p" android:keyEdgeFlags="right"/>
 	</Row>
 	<Row>
-	    <Key android:codes="16" android:keyLabel="CAPS" android:keyWidth="15%p" android:isSticky="true" android:keyEdgeFlags="left"/>
+	    <Key android:codes="-1" android:keyLabel="CAPS" android:keyWidth="15%p" android:isSticky="true" android:keyEdgeFlags="left"/>
 		<Key android:codes="122" android:keyLabel="z"/>
 		<Key android:codes="120" android:keyLabel="x"/>
 		<Key android:codes="99" android:keyLabel="c"/>
