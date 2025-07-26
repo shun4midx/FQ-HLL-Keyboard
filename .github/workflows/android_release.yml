@@ -27,7 +27,7 @@ jobs:
           path: app/build/outputs/apk/debug/app-debug.apk
 
       - name: Set current date as env variable
-        run: echo "date_today=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+        run: echo "date_today=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
 
       - name: Create Prerelease
         id: create_release
