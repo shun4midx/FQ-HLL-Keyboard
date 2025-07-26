@@ -1,4 +1,4 @@
-name: build and publish android app
+name: publish app
 
 on:
   workflow_dispatch:
