@@ -2,7 +2,7 @@
     android:keyWidth="10%p"
 	android:horizontalGap="0px"
 	android:verticalGap="0px"	
-	android:keyHeight="60dp"
+	android:keyHeight="40dp"
 >
 	<Row>
 		<Key android:codes="49" android:keyLabel="1" android:keyEdgeFlags="left"/>
@@ -52,10 +52,10 @@
 		<!-- <Key android:codes="63,33,58" android:keyLabel="\? ! :"/>	 -->
 	</Row>
 	<Row android:rowEdgeFlags="bottom">
-		<Key android:codes="47" android:keyLabel="/" android:keyWidth="10%p" />
-	    <Key android:codes="44" android:keyLabel="," android:keyWidth="10%p"  android:keyEdgeFlags="left"/>	
+		<Key android:codes="47" android:keyLabel="/"/>
+	    <Key android:codes="44" android:keyLabel="," android:keyEdgeFlags="left"/>	
 		<Key android:codes="32" android:keyLabel="SPACE" android:keyWidth="60%p" android:isRepeatable="true"/>		
 		<Key android:codes="46" android:keyLabel="."/>
-		<Key android:codes="-4" android:keyLabel="↵" android:keyWidth="10%p" android:keyEdgeFlags="right"/>
+		<Key android:codes="-4" android:keyOutputText="\\n" android:keyLabel="↵" android:keyWidth="10%p" android:keyEdgeFlags="right"/>
 	</Row>	
 </Keyboard>

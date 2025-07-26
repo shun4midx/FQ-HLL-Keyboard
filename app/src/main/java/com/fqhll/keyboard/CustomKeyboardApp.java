@@ -41,7 +41,7 @@ public class CustomKeyboardApp extends InputMethodService
             case Keyboard.KEYCODE_DELETE :
                 ic.deleteSurroundingText(1, 0);
                 break;
-            case Keyboard.KEYCODE_SHIFT:
+            case 16:
                 caps = !caps;
                 keyboard.setShifted(caps);
                 kv.invalidateAllKeys();
