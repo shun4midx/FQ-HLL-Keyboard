@@ -31,3 +31,7 @@ app/src/main
     └── xml
         ├── custom_keypad.xml
         └── custom_method.xml
+
+## latest apk
+
+https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/debug/app-debug.apk
