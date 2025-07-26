@@ -23,7 +23,7 @@ app/src/main
 ├── java/com.fqhll.keyboard
 │   └── CustomKeyboardApp.java
 ├── cpp
-│   ├── native-lib.cpp
+│   └── native-lib.cpp
 └── res
     ├── layout
     │   ├── custom_keyboard_layout.xml
