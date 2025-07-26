@@ -21,3 +21,27 @@ jobs:
         with:
           name: apk
           path: app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Set current date as env variable
+        run: echo "date_today=$(date '+%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+
+      - name: Create Prerelease
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ env.date_today }}
+          release_name: ${{ env.date_today }}
+          draft: false
+          prerelease: true
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: app/build/outputs/apk/debug/app-debug.apk
+          asset_name: FQHLL_Keyboard.apk
+          asset_content_type: application/vnd.android.package-archive
