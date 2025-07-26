@@ -41,4 +41,4 @@ app/src/main
 
 ## latest apk
 
-https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/release/app-release-unsigned.apk
+https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/debug/app-debug.apk
