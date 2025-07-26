@@ -13,6 +13,7 @@ jobs:
 
       - name: copy debug apk
         run: |
+          cp app/build/outputs/apk/debug/app-debug.apk .
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
@@ -42,6 +43,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: app/build/outputs/apk/debug/app-debug.apk
+          asset_path: ./app-debug.apk
           asset_name: FQHLL_Keyboard.apk
           asset_content_type: application/vnd.android.package-archive
