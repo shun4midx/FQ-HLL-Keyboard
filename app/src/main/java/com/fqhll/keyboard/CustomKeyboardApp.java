@@ -116,8 +116,7 @@ public class CustomKeyboardApp extends InputMethodService
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
         defaultCaps = prefs.getBoolean("default_caps_enabled", false);
 
-        if (defaultCaps && isAtLineStart() && caps_state != 2) {
-            caps_state = 1; // Single-shift on
+        if (defaultCaps && isAtLineStart() && caps_state == 1) {
             applyCapsState();
         }
 
