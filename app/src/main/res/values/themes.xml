@@ -45,7 +45,7 @@
     <style name="Theme.FQHLLKeyboard.Yellow" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/black</item>
         <item name="keyTextColor">@color/custom_yellow</item>
-        <item name="keyboardBackgroundColor">@color/cardview_dark_background</item>
+        <item name="keyboardBackgroundColor">@color/black</item>
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
