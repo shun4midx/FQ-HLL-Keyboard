@@ -20,17 +20,15 @@ switch to the keyboard in a text editor
 
 ### Keyboard files
 
-`CustomKeyboardApp.java`: the actual code of the keyboard
+`java/com.fqhll.keyboard`: the actual code of the keyboard
 
 `native-lib.cpp`: how the app starts
 
-`custom_keyboard_layout.xml`: constructor of the keyboard
+`activity_main.xml`: the initial layout of the app
 
 `custom_keyboard_preview.xml`: the layout of the popup when holding down a key
 
 `custom_keypad.xml`: the entire layout of the keyboard
-
-`custom_method.xml`: method for the keyboard
 
 `key_background.xml`: the background of the keyboard
 
@@ -44,6 +42,7 @@ app/src/main/
 |   `-- native-lib.cpp
 |-- java/com.fqhll.keyboard
 |    |-- CustomKeyboardApp.java
+|    |-- CustomKeyboardView.java
 |     `-- MainActivity.kt
 `-- res
     |-- drawable
@@ -53,7 +52,6 @@ app/src/main/
     |-- layout
     |   |-- activity_main.xml
     |   |-- custom_keyboard_layout.xml
-    |   |-- custom_keyboard_layout_default.xml
     |   |-- custom_keyboard_preview.xml
     |   `-- spinner.xml
     |-- values
@@ -77,6 +75,26 @@ might not work, but you get the latest stuff
 prereleases are good beta versions of the app but are somewhat more tested
 
 https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/debug/app-debug.apk
+
+### todo
+
+- [ ] customise symbols
+- [ ] fully customise themes
+- [ ] emoji support (emoji page like symbols?)
+- [ ] clipboard
+- [ ] settings app layout
+- [ ] hold keys for symbols
+- [ ] multiple languages support?
+- [ ] customise keyboard height
+- [ ] custom background image
+- [ ] key opacity
+- [ ] custom key preview colour
+- [ ] figure out a way to build gradle project using github actions
+- [ ] fix unsigned release apk not working
+- [ ] sign apk
+- [ ] second page of symbols
+- [ ] be able to delete highlighted text
+- [ ] load changed themes without needing a refresh of keyboard (and without breaking popup/preview)
 
 ## Contact
 
