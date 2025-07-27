@@ -40,11 +40,19 @@ public class CustomKeyboardApp extends InputMethodService
 
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
 
-        // Set key colours
-        int layoutId = updateTheme();
-        kv = (KeyboardView) getLayoutInflater().inflate(layoutId, null);
+        // Dynamically apply the theme
+        String keyColor = prefs.getString("key_color", "default");
 
-
+        if (keyColor.equals("default")) {
+            kv = (KeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout_default, null);
+        }
+        else {
+            int themeId = updateTheme();
+            if (themeId != 0) {
+                getTheme().applyStyle(themeId, true);
+            }
+            kv = (KeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout, null);
+        }
         keyboard = new Keyboard(this, R.xml.custom_keypad);
         kv.setKeyboard(keyboard);
         kv.setOnKeyboardActionListener(this);
@@ -324,12 +332,10 @@ public class CustomKeyboardApp extends InputMethodService
         // Retrieve the saved key color preference
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
         String keyColor = prefs.getString("key_color", "default");
-        String keyColorLayout = "custom_keyboard_layout_" + keyColor;
 
         // Get the layout resource ID for the selected color
-        int layoutId = getResources().getIdentifier(keyColorLayout, "layout", getPackageName());
 
-        return layoutId;
+        return getResources().getIdentifier("Theme.FQHLLKeyboard." + keyColor, "style", getPackageName());
     }
 
 
@@ -339,11 +345,20 @@ public class CustomKeyboardApp extends InputMethodService
         caps_state = defaultCaps ? 1 : 0;
         applyCapsState();  // Just updates the shift key appearance
 
+        SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
         // Retrieve the layout ID for the selected theme
-        int layoutId = updateTheme();
+        String keyColor = prefs.getString("key_color", "default");
 
-        // Re-inflate the keyboard view with the selected color layout
-        kv = (KeyboardView) getLayoutInflater().inflate(layoutId, null);
+        if (keyColor.equals("default")) {
+            kv = (KeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout_default, null);
+        }
+        else {
+            int themeId = updateTheme();
+            if (themeId != 0) {
+                getTheme().applyStyle(themeId, true);
+            }
+            kv = (KeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout, null);
+        }
         kv.setKeyboard(keyboard);
         kv.setOnKeyboardActionListener(this);
 

@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:paddingBottom="15dp"
     android:keyPreviewLayout="@layout/custom_keyboard_preview"
-    android:keyBackground="@drawable/key_background_black"
+    android:keyBackground="@drawable/key_background"
     android:layout_alignParentBottom="true">
 
 </android.inputmethodservice.KeyboardView>
