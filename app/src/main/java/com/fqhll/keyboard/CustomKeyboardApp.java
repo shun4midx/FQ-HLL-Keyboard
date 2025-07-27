@@ -39,18 +39,12 @@ public class CustomKeyboardApp extends InputMethodService
     public View onCreateInputView() {
 
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-        String keyColor = prefs.getString("key_color", "default");
-        // keyColor = "dark blue";
 
-        if (keyColor == "dark blue") {
-            kv = (KeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout_dark_blue, null);
-        }
-        else if (keyColor == "black") {
-            kv = (KeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout_black, null);
-        }
-        else {
-            kv = (KeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout_default, null);
-        }
+        // Set key colours
+        int layoutId = updateTheme();
+        kv = (KeyboardView) getLayoutInflater().inflate(layoutId, null);
+
+
         keyboard = new Keyboard(this, R.xml.custom_keypad);
         kv.setKeyboard(keyboard);
         kv.setOnKeyboardActionListener(this);
@@ -325,12 +319,38 @@ public class CustomKeyboardApp extends InputMethodService
         kv.invalidateAllKeys();
     }
 
+
+    private int updateTheme() {
+        // Retrieve the saved key color preference
+        SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+        String keyColor = prefs.getString("key_color", "default");
+        String keyColorLayout = "custom_keyboard_layout_" + keyColor;
+
+        // Get the layout resource ID for the selected color
+        int layoutId = getResources().getIdentifier(keyColorLayout, "layout", getPackageName());
+
+        return layoutId;
+    }
+
+
     @Override
     public void onStartInputView(EditorInfo info, boolean restarting) {
         super.onStartInputView(info, restarting);
         caps_state = defaultCaps ? 1 : 0;
         applyCapsState();  // Just updates the shift key appearance
+
+        // Retrieve the layout ID for the selected theme
+        int layoutId = updateTheme();
+
+        // Re-inflate the keyboard view with the selected color layout
+        kv = (KeyboardView) getLayoutInflater().inflate(layoutId, null);
+        kv.setKeyboard(keyboard);
+        kv.setOnKeyboardActionListener(this);
+
+        // Set the new keyboard view
+        setInputView(kv);
     }
+
 
     @Override
     public void onText(CharSequence charSequence) {
