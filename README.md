@@ -24,6 +24,10 @@ switch to the keyboard in a text editor
 
 `custom_method.xml`: method for the keyboard
 
+`key_background.xml`: the background of the keyboard
+
+`symbols.xml`: the symbols tab of the keyboard
+
 ```
 app/src/main
 ├── java/com.fqhll.keyboard
@@ -34,11 +38,18 @@ app/src/main
     ├── layout
     │   ├── custom_keyboard_layout.xml
     │   └── custom_keyboard_preview.xml
+    ├── drawable
+    │   └── key_background.xml
     └── xml
         ├── custom_keypad.xml
+        ├── symbols.xml
         └── custom_method.xml
 ```
 
-## latest apk
+### latest development apk
 
 https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/debug/app-debug.apk
+
+## latest stable apk
+
+https://github.com/shun4midx/FQ-HLL-Keyboard/releases/latest

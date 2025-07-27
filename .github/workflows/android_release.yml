@@ -3,6 +3,9 @@ name: publish app
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
 
@@ -10,26 +13,60 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Set current date as env variable
+        run: |
+          date_today=$(date +'%Y-%m-%d_%H-%M')
+          echo "date_today=$date_today" >> $GITHUB_ENV
+          mkdir releases
+          apk_path="./releases/FQHLL_Keyboard_$date_today.apk"
+          echo "apk_path=$apk_path" >> $GITHUB_ENV
 
-      - name: Set Up JDK
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'zulu' # See 'Supported distributions' for available options
-          java-version: '17'
-          cache: 'gradle'
-
-      - name: Change wrapper permissions
-        run: chmod +x ./gradlew
-        
-      - name: build gradle project
-        run: ./gradlew build
-
-      # Create APK Release
-      - name: build apk 
-        run: ./gradlew assembleDebug
+      - name: copy debug apk
+        run: |
+          cp "app/build/outputs/apk/debug/app-debug.apk" "$apk_path"
+      #     git config --global user.name "github-actions[bot]"
+      #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
+      #     git add ./releases && git commit -am "generated prerelease"
 
       - name: Upload APK Release
         uses: actions/upload-artifact@v4
         with:
-          name: apk
-          path: app/build/outputs/apk/release/
+          name: apk zip file
+          path: ${{ env.apk_path }}
+
+      # - name: Create Prerelease
+      #   id: create_release
+      #   uses: actions/create-release@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     tag_name: ${{ env.date_today }}
+      #     release_name: Prerelease ${{ env.date_today }}
+      #     draft: false
+      #     prerelease: true
+
+      # - name: Upload Release Asset
+      #   uses: actions/upload-release-asset@v1
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     upload_url: ${{ steps.create_release.outputs.upload_url }}
+      #     asset_path: app/build/outputs/apk/debug/app-debug.apk
+      #     asset_name: FQHLL_Keyboard.apk
+      #     asset_content_type: application/vnd.android.package-archive
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          prerelease: true
+          preserve_order: true
+          fail_on_unmatched_files: true
+          tag_name: ${{ env.date_today }}
+          name: Prerelease ${{ env.date_today }}
+          append_body: true
+          body: |
+            This project is released under the MIT license. You can obtain a copy of the license [here](https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/LICENSE).
+          files: |
+            ${{ env.apk_path }}
+            LICENSE
