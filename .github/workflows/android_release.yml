@@ -16,9 +16,10 @@ jobs:
       
       - name: Set current date as env variable
         run: |
-          echo "date_today=$(date +'%Y-%m-%d_%H-%M')" >> $GITHUB_ENV
+          date_today=$(date +'%Y-%m-%d_%H-%M')
+          echo "date_today=$date_today" >> $GITHUB_ENV
           mkdir releases
-          apk_path="./releases/FQHLL_Keyboard_${{ env.date_today }}.apk"
+          apk_path="./releases/FQHLL_Keyboard_$(date_today).apk"
           echo "apk_path=$apk_path" >> $GITHUB_ENV
 
       - name: copy debug apk
