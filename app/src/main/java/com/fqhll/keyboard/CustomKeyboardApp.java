@@ -129,6 +129,16 @@ public class CustomKeyboardApp extends InputMethodService
             case -1: // CAPS key
                 handleCapsPress();
                 break;
+            case -2: // symbols
+                keyboard = new Keyboard(this, R.xml.symbols);
+                kv.setKeyboard(keyboard);
+                kv.invalidateAllKeys();
+                break;
+            case -10: // back to main
+                keyboard = new Keyboard(this, R.xml.custom_keypad);
+                kv.setKeyboard(keyboard);
+                kv.invalidateAllKeys();
+                break;
             case Keyboard.KEYCODE_DONE:
                 EditorInfo editorInfo = getCurrentInputEditorInfo();
                 if (editorInfo != null && (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) != 0) {
