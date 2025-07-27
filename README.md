@@ -39,6 +39,10 @@ app/src/main
         └── custom_method.xml
 ```
 
-## latest apk
+### latest development apk
 
 https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/debug/app-debug.apk
+
+## latest stable apk
+
+https://github.com/shun4midx/FQ-HLL-Keyboard/releases/latest
