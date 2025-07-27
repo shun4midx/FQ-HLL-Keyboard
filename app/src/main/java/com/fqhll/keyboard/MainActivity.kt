@@ -33,13 +33,13 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             prefs.edit { putBoolean("default_caps_enabled", isChecked) }
         }
 
-        // the dropdown
-        val aa = ArrayAdapter(this, R.layout.spinner, colors)
-        aa.setDropDownViewResource(R.layout.spinner)
-
         val keyBackgroundColor: Spinner = findViewById(R.id.spinner_options)
         val savedColor = prefs.getString("key_color", "black") // Default to "black"
         prefs.edit { putString("key_color", savedColor) }
+
+        // the dropdown
+        val aa = ArrayAdapter(this, R.layout.spinner, colors)
+        aa.setDropDownViewResource(R.layout.spinner)
 
         with(keyBackgroundColor) {
             adapter = aa
@@ -51,10 +51,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val prefs = getSharedPreferences("keyboard_settings", Context.MODE_PRIVATE)
-        val color_pos = colors[position]
-        val selectedColor = prefs.getString("key_color", color_pos)
-        prefs.edit { putString("key_color", color_pos) }
-        showToast(message = "Spinner 2 Position: $position and color: $selectedColor")
+        val selectedColor = colors[position] // Get the selected color
+        prefs.edit { putString("key_color", selectedColor) } // Save the selected color
+        showToast(message = "Selected color: $selectedColor")
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
