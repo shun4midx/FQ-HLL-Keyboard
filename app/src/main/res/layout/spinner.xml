@@ -6,6 +6,6 @@
     android:gravity="end"
     android:padding="15dp"
     android:textAlignment="gravity"
-    android:textColor="@color/custom_dark_blue"
+    android:textColor="@color/custom_fqhll_banner_purple"
     android:textSize="16sp"
     />
