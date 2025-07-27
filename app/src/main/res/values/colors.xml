@@ -3,11 +3,23 @@
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
+    <color name="purple_900">#210677</color>
+    <color name="teal_200">#4cd4a7</color>
+    <color name="teal_700">#061916</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
     <color name="custom_dark_blue">#1A1F46</color>
+    <color name="custom_blue">#255FAB</color>
+    <color name="shun_blue">#051760</color>
     <color name="custom_cyan">#B0FFFF</color>
     <color name="custom_yellow">#ffd900</color>
+
+    <color name="custom_fqhll_logo_pink">#ff1fa9</color>
+    <color name="custom_fqhll_logo_purple">#bc3fde</color>
+    <color name="custom_fqhll_logo_blue">#0025cc</color>
+    <color name="custom_fqhll_logo_wire_light_blue">#5ca3ff</color>
+    <color name="custom_fqhll_banner_pink">#ff1fa9</color>
+    <color name="custom_fqhll_banner_purple">#bc3fde</color>
+    <color name="custom_fqhll_banner_blue">#0b259b</color>
 </resources>

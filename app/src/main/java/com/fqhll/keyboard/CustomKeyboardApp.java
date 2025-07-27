@@ -50,14 +50,9 @@ public class CustomKeyboardApp extends InputMethodService
         // Dynamically apply the theme
         String keyColor = prefs.getString("key_color", "default");
 
-        if (keyColor.equals("default")) {
-            kv = (CustomKeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout_default, null);
-        }
-        else {
-            int themeId = updateTheme();
-            if (themeId != 0) {
-                getTheme().applyStyle(themeId, true);
-            }
+        int themeId = updateTheme();
+        if (themeId != 0) {
+            getTheme().applyStyle(themeId, true);
             kv = (CustomKeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout, null);
         }
         keyboard = new Keyboard(this, R.xml.custom_keypad);
