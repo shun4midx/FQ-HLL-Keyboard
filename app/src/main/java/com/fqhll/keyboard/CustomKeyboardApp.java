@@ -5,6 +5,7 @@ import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.ExtractedTextRequest;
@@ -17,11 +18,13 @@ import android.view.ViewGroup;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 
 public class CustomKeyboardApp extends InputMethodService
         implements KeyboardView.OnKeyboardActionListener {
 
-    private KeyboardView kv;
+    private CustomKeyboardView kv;
     private Keyboard keyboard;
 
     private PopupWindow keyPreviewPopup;
@@ -34,6 +37,10 @@ public class CustomKeyboardApp extends InputMethodService
 
     // Don't show pop-up for SPACE, CAPS (-1), DELETE (-5), Symbols (-10 from symbols page and -2 from main page), or ENTER (-4)
     private static final Set<Integer> NO_POPUP = new HashSet<>(Arrays.asList(32, -1, -5, -10, -2, -4));
+    private static final Set<String> CAPITALIZE_ENDS = new HashSet<>(Arrays.asList(". ", "! ", "? "));
+
+    private float scaleX, scaleY;
+    private int lastTouchX, lastTouchY;
 
     @Override
     public View onCreateInputView() {
@@ -42,18 +49,39 @@ public class CustomKeyboardApp extends InputMethodService
         String keyColor = prefs.getString("key_color", "default");
         // keyColor = "dark blue";
 
-        if (keyColor == "dark blue") {
-            kv = (KeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout_dark_blue, null);
+        if (keyColor.equals("dark blue")) {
+            kv = (CustomKeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout_dark_blue, null);
         }
-        else if (keyColor == "black") {
-            kv = (KeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout_black, null);
+        else if (keyColor.equals("black")) {
+            kv = (CustomKeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout_black, null);
         }
         else {
-            kv = (KeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout_default, null);
+            kv = (CustomKeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout_default, null);
         }
         keyboard = new Keyboard(this, R.xml.custom_keypad);
         kv.setKeyboard(keyboard);
         kv.setOnKeyboardActionListener(this);
+
+        kv.setOnTouchListener((v, ev) -> {
+            if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+                // Record where the user actually touched, in view‑coords
+                lastTouchX = (int) ev.getX();
+                lastTouchY = (int) ev.getY();
+            }
+            if (ev.getAction() == MotionEvent.ACTION_UP) {
+                v.performClick();  // Accessibility click
+            }
+            return false;  // STILL let KeyboardView handle the key event!
+        });
+
+        kv.post(() -> {
+            int viewW  = kv.getWidth();
+            int viewH  = kv.getHeight();
+            int kbW    = kv.getKeyboard().getMinWidth();
+            int kbH    = kv.getKeyboard().getHeight();
+            scaleX = (float)viewW / kbW;
+            scaleY = (float)viewH / kbH;
+        });
 
         // Disable default pop-up
         kv.setPreviewEnabled(false);
@@ -83,33 +111,66 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onPress(int primaryCode) {
-        if (NO_POPUP.contains(primaryCode)) {
-            return;
-        }
+        if (NO_POPUP.contains(primaryCode)) return;
 
-        for (Keyboard.Key key : keyboard.getKeys()) {
+        // 1) Un‑scale into keyboard coords (you already have scaleX/scaleY set up)
+        int kx = (int)((lastTouchX - kv.getPaddingLeft()) / scaleX);
+        int ky = (int)((lastTouchY - kv.getPaddingTop())  / scaleY);
+
+        // 2) Collect all keys with that code whose box contains the touch
+        List<Keyboard.Key> matches = new ArrayList<>();
+        for (Keyboard.Key key : kv.getKeyboard().getKeys()) {
             if (key.codes[0] == primaryCode) {
-                // Set text
-                char curr_char = (char) primaryCode;
-                previewText.setText(String.valueOf(caps_state > 0 ? Character.toUpperCase(curr_char) : curr_char));
-                previewText.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-
-                // Match popup size to key size
-                keyPreviewPopup.setWidth(key.width);
-                keyPreviewPopup.setHeight(key.height);
-
-                // Calculate position: center horizontally, one key height above
-                int popupX = key.x;
-                int popupY = -((kv.getHeight() - key.y) + key.height);
-
-                // Small adjustment if needed (like Gboard's preview offset)
-                int adjustmentY = -4; // fine-tune upward offset (dp to px)
-                popupY += (int) (adjustmentY * getResources().getDisplayMetrics().density);
-
-                keyPreviewPopup.showAsDropDown(kv, popupX, popupY);
-                break;
+                if ( kx >= key.x
+                        && kx <  key.x + key.width
+                        && ky >= key.y
+                        && ky <  key.y + key.height) {
+                    matches.add(key);
+                }
             }
         }
+
+        // 3) Pick the one whose center is closest to (kx,ky)
+        Keyboard.Key tapped = null;
+        if (!matches.isEmpty()) {
+            double bestDist = Double.MAX_VALUE;
+            for (Keyboard.Key key : matches) {
+                double centerX = key.x + key.width  * 0.5;
+                double centerY = key.y + key.height * 0.5;
+                double dx = kx - centerX, dy = ky - centerY;
+                double dist = dx*dx + dy*dy;
+                if (dist < bestDist) {
+                    bestDist = dist;
+                    tapped = key;
+                }
+            }
+        }
+
+        // 4) If we found one, show the popup above it
+        if (tapped != null && tapped.codes[0] == primaryCode) {
+            showKeyPreview(tapped, primaryCode);
+        }
+    }
+
+    public void showKeyPreview(Keyboard.Key key, int code) {
+        // Set text
+        char curr_char = (char) code;
+        previewText.setText(String.valueOf(caps_state > 0 ? Character.toUpperCase(curr_char) : curr_char));
+        previewText.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+
+        // Match popup size to key size
+        keyPreviewPopup.setWidth(key.width);
+        keyPreviewPopup.setHeight(key.height);
+
+        // Calculate position: center horizontally, one key height above
+        int popupX = key.x;
+        int popupY = -((kv.getHeight() - key.y) + key.height);
+
+        // Small adjustment if needed (like Gboard's preview offset)
+        int adjustmentY = -4; // fine-tune upward offset (dp to px)
+        popupY += (int) (adjustmentY * getResources().getDisplayMetrics().density);
+
+        keyPreviewPopup.showAsDropDown(kv, popupX, popupY);
     }
 
     @Override
@@ -197,8 +258,10 @@ public class CustomKeyboardApp extends InputMethodService
         if (beforeText == null || beforeText.length() < 2) return false;
 
         String lastText = beforeText.toString();
-        // Check for ". " but not "..."
-        return lastText.endsWith(". ") && !lastText.endsWith("... ");
+
+        if (lastText.endsWith("... ")) return false;
+
+        return CAPITALIZE_ENDS.contains(lastText.substring(lastText.length() - 2));
     }
 
     private boolean isAtLineStart() {

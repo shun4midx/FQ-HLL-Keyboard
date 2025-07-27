@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.inputmethodservice.KeyboardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.fqhll.keyboard.CustomKeyboardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="15dp"
@@ -7,4 +7,4 @@
     android:keyBackground="@drawable/key_background_black"
     android:layout_alignParentBottom="true">
 
-</android.inputmethodservice.KeyboardView>
+</com.fqhll.keyboard.CustomKeyboardView>
