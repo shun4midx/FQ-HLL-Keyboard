@@ -193,6 +193,10 @@ public class CustomKeyboardApp extends InputMethodService
     }
 
     private void adjustCapsAfterDeletion() {
+        if (caps_state == 2) {
+            return;
+        }
+
         if (defaultCaps && isAtLineStart()) {
             caps_state = 1;
         } else if (shouldAutoCap() && defaultCaps) {
