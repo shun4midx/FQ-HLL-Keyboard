@@ -25,15 +25,15 @@
             android:layout_height="wrap_content"
             android:text="@string/enable_auto_caps" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/theme_switcher" />
+
         <Spinner
             android:id="@+id/spinner_options"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="meow" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

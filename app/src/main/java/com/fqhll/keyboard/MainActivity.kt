@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
 
-    var colors = arrayOf("black", "dark blue")
+    var colors = arrayOf("default", "black", "dark blue")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
 
         val keyBackgroundColor: Spinner = findViewById(R.id.spinner_options)
-        val savedColor = prefs.getString("key_color", "black") // Default to "black"
+        val savedColor = prefs.getString("key_color", "default")
         prefs.edit { putString("key_color", savedColor) }
 
         // the dropdown

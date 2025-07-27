@@ -39,7 +39,7 @@ public class CustomKeyboardApp extends InputMethodService
     public View onCreateInputView() {
 
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-        String keyColor = prefs.getString("key_color", "black");
+        String keyColor = prefs.getString("key_color", "default");
         // keyColor = "dark blue";
 
         if (keyColor == "dark blue") {
@@ -47,6 +47,9 @@ public class CustomKeyboardApp extends InputMethodService
         }
         else if (keyColor == "black") {
             kv = (KeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout_black, null);
+        }
+        else {
+            kv = (KeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout_default, null);
         }
         keyboard = new Keyboard(this, R.xml.custom_keypad);
         kv.setKeyboard(keyboard);
