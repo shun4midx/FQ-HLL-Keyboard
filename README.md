@@ -1,4 +1,4 @@
-# FQ-HLL Keyboard
+# <img src="FQ-HLL_App.png" width="30"/> FQ-HLL Keyboard 
 
 <img src="FQ-HLL_Banner_Cropped.png"/>
 
