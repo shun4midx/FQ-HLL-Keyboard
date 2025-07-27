@@ -14,6 +14,10 @@ import android.widget.TextView;
 import android.view.Gravity;
 import android.view.ViewGroup;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class CustomKeyboardApp extends InputMethodService
         implements KeyboardView.OnKeyboardActionListener {
 
@@ -27,6 +31,9 @@ public class CustomKeyboardApp extends InputMethodService
     private long last_caps_time = 0;
     private boolean defaultCaps = true;
     private static final int DOUBLE_TAP_TIMEOUT = 300; // Smth like Gboard capping
+
+    // Don't show pop-up for SPACE, CAPS (-1), DELETE (-5), Symbols (-10 from symbols page and -2 from main page), or ENTER (-4)
+    private static final Set<Integer> NO_POPUP = new HashSet<>(Arrays.asList(32, -1, -5, -10, -2, -4));
 
     @Override
     public View onCreateInputView() {
@@ -64,8 +71,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onPress(int primaryCode) {
-        // Don't show pop-up for SPACE, CAPS (-1), DELETE (-5), or ENTER (-4)
-        if (primaryCode == 32 || primaryCode == -1 || primaryCode == -5 || primaryCode == -4) {
+        if (NO_POPUP.contains(primaryCode)) {
             return;
         }
 
@@ -136,7 +142,7 @@ public class CustomKeyboardApp extends InputMethodService
             case -10: // back to main
                 keyboard = new Keyboard(this, R.xml.custom_keypad);
                 kv.setKeyboard(keyboard);
-                kv.invalidateAllKeys();
+                applyCapsState();
                 break;
             case Keyboard.KEYCODE_DONE:
                 EditorInfo editorInfo = getCurrentInputEditorInfo();
