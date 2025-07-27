@@ -66,7 +66,7 @@ jobs:
           name: Prerelease ${{ env.date_today }}
           append_body: true
           body: |
-            This project is licensed under the MIT license. You can obtain a copy of the license [here](https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/LICENSE). A copy of the license has also been attached below for your convenience.
+            This project is released under the MIT license. You can obtain a copy of the license [here](https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/LICENSE).
           files: |
             ${{ env.apk_path }}
             LICENSE
