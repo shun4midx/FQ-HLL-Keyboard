@@ -48,8 +48,6 @@ public class CustomKeyboardApp extends InputMethodService
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
 
         // Dynamically apply the theme
-        String keyColor = prefs.getString("key_color", "default");
-
         int themeId = updateTheme();
         if (themeId != 0) {
             getTheme().applyStyle(themeId, true);
@@ -198,8 +196,17 @@ public class CustomKeyboardApp extends InputMethodService
 
         switch (primaryCode) {
             case Keyboard.KEYCODE_DELETE:
-                ic.deleteSurroundingText(1, 0);
-                adjustCapsAfterDeletion();
+                // First, see if there's any selected text
+                CharSequence selected = ic.getSelectedText(0);
+                if (selected != null && selected.length() > 0) {
+                    // If so, replace it (commit empty string) and return
+                    ic.commitText("", 1);
+                    adjustCapsAfterDeletion();
+                } else {
+                    // No selection, fall back to single‐char delete
+                    ic.deleteSurroundingText(1, 0);
+                    adjustCapsAfterDeletion();
+                }
                 break;
             case -1: // CAPS key
                 handleCapsPress();
@@ -213,6 +220,22 @@ public class CustomKeyboardApp extends InputMethodService
                 keyboard = new Keyboard(this, R.xml.custom_keypad);
                 kv.setKeyboard(keyboard);
                 applyCapsState();
+                break;
+            case -42: // Left arrow
+                // Look at the char immediately before the cursor
+                CharSequence before = ic.getTextBeforeCursor(1, 0);
+                if (before != null && before.length() > 0) {
+                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT));
+                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_LEFT));
+                }
+                break;
+            case -52: // Right arrow
+                // look at the char immediately after the cursor
+                CharSequence after = ic.getTextAfterCursor(1, 0);
+                if (after != null && after.length() > 0) {
+                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT));
+                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT));
+                }
                 break;
             case Keyboard.KEYCODE_DONE:
                 EditorInfo editorInfo = getCurrentInputEditorInfo();
@@ -316,10 +339,12 @@ public class CustomKeyboardApp extends InputMethodService
         // Case 2: Cursor at start of line or after newline
         CharSequence before = ic.getTextBeforeCursor(1, 0);
         if (before != null && (before.length() == 0 || before.charAt(0) == '\n')) {
-            if (defaultCaps) {
-                caps_state = 1; // Auto-cap after newline
-            } else if (caps_state != 2) {
-                caps_state = 0;
+            if (caps_state != 2) {
+                if (defaultCaps) {
+                    caps_state = 1;
+                } else {
+                    caps_state = 0;
+                }
             }
         }
 
