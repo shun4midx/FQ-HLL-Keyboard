@@ -16,11 +16,23 @@
 
     <style name="Theme.FQHLLKeyboard.Black" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/black</item>
+        <item name="keyTextColor">@color/white</item>
+        <item name="keyboardBackgroundColor">@color/black</item>
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
     <style name="Theme.FQHLLKeyboard.DarkBlue" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/custom_dark_blue</item>
+        <item name="keyTextColor">@color/custom_cyan</item>
+        <item name="keyboardBackgroundColor">@color/black</item>
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
     <style name="Theme.FQHLLKeyboard.Cyan" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/custom_cyan</item>
+        <item name="keyTextColor">@color/custom_cyan</item>
+        <item name="keyboardBackgroundColor">@color/black</item>
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
 </resources>
