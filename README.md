@@ -1,5 +1,11 @@
 # FQ-HLL Keyboard
 
+## Installation
+
+Download the latest release of the app [here](https://github.com/shun4midx/FQ-HLL-Keyboard/releases/latest), install the apk and head to your phone's keyboard settings. Enable `FQ-HLL Keyboard` and switch to the keyboard.
+
+Keyboard settings can be found by launching the FQ-HLL Keyboard app installed with the apk.
+
 ## Development usage
 
 setup android studio and link to phone
@@ -29,27 +35,47 @@ switch to the keyboard in a text editor
 `symbols.xml`: the symbols tab of the keyboard
 
 ```
-app/src/main
-├── java/com.fqhll.keyboard
-│   └── CustomKeyboardApp.java
-├── cpp
-│   └── native-lib.cpp
-└── res
-    ├── layout
-    │   ├── custom_keyboard_layout.xml
-    │   └── custom_keyboard_preview.xml
-    ├── drawable
-    │   └── key_background.xml
-    └── xml
-        ├── custom_keypad.xml
-        ├── symbols.xml
-        └── custom_method.xml
+app/src/main/
+|-- AndroidManifest.xml
+|-- cpp
+|   |-- CMakeLists.txt
+|   `-- native-lib.cpp
+|-- java/com.fqhll.keyboard
+|    |-- CustomKeyboardApp.java
+|     `-- MainActivity.kt
+`-- res
+    |-- drawable
+    |   |-- key_background.xml
+    |   |-- key_popup_background.xml
+    |   `-- key_popup_view.xml
+    |-- layout
+    |   |-- activity_main.xml
+    |   |-- custom_keyboard_layout.xml
+    |   |-- custom_keyboard_layout_default.xml
+    |   |-- custom_keyboard_preview.xml
+    |   `-- spinner.xml
+    |-- values
+    |   |-- attrs.xml
+    |   |-- colors.xml
+    |   |-- strings.xml
+    |   `-- themes.xml
+    |-- values-night
+    |   `-- themes.xml
+    `-- xml
+        |-- backup_rules.xml
+        |-- custom_keypad.xml
+        |-- custom_method.xml
+        `-- symbols.xml
 ```
 
 ### latest development apk
 
+might not work, but you get the latest stuff
+
+prereleases are good beta versions of the app but are somewhat more tested
+
 https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/debug/app-debug.apk
 
-## latest stable apk
+## Contact
 
-https://github.com/shun4midx/FQ-HLL-Keyboard/releases/latest
+You can contact Shun via [Email](mailto:shun4midx@gmail.com) or Discord at @shun4midx, and Ducky via [Email](mailto:ducky4life@duck.com).
