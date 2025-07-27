@@ -21,7 +21,7 @@ jobs:
         run: |
           apk_path='./releases/FQHLL_Keyboard_${{ env.date_today }}.apk'
           echo "apk_path=$(apk_path)" >> $GITHUB_ENV
-          cp app/build/outputs/apk/debug/app-debug.apk ${{ env.apk_path }}
+          cp app/build/outputs/apk/debug/app-debug.apk $(apk_path)
       #     git config --global user.name "github-actions[bot]"
       #     git config --global user.email "github-actions[bot]@users.noreply.github.com"
       #     git add ./releases && git commit -am "generated prerelease"
