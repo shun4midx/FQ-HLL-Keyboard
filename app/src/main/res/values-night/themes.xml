@@ -13,4 +13,14 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="Theme.FQHLLKeyboard.Black" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/black</item>
+    </style>
+    <style name="Theme.FQHLLKeyboard.DarkBlue" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/custom_dark_blue</item>
+    </style>
+    <style name="Theme.FQHLLKeyboard.Cyan" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/custom_cyan</item>
+    </style>
 </resources>
