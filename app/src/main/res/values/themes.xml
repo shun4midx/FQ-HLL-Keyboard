@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Theme.FQHLLKeyboard" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimary">@color/custom_dark_blue</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
@@ -12,5 +12,27 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Theme.FQHLLKeyboard.Black" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/black</item>
+        <item name="keyTextColor">@color/white</item>
+        <item name="keyboardBackgroundColor">@color/black</item>
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+    </style>
+    <style name="Theme.FQHLLKeyboard.DarkBlue" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/custom_dark_blue</item>
+        <item name="keyTextColor">@color/custom_cyan</item>
+        <item name="keyboardBackgroundColor">@color/black</item>
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+    </style>
+    <style name="Theme.FQHLLKeyboard.Cyan" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/custom_cyan</item>
+        <item name="keyTextColor">@color/custom_cyan</item>
+        <item name="keyboardBackgroundColor">@color/black</item>
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
 </resources>
