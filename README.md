@@ -1,5 +1,7 @@
 # FQ-HLL Keyboard
 
+<img src="FQ-HLL_Banner_Cropped.png"/>
+
 ## Installation
 
 Download the latest release of the app [here](https://github.com/shun4midx/FQ-HLL-Keyboard/releases/latest), install the apk and head to your phone's keyboard settings. Enable `FQ-HLL Keyboard` and switch to the keyboard.
