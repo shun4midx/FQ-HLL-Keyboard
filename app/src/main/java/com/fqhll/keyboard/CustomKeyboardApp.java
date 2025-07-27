@@ -37,7 +37,17 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public View onCreateInputView() {
-        kv = (KeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout, null);
+
+        SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+        String keyColor = prefs.getString("key_color", "black");
+        // keyColor = "dark blue";
+
+        if (keyColor == "dark blue") {
+            kv = (KeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout_dark_blue, null);
+        }
+        else if (keyColor == "black") {
+            kv = (KeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout_black, null);
+        }
         keyboard = new Keyboard(this, R.xml.custom_keypad);
         kv.setKeyboard(keyboard);
         kv.setOnKeyboardActionListener(this);
@@ -46,7 +56,6 @@ public class CustomKeyboardApp extends InputMethodService
         kv.setPreviewEnabled(false);
 
         // Get default caps
-        SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
         defaultCaps = prefs.getBoolean("default_caps_enabled", false);
         caps_state = defaultCaps ? 1 : 0;
         keyboard.setShifted(caps_state > 0);
