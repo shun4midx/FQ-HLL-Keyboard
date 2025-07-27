@@ -5,6 +5,10 @@
     android:background="@android:color/white"
     android:gravity="center"
     android:textColor="@color/black"
-    android:textSize="24sp">
+    android:textSize="24sp"
+    android:animateLayoutChanges="false"
+    android:layoutAnimation="@null"
+    android:translationZ="0dp"
+    android:elevation="0dp">
 
 </TextView>

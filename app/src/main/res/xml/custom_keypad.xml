@@ -2,7 +2,7 @@
     android:keyWidth="10%p"
 	android:horizontalGap="0px"
 	android:verticalGap="3dp"	
-	android:keyHeight="55dp"
+	android:keyHeight="45dp"
 >
 	<Row>
 		<Key android:codes="49" android:keyLabel="1" android:keyEdgeFlags="left"/>
@@ -29,7 +29,7 @@
 		<Key android:codes="112" android:keyLabel="p" android:keyEdgeFlags="right"/>
 	</Row>
 	<Row>
-		<Key android:codes="97" android:keyLabel="a" android:keyWidth="15%p" android:keyEdgeFlags="left"/>
+		<Key android:codes="97" android:keyLabel="a" android:horizontalGap="5%p" android:keyEdgeFlags="left"/>
 		<Key android:codes="115" android:keyLabel="s"/>
 		<Key android:codes="100" android:keyLabel="d"/>
 		<Key android:codes="102" android:keyLabel="f"/>
@@ -37,7 +37,7 @@
 		<Key android:codes="104" android:keyLabel="h"/>
 		<Key android:codes="106" android:keyLabel="j"/>
 		<Key android:codes="107" android:keyLabel="k"/>		
-		<Key android:codes="108" android:keyLabel="l" android:keyWidth="15%p" android:keyEdgeFlags="right"/>
+		<Key android:codes="108" android:keyLabel="l" android:keyEdgeFlags="right"/>
 	</Row>
 	<Row>
 	    <Key android:codes="-1" android:keyLabel="CAPS" android:keyWidth="15%p" android:isSticky="true" android:keyEdgeFlags="left"/>
@@ -56,6 +56,6 @@
 	    <Key android:codes="44" android:keyLabel=","/>	
 		<Key android:codes="32" android:keyLabel="SPACE" android:keyWidth="60%p" android:isRepeatable="true"/>		
 		<Key android:codes="46" android:keyLabel="."/>
-		<Key android:codes="-4" android:keyOutputText="\\n" android:keyLabel="↵" android:keyWidth="10%p" android:keyEdgeFlags="right"/>
-	</Row>	
+		<Key android:codes="-4" android:keyLabel="↵" android:keyWidth="10%p" android:keyEdgeFlags="right"/>
+	</Row>
 </Keyboard>

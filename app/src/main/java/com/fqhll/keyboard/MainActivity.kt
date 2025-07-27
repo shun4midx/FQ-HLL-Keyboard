@@ -1,9 +1,11 @@
 package com.fqhll.keyboard
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Context
 import android.os.Bundle
-import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 import com.fqhll.keyboard.databinding.ActivityMainBinding
+import androidx.core.content.edit
 
 class MainActivity : AppCompatActivity() {
 
@@ -11,22 +13,23 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        val capsToggle: SwitchCompat = findViewById(R.id.capsToggle)
+        val prefs = getSharedPreferences("keyboard_settings", Context.MODE_PRIVATE)
 
-        // Example of a call to a native method
-        binding.sampleText.text = stringFromJNI()
+        // Load saved toggle state
+        capsToggle.isChecked = prefs.getBoolean("default_caps_enabled", false)
+
+        // Save toggle changes
+        capsToggle.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit { putBoolean("default_caps_enabled", isChecked) }
+        }
     }
 
-    /**
-     * A native method that is implemented by the 'keyboard' native library,
-     * which is packaged with this application.
-     */
-    external fun stringFromJNI(): String
+    external fun getSuggestion(input: String): String
 
     companion object {
-        // Used to load the 'keyboard' library on application startup.
         init {
             System.loadLibrary("keyboard")
         }

@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">FQ-HLL Keyboard</string>
+    <string name="enable_auto_caps">Enable Auto-Capitalization</string>
+
 </resources>
