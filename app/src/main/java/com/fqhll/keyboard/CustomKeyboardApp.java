@@ -221,6 +221,10 @@ public class CustomKeyboardApp extends InputMethodService
                 kv.setKeyboard(keyboard);
                 applyCapsState();
                 break;
+            case -11: // emojis
+                keyboard = new Keyboard(this, R.xml.emojis);
+                kv.setKeyboard(keyboard);
+                kv.invalidateAllKeys();
             case -42: // Left arrow
                 // Look at the char immediately before the cursor
                 CharSequence before = ic.getTextBeforeCursor(1, 0);
