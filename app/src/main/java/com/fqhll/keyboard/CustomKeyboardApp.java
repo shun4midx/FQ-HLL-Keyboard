@@ -258,7 +258,8 @@ public class CustomKeyboardApp extends InputMethodService
                         code = Character.toUpperCase(code);
                     }
                 }
-                ic.commitText(String.valueOf(code), 1);
+                // ic.commitText(String.valueOf(code), 1);
+                ic.commitText(String.valueOf(Character.toChars(code)), 1);
 
                 // If single-shift was used, reset to 0
                 if (caps_state == 1) {
