@@ -93,7 +93,7 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [ ] fix unsigned release apk not working
 - [ ] sign apk
 - [ ] second page of symbols
-- [ ] be able to delete highlighted text
+- [x] be able to delete highlighted text
 - [ ] load changed themes without needing a refresh of keyboard (and without breaking popup/preview)
 
 ## Contact
