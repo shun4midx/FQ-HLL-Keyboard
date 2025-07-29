@@ -49,7 +49,8 @@ public class CustomKeyboardApp extends InputMethodService
     private float scaleX, scaleY;
     private int lastTouchX, lastTouchY;
 
-    public static final String[] emoji_list = new String[]{"😭", "😂", "💀", "😔", "🫠", "💁‍♂️", "🧍‍♂️", "💩", "💅", "🫂", "🔥", "🍀", "👾", "👀", "✨️", "🐟", "✅️", "❌️", "🐸", "🌸", "🎀", "🤡", "😡", "🙏", "👻", "🥺", "😐", "👍"};
+    // (jperm voice) hope you can turn on word wrap            
+    public static final String[] emoji_list = new String[]{"😭", "😂", "💀", "😔", "🫠", "💁‍♂️", "🧍‍♂️", "💩", "💅", "🫂", "🔥", "🍀", "👾", "👀", "✨️", "🐟", "✅️", "❌️", "🐸", "🌸", "🎀", "🤡", "😡", "🙏", "👻", "🥺", "😐", "👍", "😤", "🤓", "😀", "🦆", "🥬", "🐒", "🌚", "🌃", "🌌"};
 
     private LinearLayout suggestionBar;
     private View root;
