@@ -18,10 +18,12 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class CustomKeyboardApp extends InputMethodService
         implements KeyboardView.OnKeyboardActionListener {
@@ -267,8 +269,16 @@ public class CustomKeyboardApp extends InputMethodService
                         code = Character.toUpperCase(code);
                     }
                 }
-                // ic.commitText(String.valueOf(code), 1);
-                ic.commitText(String.valueOf(Character.toChars(code)), 1);
+
+                // if its an emoji code, return the corresponding emoji unicode, else just send the character
+                Map<Integer, String> emoji_codes = getEmojiCodes();
+                if (emoji_codes.containsKey(primaryCode)) {
+                    String emoji_unicode = emoji_codes.get(primaryCode);
+                    ic.commitText(emoji_unicode, 1);
+                } else {
+                    // ic.commitText(String.valueOf(code), 1);
+                    ic.commitText(String.valueOf(Character.toChars(code)), 1);
+                }
 
                 // If single-shift was used, reset to 0
                 if (caps_state == 1) {
@@ -282,6 +292,20 @@ public class CustomKeyboardApp extends InputMethodService
                 }
                 break;
         }
+    }
+
+    private static Map<Integer, String> getEmojiCodes() {
+        Map<Integer, String> emoji_codes = new HashMap<>();
+        String[] emoji_list = {"\uD83D\uDE2D", "\ud83d\ude00"};
+
+        for (int i = 0; i < emoji_list.length; i++) {
+            int emoji_keycode = 100 + i;
+            emoji_keycode = -emoji_keycode; // just add the negative sign for negative keycode
+
+            emoji_codes.put(emoji_keycode, emoji_list[i]);
+        }
+
+        return emoji_codes;
     }
 
     private boolean shouldAutoCap() {
