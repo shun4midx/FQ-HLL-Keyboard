@@ -11,8 +11,8 @@
         <Key android:codes="\\U+1F600" android:keyLabel="3"/>
         <Key android:codes="\\u1F600" android:keyLabel="4"/>
         <Key android:codes="0x1F602" android:keyLabel="\\ud83d\\ude02"/>
-        <Key android:codes="54" android:keyLabel="6"/>
-        <Key android:codes="55" android:keyLabel="7"/>
+        <Key android:keyLabel="☺"/>
+        <Key android:codes="☺" android:keyLabel="7"/>
         <Key android:codes="56" android:keyLabel="8"/>
         <Key android:codes="57" android:keyLabel="9"/>
         <Key android:codes="48" android:keyLabel="0" android:keyEdgeFlags="right"/>

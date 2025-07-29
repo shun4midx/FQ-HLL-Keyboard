@@ -1,6 +1,8 @@
 package com.fqhll.keyboard;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
@@ -225,6 +227,13 @@ public class CustomKeyboardApp extends InputMethodService
                 keyboard = new Keyboard(this, R.xml.emojis);
                 kv.setKeyboard(keyboard);
                 kv.invalidateAllKeys();
+                break;
+            case -12: // settings
+                PackageManager manager = getPackageManager();
+                Intent launchIntent = manager.getLaunchIntentForPackage("com.fqhll.keyboard"); // Replace with the target app's package name
+                launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                startActivity(launchIntent);
+                break;
             case -42: // Left arrow
                 // Look at the char immediately before the cursor
                 CharSequence before = ic.getTextBeforeCursor(1, 0);
