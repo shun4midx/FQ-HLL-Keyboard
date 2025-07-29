@@ -1,13 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.fqhll.keyboard.CustomKeyboardView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="8dp"
-    android:paddingBottom="15dp"
-    android:keyPreviewLayout="@layout/custom_keyboard_preview"
-    android:keyBackground="@drawable/key_background"
-    android:keyTextColor="?attr/keyTextColor"
-    android:background="?attr/keyboardBackgroundColor"
-    android:layout_alignParentBottom="true">
+    android:layout_height="wrap_content">
 
-</com.fqhll.keyboard.CustomKeyboardView>
+    <LinearLayout
+        android:id="@+id/suggestion_bar_container"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:gravity="center_vertical"
+        android:background="?attr/keyTextColor"
+        android:padding="4dp"
+
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:descendantFocusability="blocksDescendants">
+
+        <TextView
+            android:id="@+id/btn_clipboard"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="⎘"
+            android:textSize="18sp"
+            android:textColor="?attr/keyColor"
+            android:background="?attr/keyTextColor"
+            android:padding="4dp"
+            android:layout_marginEnd="4dp"
+            android:clickable="true"/>
+
+        <TextView
+            android:id="@+id/suggestion_1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:autoSizeTextType="uniform"
+            android:singleLine="true"
+            android:textColor="?attr/keyColor"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/suggestion_2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:autoSizeTextType="uniform"
+            android:singleLine="true"
+            android:textColor="?attr/keyColor"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/suggestion_3"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:autoSizeTextType="uniform"
+            android:singleLine="true"
+            android:textColor="?attr/keyColor"
+            android:gravity="center" />
+
+        <TextView
+            android:id="@+id/btn_editor"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="️𝙸"
+            android:textSize="18sp"
+            android:textColor="?attr/keyColor"
+            android:background="?attr/keyTextColor"
+            android:padding="4dp"
+            android:layout_marginStart="4dp"
+            android:clickable="true"/>
+
+    </LinearLayout>
+
+    <com.fqhll.keyboard.CustomKeyboardView
+        android:id="@+id/keyboard_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="15dp"
+        android:keyPreviewLayout="@layout/custom_keyboard_preview"
+        android:keyBackground="@drawable/key_background"
+        android:keyTextColor="?attr/keyTextColor"
+        android:background="?attr/keyboardBackgroundColor">
+
+    </com.fqhll.keyboard.CustomKeyboardView>
+
+</LinearLayout>

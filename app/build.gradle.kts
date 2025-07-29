@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.fqhll.keyboard"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"

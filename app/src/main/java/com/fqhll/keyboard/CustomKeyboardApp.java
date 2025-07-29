@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputConnection;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.view.Gravity;
@@ -50,6 +51,24 @@ public class CustomKeyboardApp extends InputMethodService
 
     public static final String[] emoji_list = new String[]{"😭", "😂", "💀", "😔", "🫠", "💁‍♂️", "🧍‍♂️", "💩", "💅", "🫂", "🔥", "🍀", "👾", "👀", "✨️", "🐟", "✅️", "❌️", "🐸", "🌸", "🎀", "🤡", "😡", "🙏", "👻", "🥺", "😐", "👍"};
 
+    private LinearLayout suggestionBar;
+    private View root;
+
+    private boolean nativeLoaded = false;
+
+    private void ensureNative() {
+        if (!nativeLoaded) {
+            try {
+                System.loadLibrary("keyboard");
+                nativeLoaded = true;
+            } catch (Throwable t) {
+                // swallow it—keyboard still works
+            }
+        }
+    }
+
+    private native String[] nativeSuggest(String prefix);
+
     @Override
     public View onCreateInputView() {
 
@@ -59,12 +78,14 @@ public class CustomKeyboardApp extends InputMethodService
         int themeId = updateTheme();
         if (themeId != 0) {
             getTheme().applyStyle(themeId, true);
-            kv = (CustomKeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout, null);
+            root = getLayoutInflater().inflate(R.layout.custom_keyboard_layout, null);
         }
         keyboard = new Keyboard(this, R.xml.custom_keypad);
         emojiKeyboard = new Keyboard(this, R.xml.emojis);
         symbolKeyboard = new Keyboard(this, R.xml.symbols);
 
+        suggestionBar = root.findViewById(R.id.suggestion_bar_container);
+        kv = root.findViewById(R.id.keyboard_view);
         kv.setKeyboard(keyboard);
         kv.setOnKeyboardActionListener(this);
 
@@ -113,7 +134,9 @@ public class CustomKeyboardApp extends InputMethodService
 
         kv.setPreviewEnabled(false); // Remove default setup
 
-        return kv;
+        ensureNative();
+
+        return root;
     }
 
     @Override
@@ -219,6 +242,7 @@ public class CustomKeyboardApp extends InputMethodService
                     ic.deleteSurroundingText(1, 0);
                     adjustCapsAfterDeletion();
                 }
+                updateSuggestion(ic);
                 break;
             case -1: // CAPS key
                 handleCapsPress();
@@ -234,6 +258,7 @@ public class CustomKeyboardApp extends InputMethodService
             case -11: // emojis
                 kv.setKeyboard(emojiKeyboard);
                 kv.invalidateAllKeys();
+                showSuggestions("");
                 break;
             case -12: // settings
                 PackageManager manager = getPackageManager();
@@ -247,16 +272,18 @@ public class CustomKeyboardApp extends InputMethodService
                 if (before != null && before.length() > 0) {
                     ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT));
                     ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_LEFT));
+                    showSuggestions("");
                 }
-                break;
+                return;
             case -52: // Right arrow
                 // look at the char immediately after the cursor
                 CharSequence after = ic.getTextAfterCursor(1, 0);
                 if (after != null && after.length() > 0) {
                     ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT));
                     ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT));
+                    showSuggestions("");
                 }
-                break;
+                return;
             case Keyboard.KEYCODE_DONE:
                 EditorInfo editorInfo = getCurrentInputEditorInfo();
                 if (editorInfo != null && (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) != 0) {
@@ -266,6 +293,11 @@ public class CustomKeyboardApp extends InputMethodService
                     ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER));
                 }
                 resetCaps();
+                showSuggestions("");
+                break;
+            case 32:  // SPACE
+                ic.commitText(" ", 1);
+                updateSuggestion(ic);
                 break;
             default:
                 char code = (char) primaryCode;
@@ -283,6 +315,7 @@ public class CustomKeyboardApp extends InputMethodService
                 } else {
                     // ic.commitText(String.valueOf(code), 1);
                     ic.commitText(String.valueOf(Character.toChars(code)), 1);
+                    updateSuggestion(ic);
                 }
 
                 // If single-shift was used, reset to 0
@@ -296,6 +329,44 @@ public class CustomKeyboardApp extends InputMethodService
                     applyCapsState();
                 }
                 break;
+        }
+    }
+
+    private void updateSuggestion(InputConnection ic) {
+        CharSequence beforeCs = ic.getTextBeforeCursor(50, 0);
+        String before = (beforeCs == null ? "" : beforeCs.toString());
+        before = before.trim();
+
+        if (before.isEmpty()) {
+            showSuggestions("");
+            return;
+        }
+
+        String[] parts = before.split("\\s+");
+        String last_word = parts[parts.length - 1];
+
+        showSuggestions(last_word);
+    }
+
+    private void showSuggestions(String og) {
+        ensureNative();
+        suggestionBar.setVisibility(View.VISIBLE);
+
+        final String[] choices;
+        if (nativeLoaded) {
+            choices = nativeSuggest(og);
+        } else {
+            choices = new String[] {"", "", ""};
+        }
+
+        for (int i = 0; i < 3; i++) {
+            TextView tv = (TextView) suggestionBar.getChildAt(i + 1);
+            tv.setText(choices[i]);
+            tv.setOnClickListener(v -> {
+                getCurrentInputConnection().commitText(((TextView)v).getText(), 1);
+                // then clear suggestions
+                showSuggestions("");
+            });
         }
     }
 
@@ -485,7 +556,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onStartInputView(EditorInfo info, boolean restarting) {
-        super.onStartInputView(info, restarting);
+        kv.setKeyboard(keyboard);
         caps_state = defaultCaps ? 1 : 0;
         applyCapsState();  // Just updates the shift key appearance
     }
