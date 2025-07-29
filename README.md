@@ -95,6 +95,10 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [ ] second page of symbols
 - [x] be able to delete highlighted text
 - [ ] load changed themes without needing a refresh of keyboard (and without breaking popup/preview)
+- [ ] coyote-time-like queueing of handling simutaneous key presses
+- [ ] an easy way to add word to dictionary
+- [ ] emoji suggestions in place of predictive text
+- [ ] bypass autocorrected word by long pressing space
 
 ## Contact
 
