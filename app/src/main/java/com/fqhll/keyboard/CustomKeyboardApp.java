@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class CustomKeyboardApp extends InputMethodService
         implements KeyboardView.OnKeyboardActionListener {
-    
+
     private CustomKeyboardView kv;
     private Keyboard keyboard;
     private Keyboard emojiKeyboard;
@@ -48,7 +48,7 @@ public class CustomKeyboardApp extends InputMethodService
     private float scaleX, scaleY;
     private int lastTouchX, lastTouchY;
 
-    public static final String[] emoji_list = new String[]{"\uD83D\uDE2D", "\ud83d\ude00"};
+    public static final String[] emoji_list = new String[]{"\uD83D\uDE2D", "\ud83d\ude00" , "😀"};
 
     @Override
     public View onCreateInputView() {
