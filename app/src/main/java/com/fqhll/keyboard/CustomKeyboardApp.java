@@ -431,7 +431,7 @@ public class CustomKeyboardApp extends InputMethodService
         String keyColor = prefs.getString("key_color", "Unselected");
 
         // unselected theme defaults to shun
-        if (keyColor == "Unselected") {
+        if (keyColor.equals("Unselected")) {
             keyColor = "Shun";
         }
 
