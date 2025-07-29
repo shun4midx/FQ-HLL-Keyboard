@@ -230,7 +230,7 @@ public class CustomKeyboardApp extends InputMethodService
                 break;
             case -12: // settings
                 PackageManager manager = getPackageManager();
-                Intent launchIntent = manager.getLaunchIntentForPackage("com.fqhll.keyboard"); // Replace with the target app's package name
+                Intent launchIntent = manager.getLaunchIntentForPackage("com.fqhll.keyboard");
                 launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
                 startActivity(launchIntent);
                 break;
@@ -426,12 +426,16 @@ public class CustomKeyboardApp extends InputMethodService
 
 
     private int updateTheme() {
-        // Retrieve the saved key color preference
+        // get saved theme
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-        String keyColor = prefs.getString("key_color", "default");
+        String keyColor = prefs.getString("key_color", "Unselected");
 
-        // Get the layout resource ID for the selected color
+        // unselected theme defaults to shun
+        if (keyColor == "Unselected") {
+            keyColor = "Shun";
+        }
 
+        // return theme id
         return getResources().getIdentifier("Theme.FQHLLKeyboard." + keyColor, "style", getPackageName());
     }
 

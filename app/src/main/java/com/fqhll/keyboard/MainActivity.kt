@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
 
-    var colors = arrayOf("Shun", "Black", "DarkBlue", "Cyan", "Yellow", "Teal")
+    var colors = arrayOf("Unselected", "Shun", "Black", "DarkBlue", "Cyan", "Yellow", "Teal")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +34,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
 
         val keyBackgroundColor: Spinner = findViewById(R.id.spinner_options)
-        val savedColor = prefs.getString("key_color", "Shun")
+        val savedColor = prefs.getString("key_color", "Unselected")
         prefs.edit { putString("key_color", savedColor) }
 
         // the dropdown
@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val prefs = getSharedPreferences("keyboard_settings", Context.MODE_PRIVATE)
         val selectedColor = colors[position] // Get the selected color
         prefs.edit { putString("key_color", selectedColor) } // Save the selected color
-        showToast(message = "Selected color: $selectedColor")
+        showToast(message = "Selected theme: $selectedColor")
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
