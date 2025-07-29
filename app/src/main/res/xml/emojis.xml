@@ -6,56 +6,53 @@
     >
 
     <Row>
-        <Key android:codes="-100" android:keyLabel="😭" android:keyEdgeFlags="left"/>
-        <Key android:codes="-101" android:keyLabel="😭"/>
-        <Key android:codes="-102" android:keyLabel="😭"/>
-        <Key android:codes="-103" android:keyLabel="😭"/>
-        <Key android:codes="-104" android:keyLabel="😭"/>
-        <Key android:codes="-105" android:keyLabel="😭"/>
-        <Key android:codes="-106" android:keyLabel="😭"/>
-        <Key android:codes="-107" android:keyLabel="😭"/>
-        <Key android:codes="-108" android:keyLabel="😭"/>
-        <Key android:codes="-109" android:keyLabel="😭" android:keyEdgeFlags="right"/>
+        <Key android:codes="-100" android:keyEdgeFlags="left"/>
+        <Key android:codes="-101"/>
+        <Key android:codes="-102"/>
+        <Key android:codes="-103"/>
+        <Key android:codes="-104"/>
+        <Key android:codes="-105"/>
+        <Key android:codes="-106"/>
+        <Key android:codes="-107"/>
+        <Key android:codes="-108"/>
+        <Key android:codes="-109" android:keyEdgeFlags="right"/>
     </Row>
 
     <Row>
-        <Key android:codes="-110" android:keyLabel="+" android:keyEdgeFlags="left"/>
-        <Key android:codes="-111" android:keyLabel="×"/>
-        <Key android:codes="-112" android:keyLabel="÷"/>
-        <Key android:codes="-113" android:keyLabel="="/>
-        <Key android:codes="-114" android:keyLabel="/"/>
-        <Key android:codes="-115" android:keyLabel="_"/>
-        <Key android:codes="-116" android:keyLabel="&lt;"/>
-        <Key android:codes="-117" android:keyLabel="&gt;"/>
-        <Key android:codes="-118" android:keyLabel="["/>
-        <Key android:codes="-119" android:keyLabel="]" android:keyEdgeFlags="right"/>
+        <Key android:codes="-110" android:keyEdgeFlags="left"/>
+        <Key android:codes="-111"/>
+        <Key android:codes="-112"/>
+        <Key android:codes="-113"/>
+        <Key android:codes="-114"/>
+        <Key android:codes="-115"/>
+        <Key android:codes="-116"/>
+        <Key android:codes="-117"/>
+        <Key android:codes="-118"/>
+        <Key android:codes="-119" android:keyEdgeFlags="right"/>
     </Row>
 
     <Row>
-        <Key android:codes="-120" android:keyLabel="!" android:keyEdgeFlags="left"/>
+        <Key android:codes="-120" android:keyEdgeFlags="left"/>
         <Key android:codes="-121" android:keyLabel="\@"/>
-        <Key android:codes="-122" android:keyLabel="#"/>
-        <Key android:codes="-123" android:keyLabel="$"/>
-        <Key android:codes="-124" android:keyLabel="%"/>
-        <Key android:codes="-125" android:keyLabel="^"/>
-        <Key android:codes="-126" android:keyLabel="&amp;"/>
-        <Key android:codes="-127" android:keyLabel="*"/>
-        <Key android:codes="-128" android:keyLabel="("/>
-        <Key android:codes="-129" android:keyLabel=")" android:keyEdgeFlags="right"/>
+        <Key android:codes="-122"/>
+        <Key android:codes="-123"/>
+        <Key android:codes="-124"/>
+        <Key android:codes="-125"/>
+        <Key android:codes="-126"/>
+        <Key android:codes="-127"/>
+        <Key android:codes="-128"/>
+        <Key android:codes="-129" android:keyEdgeFlags="right"/>
     </Row>
 
     <Row>
-        <Key android:keyLabel="1/2"
-            android:keyWidth="15%p"
-            android:keyEdgeFlags="left"
-            android:codes="-10"/>
-        <Key android:codes="-130" android:keyLabel="-"/>
-        <Key android:codes="-131" android:keyLabel="&apos;"/>
-        <Key android:codes="-132" android:keyLabel="&quot;"/>
-        <Key android:codes="-133" android:keyLabel=":"/>
-        <Key android:codes="-134" android:keyLabel=";"/>
-        <Key android:codes="-135" android:keyLabel=","/>
-        <Key android:codes="-136" android:keyLabel="?"/>
+        <Key android:keyLabel="1/2" android:keyWidth="15%p" android:keyEdgeFlags="left" android:codes="-10"/>
+        <Key android:codes="-130"/>
+        <Key android:codes="-131"/>
+        <Key android:codes="-132"/>
+        <Key android:codes="-133"/>
+        <Key android:codes="-134"/>
+        <Key android:codes="-135"/>
+        <Key android:codes="-136"/>
         <Key android:codes="-5" android:keyLabel="⌫" android:keyWidth="15%p" android:isRepeatable="true" android:keyEdgeFlags="right"/>
     </Row>
 

@@ -27,9 +27,11 @@ import java.util.Map;
 
 public class CustomKeyboardApp extends InputMethodService
         implements KeyboardView.OnKeyboardActionListener {
-
+    
     private CustomKeyboardView kv;
     private Keyboard keyboard;
+    private Keyboard emojiKeyboard;
+    private Keyboard symbolKeyboard;
 
     private PopupWindow keyPreviewPopup;
     private TextView previewText;
@@ -46,6 +48,8 @@ public class CustomKeyboardApp extends InputMethodService
     private float scaleX, scaleY;
     private int lastTouchX, lastTouchY;
 
+    public static final String[] emoji_list = new String[]{"\uD83D\uDE2D", "\ud83d\ude00"};
+
     @Override
     public View onCreateInputView() {
 
@@ -58,6 +62,9 @@ public class CustomKeyboardApp extends InputMethodService
             kv = (CustomKeyboardView) getLayoutInflater().inflate(R.layout.custom_keyboard_layout, null);
         }
         keyboard = new Keyboard(this, R.xml.custom_keypad);
+        emojiKeyboard = new Keyboard(this, R.xml.emojis);
+        symbolKeyboard = new Keyboard(this, R.xml.symbols);
+
         kv.setKeyboard(keyboard);
         kv.setOnKeyboardActionListener(this);
 
@@ -90,6 +97,7 @@ public class CustomKeyboardApp extends InputMethodService
         caps_state = defaultCaps ? 1 : 0;
         keyboard.setShifted(caps_state > 0);
         updateCapsLabel();
+        updateEmojiLabel();
 
         // Initialize manual pop-up
         previewText = new TextView(this);
@@ -216,18 +224,15 @@ public class CustomKeyboardApp extends InputMethodService
                 handleCapsPress();
                 break;
             case -2: // symbols
-                keyboard = new Keyboard(this, R.xml.symbols);
-                kv.setKeyboard(keyboard);
+                kv.setKeyboard(symbolKeyboard);
                 kv.invalidateAllKeys();
                 break;
             case -10: // back to main
-                keyboard = new Keyboard(this, R.xml.custom_keypad);
                 kv.setKeyboard(keyboard);
                 applyCapsState();
                 break;
             case -11: // emojis
-                keyboard = new Keyboard(this, R.xml.emojis);
-                kv.setKeyboard(keyboard);
+                kv.setKeyboard(emojiKeyboard);
                 kv.invalidateAllKeys();
                 break;
             case -12: // settings
@@ -296,7 +301,6 @@ public class CustomKeyboardApp extends InputMethodService
 
     private static Map<Integer, String> getEmojiCodes() {
         Map<Integer, String> emoji_codes = new HashMap<>();
-        String[] emoji_list = {"\uD83D\uDE2D", "\ud83d\ude00"};
 
         for (int i = 0; i < emoji_list.length; i++) {
             int emoji_keycode = 100 + i;
@@ -306,6 +310,21 @@ public class CustomKeyboardApp extends InputMethodService
         }
 
         return emoji_codes;
+    }
+
+    private void updateEmojiLabel() {
+        for (Keyboard.Key key : emojiKeyboard.getKeys()) {
+
+            for (int i = 0; i < emoji_list.length; i++) {
+                int emoji_keycode = 100 + i;
+                emoji_keycode = -emoji_keycode; // just add the negative sign for negative keycode
+
+                if (key.codes[0] == emoji_keycode) {
+                    key.label = emoji_list[i];
+                    break;
+                }
+            }
+        }
     }
 
     private boolean shouldAutoCap() {
