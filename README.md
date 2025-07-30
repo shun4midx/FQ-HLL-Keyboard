@@ -12,7 +12,7 @@ Keyboard settings are saved across updates of the app.
 
 ## Themes
 
-You can view the themes in the [themes folder](https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/themes/themes.md).
+You can view the themes in the [themes folder](https://github.com/shun4midx/FQ-HLL-Keyboard/tree/main/themes#readme).
 
 ## Development usage
 
