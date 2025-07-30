@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
 
-    private var themes = arrayOf("Unselected", "Shun", "Ducky", "Cabbage", "Black", "DarkBlue", "Hammerhead", "CottonCandy", "Yellow", "Teal", "Purple", "Green")
+    private var themes = arrayOf("Unselected", "Shun", "Ducky", "Cabbage", "Black", "DarkBlue", "Hammerhead", "Stargaze", "CottonCandy", "Yellow", "Teal", "Purple", "Green", "Cyan")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

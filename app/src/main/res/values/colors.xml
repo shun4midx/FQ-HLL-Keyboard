@@ -27,6 +27,7 @@
     <color name="shun_blue">#051760</color>
     <color name="custom_cyan">#B0FFFF</color>
     <color name="custom_yellow">#ffd900</color>
+    <color name="custom_light_yellow">#FFF7B3</color>
     <color name="custom_dark_grey">#232323</color>
     <color name="custom_light_grey">#808080</color>
     <color name="custom_purple">#250040</color>
