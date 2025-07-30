@@ -27,6 +27,8 @@
     <color name="shun_blue">#051760</color>
     <color name="custom_cyan">#B0FFFF</color>
     <color name="custom_yellow">#ffd900</color>
+    <color name="custom_dark_grey">#232323</color>
+    <color name="custom_light_grey">#D5D5D5</color>
 
     <color name="custom_fqhll_logo_pink">#ff1fa9</color>
     <color name="custom_fqhll_logo_purple">#bc3fde</color>
