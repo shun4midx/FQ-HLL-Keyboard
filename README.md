@@ -8,7 +8,7 @@ Download the latest release of the app [here](https://github.com/shun4midx/FQ-HL
 
 Keyboard settings can be found by launching the FQ-HLL Keyboard app installed with the apk.
 
-Keyboard settings are saved across updates/reinstallations of the app.
+Keyboard settings are saved across updates of the app.
 
 ## Development usage
 
@@ -67,6 +67,7 @@ app/src/main/
         |-- backup_rules.xml
         |-- custom_keypad.xml
         |-- custom_method.xml
+        |-- emojis.xml
         `-- symbols.xml
 ```
 
