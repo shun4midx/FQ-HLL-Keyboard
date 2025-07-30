@@ -285,7 +285,6 @@ public class CustomKeyboardApp extends InputMethodService
 
                 // Read fresh prefs
                 prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-                defaultAutocor = prefs.getBoolean("autocorToggle", true);
 
                 // If we should auto‑replace:
                 if (defaultAutocor && score >= AUTO_REPLACE_THRESHOLD && !top.isEmpty()) {
@@ -374,7 +373,6 @@ public class CustomKeyboardApp extends InputMethodService
         String[] words  = s.suggestions;
         double[] scores = s.scores;
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-        defaultAutocor = prefs.getBoolean("autocorToggle", true);
 
         for (int i = 0; i < 3; i++) {
             final String word  = words[i];
