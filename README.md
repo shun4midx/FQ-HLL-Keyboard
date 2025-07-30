@@ -10,6 +10,10 @@ Keyboard settings can be found by launching the FQ-HLL Keyboard app installed wi
 
 Keyboard settings are saved across updates of the app.
 
+## Themes
+
+You can view the themes in the [themes folder](https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/themes/themes.md).
+
 ## Development usage
 
 setup android studio and link to phone
