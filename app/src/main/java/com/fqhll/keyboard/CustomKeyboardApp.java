@@ -285,6 +285,7 @@ public class CustomKeyboardApp extends InputMethodService
 
                 // Read fresh prefs
                 prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+                defaultAutocor = prefs.getBoolean("autocorToggle", true);
 
                 // If we should auto‑replace:
                 if (defaultAutocor && score >= AUTO_REPLACE_THRESHOLD && !top.isEmpty()) {

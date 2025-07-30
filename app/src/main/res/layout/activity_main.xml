@@ -21,16 +21,16 @@
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/capsToggle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:defaultValue="true"
+            android:checked="true"
             android:text="@string/enable_auto_caps" />
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/autocorToggle"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:defaultValue="true"
+            android:checked="true"
             android:text="@string/enable_autocor" />
 
         <TextView
