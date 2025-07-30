@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val prefs = getSharedPreferences("keyboard_settings", Context.MODE_PRIVATE)
 
         // Load saved toggle state
-        capsToggle.isChecked = prefs.getBoolean("default_caps_enabled", false)
+        capsToggle.isChecked = prefs.getBoolean("default_caps_enabled", true)
 
         // Save toggle changes
         capsToggle.setOnCheckedChangeListener { _, isChecked ->

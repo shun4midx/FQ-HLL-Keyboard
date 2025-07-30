@@ -183,7 +183,8 @@ public class CustomKeyboardApp extends InputMethodService
                     adjustCapsAfterDeletion();
                 } else {
                     // No selection, fall back to single‐char delete
-                    ic.deleteSurroundingText(1, 0);
+                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
+                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL));
                     adjustCapsAfterDeletion();
                 }
                 updateSuggestion(ic);
