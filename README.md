@@ -8,6 +8,8 @@ Download the latest release of the app [here](https://github.com/shun4midx/FQ-HL
 
 Keyboard settings can be found by launching the FQ-HLL Keyboard app installed with the apk.
 
+Keyboard settings are saved across updates/reinstallations of the app.
+
 ## Development usage
 
 setup android studio and link to phone
@@ -80,7 +82,7 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 
 - [ ] customise symbols
 - [ ] fully customise themes
-- [ ] emoji support (emoji page like symbols?)
+- [x] emoji support (emoji page like symbols?)
 - [ ] clipboard
 - [ ] settings app layout
 - [ ] hold keys for symbols
@@ -94,8 +96,8 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [ ] sign apk
 - [ ] second page of symbols
 - [x] be able to delete highlighted text
-- [ ] load changed themes without needing a refresh of keyboard (and without breaking popup/preview)
-- [ ] coyote-time-like queueing of handling simutaneous key presses
+- [x] load changed themes without needing a refresh of keyboard (and without breaking popup/preview)
+- [x] coyote-time-like queueing of handling simutaneous key presses
 - [ ] an easy way to add word to dictionary
 - [ ] emoji suggestions in place of predictive text
 - [ ] bypass autocorrected word by long pressing space
