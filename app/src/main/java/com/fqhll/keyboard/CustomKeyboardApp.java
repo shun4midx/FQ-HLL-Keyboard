@@ -185,8 +185,8 @@ public class CustomKeyboardApp extends InputMethodService
 
     public void showKeyPreview(Keyboard.Key key, int code) {
         // Set text
-        char curr_char = (char) code;
-        previewText.setText(String.valueOf(caps_state > 0 ? Character.toUpperCase(curr_char) : curr_char));
+        char curr_char = (char) (code);
+        previewText.setText(String.valueOf(caps_state > 0 && code > 0 ? Character.toUpperCase(curr_char) : key.label));
         previewText.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 
         // Match popup size to key size
