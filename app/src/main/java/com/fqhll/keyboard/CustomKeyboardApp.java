@@ -299,6 +299,12 @@ public class CustomKeyboardApp extends InputMethodService
             case 32:  // SPACE
                 ic.commitText(" ", 1);
                 updateSuggestion(ic);
+
+                // Auto-cap if punctuation (e.g., after ". ")
+                if (shouldAutoCap() && defaultCaps) {
+                    caps_state = 1;
+                    applyCapsState();
+                }
                 break;
             default:
                 char code = (char) primaryCode;
@@ -322,12 +328,6 @@ public class CustomKeyboardApp extends InputMethodService
                 // If single-shift was used, reset to 0
                 if (caps_state == 1) {
                     resetCaps();
-                }
-
-                // Auto-cap if punctuation (e.g., after ". ")
-                if (shouldAutoCap() && defaultCaps) {
-                    caps_state = 1;
-                    applyCapsState();
                 }
                 break;
         }
