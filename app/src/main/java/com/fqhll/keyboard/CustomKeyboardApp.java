@@ -597,13 +597,42 @@ public class CustomKeyboardApp extends InputMethodService
                 getTheme().applyStyle(themeId, true);
             }
 
-            View newRoot = getLayoutInflater().inflate(R.layout.custom_keyboard_layout, null);
+            View newRoot = buildKeyboardView();
             setInputView(newRoot);
 
             kv = newRoot.findViewById(R.id.keyboard_view);
             kv.setKeyboard(keyboard);
             kv.invalidateAllKeys();
         }
+    }
+
+    private View buildKeyboardView() {
+        SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+        prefs.registerOnSharedPreferenceChangeListener(this);
+        int themeId = updateTheme();
+        if (themeId != 0) getTheme().applyStyle(themeId, true);
+
+        View root = getLayoutInflater().inflate(R.layout.custom_keyboard_layout, null);
+        suggestionBar = root.findViewById(R.id.suggestion_bar_container);
+
+        kv = root.findViewById(R.id.keyboard_view);
+        keyboard = new Keyboard(this, R.xml.custom_keypad);
+        emojiKeyboard = new Keyboard(this, R.xml.emojis);
+        symbolKeyboard=new Keyboard(this, R.xml.symbols);
+
+        kv.setKeyboard(keyboard);
+        kv.setOnKeyboardActionListener(this);
+        kv.setPreviewEnabled(false);
+
+        kv.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+        int viewW = kv.getMeasuredWidth(), kbW = kv.getKeyboard().getMinWidth();
+        int viewH = kv.getMeasuredHeight(), kbH = kv.getKeyboard().getHeight();
+        scaleX = (float)viewW/kbW;
+        scaleY = (float)viewH/kbH;
+
+        updateCapsLabel();
+        updateEmojiLabel();
+        return root;
     }
 
     @Override
