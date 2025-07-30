@@ -354,22 +354,47 @@ public class CustomKeyboardApp extends InputMethodService
         suggestionBar.setVisibility(View.VISIBLE);
 
         final String[] choices;
-        if (nativeLoaded) {
+        if (nativeLoaded && !og.isEmpty()) {
             choices = nativeSuggest(og);
         } else {
             choices = new String[] {"", "", ""};
         }
 
         for (int i = 0; i < 3; i++) {
+            final String suggestion = choices[i];
             TextView tv = (TextView) suggestionBar.getChildAt(i + 1);
-            tv.setText(choices[i]);
+            tv.setText(suggestion);
             tv.setOnClickListener(v -> {
-                getCurrentInputConnection().commitText(((TextView)v).getText(), 1);
-                // then clear suggestions
+                replaceCurrentWord(suggestion);
                 showSuggestions("");
             });
         }
     }
+
+    private void replaceCurrentWord(String suggestion) {
+        InputConnection ic = getCurrentInputConnection();
+        if (ic == null) return;
+
+        // Grab up to 50 chars before cursor
+        CharSequence beforeCs = ic.getTextBeforeCursor(50, 0);
+        String before = beforeCs == null ? "" : beforeCs.toString();
+
+        // Find the start of the curr word
+        int lastSpace = before.lastIndexOf(' ');
+        int wordStart = lastSpace + 1; // if no space, this is 0
+        int wordLength = before.length() - wordStart;
+
+        // Delete that many chars before the cursor
+        if (wordLength > 0) {
+            ic.deleteSurroundingText(wordLength, 0);
+        }
+
+        // Commit the suggestion in its place
+        ic.commitText(suggestion + " ", 1);
+
+        showSuggestions("");
+    }
+
 
     private static Map<Integer, String> getEmojiCodes() {
         Map<Integer, String> emoji_codes = new HashMap<>();
@@ -558,6 +583,7 @@ public class CustomKeyboardApp extends InputMethodService
     @Override
     public void onStartInputView(EditorInfo info, boolean restarting) {
         kv.setKeyboard(keyboard);
+        showSuggestions("");
         caps_state = defaultCaps ? 1 : 0;
         applyCapsState();  // Just updates the shift key appearance
     }
