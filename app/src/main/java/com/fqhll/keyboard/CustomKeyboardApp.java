@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
+import android.os.Looper;
+import android.os.Handler;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -58,6 +60,12 @@ public class CustomKeyboardApp extends InputMethodService
     private View root;
 
     private boolean nativeLoaded = false;
+
+    // Coyote‑time window for grouping near‑simultaneous presses
+    private static final long COYOTE_WINDOW_MS = 3;
+    private final List<Integer> pendingKeys = new ArrayList<>();
+    private final Handler coyoteHandler = new Handler(Looper.getMainLooper());
+    private final Runnable flushRunnable = this::flushPendingKeys;
 
     private void ensureNative() {
         if (!nativeLoaded) {
@@ -156,6 +164,15 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
+        if (isChordable(primaryCode)) {
+            synchronized (pendingKeys) {
+                pendingKeys.add(primaryCode);
+            }
+            coyoteHandler.removeCallbacks(flushRunnable);
+            coyoteHandler.postDelayed(flushRunnable, COYOTE_WINDOW_MS);
+            return;
+        }
+
         // If it's SHIFT, handle it *before* anything else:
         if (primaryCode == Keyboard.KEYCODE_SHIFT) {
             handleCapsPress();
@@ -241,6 +258,7 @@ public class CustomKeyboardApp extends InputMethodService
                 showSuggestions("");
                 break;
             case 32:  // SPACE
+                flushPendingKeys();
                 ic.commitText(" ", 1);
                 updateSuggestion(ic);
 
@@ -251,29 +269,40 @@ public class CustomKeyboardApp extends InputMethodService
                 }
                 break;
             default:
-                char code = (char) primaryCode;
-                if (Character.isLetter(code)) {
-                    if (caps_state > 0) {
-                        code = Character.toUpperCase(code);
-                    }
-                }
+                commitChar(ic, primaryCode);
+        }
+    }
 
-                // if its an emoji code, return the corresponding emoji unicode, else just send the character
-                Map<Integer, String> emoji_codes = getEmojiCodes();
-                if (emoji_codes.containsKey(primaryCode)) {
-                    String emoji_unicode = emoji_codes.get(primaryCode);
-                    ic.commitText(emoji_unicode, 1);
-                } else {
-                    // ic.commitText(String.valueOf(code), 1);
-                    ic.commitText(String.valueOf(Character.toChars(code)), 1);
-                    updateSuggestion(ic);
-                }
+    private boolean isChordable(int code) {
+        // Letters, digits, or space
+        return Character.isLetterOrDigit((char)code);
+    }
 
-                // If single-shift was used, reset to 0
-                if (caps_state == 1) {
-                    resetCaps();
-                }
-                break;
+    private void flushPendingKeys() {
+        List<Integer> batch;
+        synchronized (pendingKeys) {
+            batch = new ArrayList<>(pendingKeys);
+            pendingKeys.clear();
+        }
+        InputConnection ic = getCurrentInputConnection();
+        if (ic == null) return;
+
+        for (int code : batch) {
+            commitChar(ic, code);
+        }
+    }
+    private void commitChar(InputConnection ic, int code) {
+        Map<Integer,String> emojis = getEmojiCodes();
+        if (emojis.containsKey(code)) {
+            ic.commitText(emojis.get(code), 1);
+        } else {
+            char c = (char)code;
+            if (Character.isLetter(c) && caps_state > 0) {
+                c = Character.toUpperCase(c);
+            }
+            ic.commitText(String.valueOf(c), 1);
+            updateSuggestion(ic);
+            if (caps_state == 1) resetCaps();
         }
     }
 
@@ -409,6 +438,8 @@ public class CustomKeyboardApp extends InputMethodService
     @Override
     public void onFinishInput() {
         super.onFinishInput();
+        coyoteHandler.removeCallbacks(flushRunnable);
+        synchronized (pendingKeys) { pendingKeys.clear(); }
         resetCaps(); // Reset caps or perform actions
     }
 
