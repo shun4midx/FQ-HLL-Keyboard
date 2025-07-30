@@ -9,6 +9,16 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="teal_gradient_1">#E7003050</color>
+    <color name="teal_gradient_2">#8426CEAA</color>
+    <color name="teal_gradient_3">#9D98E8C1</color>
+    <color name="teal_gradient_5">#C8496683</color>
+    <color name="teal_gradient_6">#A55049CC</color>
+    <color name="teal_gradient_7">#B8161540</color>
+
+    <color name="cotton_candy_light_blue">#5BCEFA</color>
+    <color name="cotton_candy_light_pink">#FF95D7</color>
+
     <color name="custom_dark_blue">#1A1F46</color>
     <color name="custom_blue">#255FAB</color>
     <color name="shun_blue">#051760</color>
