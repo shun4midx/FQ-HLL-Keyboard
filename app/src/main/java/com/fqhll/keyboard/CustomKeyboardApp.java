@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class CustomKeyboardApp extends InputMethodService
-        implements KeyboardView.OnKeyboardActionListener {
+        implements KeyboardView.OnKeyboardActionListener, SharedPreferences.OnSharedPreferenceChangeListener {
 
     private CustomKeyboardView kv;
     private Keyboard keyboard;
@@ -74,6 +74,7 @@ public class CustomKeyboardApp extends InputMethodService
     public View onCreateInputView() {
 
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+        prefs.registerOnSharedPreferenceChangeListener(this);
 
         // Dynamically apply the theme
         int themeId = updateTheme();
@@ -586,6 +587,23 @@ public class CustomKeyboardApp extends InputMethodService
         showSuggestions("");
         caps_state = defaultCaps ? 1 : 0;
         applyCapsState();  // Just updates the shift key appearance
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+        if (key.equals("key_color")) {
+            int themeId = updateTheme();
+            if (themeId != 0) {
+                getTheme().applyStyle(themeId, true);
+            }
+
+            View newRoot = getLayoutInflater().inflate(R.layout.custom_keyboard_layout, null);
+            setInputView(newRoot);
+
+            kv = newRoot.findViewById(R.id.keyboard_view);
+            kv.setKeyboard(keyboard);
+            kv.invalidateAllKeys();
+        }
     }
 
     @Override
