@@ -23,14 +23,19 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         setContentView(R.layout.activity_main)
 
         val capsToggle: SwitchCompat = findViewById(R.id.capsToggle)
+        val autocorToggle: SwitchCompat = findViewById(R.id.autocorToggle)
         val prefs = getSharedPreferences("keyboard_settings", Context.MODE_PRIVATE)
 
         // Load saved toggle state
         capsToggle.isChecked = prefs.getBoolean("default_caps_enabled", true)
+        autocorToggle.isChecked = prefs.getBoolean("autocorToggle", true)
 
         // Save toggle changes
         capsToggle.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit { putBoolean("default_caps_enabled", isChecked) }
+        }
+        autocorToggle.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit { putBoolean("autocorToggle", isChecked) }
         }
 
         val keyBackgroundColor: Spinner = findViewById(R.id.spinner_options)
