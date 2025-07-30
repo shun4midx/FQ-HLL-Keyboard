@@ -6,7 +6,9 @@ import android.content.pm.PackageManager;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
+import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -72,72 +74,12 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public View onCreateInputView() {
-
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-        prefs.registerOnSharedPreferenceChangeListener(this);
-
-        // Dynamically apply the theme
-        int themeId = updateTheme();
-        if (themeId != 0) {
-            getTheme().applyStyle(themeId, true);
-            root = getLayoutInflater().inflate(R.layout.custom_keyboard_layout, null);
-        }
-        keyboard = new Keyboard(this, R.xml.custom_keypad);
-        emojiKeyboard = new Keyboard(this, R.xml.emojis);
-        symbolKeyboard = new Keyboard(this, R.xml.symbols);
-
-        suggestionBar = root.findViewById(R.id.suggestion_bar_container);
-        kv = root.findViewById(R.id.keyboard_view);
-        kv.setKeyboard(keyboard);
-        kv.setOnKeyboardActionListener(this);
-
-        kv.setOnTouchListener((v, ev) -> {
-            if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-                // Record where the user actually touched, in view‑coords
-                lastTouchX = (int) ev.getX();
-                lastTouchY = (int) ev.getY();
-            }
-            if (ev.getAction() == MotionEvent.ACTION_UP) {
-                v.performClick();  // Accessibility click
-            }
-            return false;  // STILL let KeyboardView handle the key event!
-        });
-
-        kv.post(() -> {
-            int viewW  = kv.getWidth();
-            int viewH  = kv.getHeight();
-            int kbW    = kv.getKeyboard().getMinWidth();
-            int kbH    = kv.getKeyboard().getHeight();
-            scaleX = (float)viewW / kbW;
-            scaleY = (float)viewH / kbH;
-        });
-
-        // Disable default pop-up
-        kv.setPreviewEnabled(false);
-
-        // Get default caps
         defaultCaps = prefs.getBoolean("default_caps_enabled", false);
-        caps_state = defaultCaps ? 1 : 0;
-        keyboard.setShifted(caps_state > 0);
-        updateCapsLabel();
-        updateEmojiLabel();
+        caps_state  = defaultCaps ? 1 : 0;
 
-        // Initialize manual pop-up
-        previewText = new TextView(this);
-        previewText.setBackgroundColor(getResources().getColor(android.R.color.white));
-        previewText.setTextColor(getResources().getColor(android.R.color.black));
-        previewText.setTextSize(26f);
-        previewText.setGravity(Gravity.CENTER);
-
-        keyPreviewPopup = new PopupWindow(previewText,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
-        keyPreviewPopup.setAnimationStyle(0);  // No animation
-
-        kv.setPreviewEnabled(false); // Remove default setup
-
-        ensureNative();
-
+        root = buildKeyboardView();
+        applyCapsState();
         return root;
     }
 
@@ -591,47 +533,77 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        if (key.equals("key_color")) {
-            int themeId = updateTheme();
-            if (themeId != 0) {
-                getTheme().applyStyle(themeId, true);
-            }
-
-            View newRoot = buildKeyboardView();
-            setInputView(newRoot);
-
-            kv = newRoot.findViewById(R.id.keyboard_view);
-            kv.setKeyboard(keyboard);
-            kv.invalidateAllKeys();
+        if (!"key_color".equals(key)) {
+            return;
         }
+        View newRoot = buildKeyboardView();
+        setInputView(newRoot);
+        root = newRoot;
+        applyCapsState();
     }
 
     private View buildKeyboardView() {
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
         prefs.registerOnSharedPreferenceChangeListener(this);
+
+        // 1) Figure out the theme, but don't gate inflation on it
         int themeId = updateTheme();
-        if (themeId != 0) getTheme().applyStyle(themeId, true);
 
-        View root = getLayoutInflater().inflate(R.layout.custom_keyboard_layout, null);
-        suggestionBar = root.findViewById(R.id.suggestion_bar_container);
+        ContextThemeWrapper wrap;
 
+        if (themeId != 0) {
+            wrap = new ContextThemeWrapper(this, themeId);
+        } else {
+            return root;
+        }
+
+        // 2) Always inflate under that context
+        LayoutInflater li = LayoutInflater.from(wrap);
+        View root = li.cloneInContext(wrap)
+                .inflate(R.layout.custom_keyboard_layout, null);
+
+        // 3) (Exactly as before) wire up your KeyboardView + pop‑up machinery
         kv = root.findViewById(R.id.keyboard_view);
-        keyboard = new Keyboard(this, R.xml.custom_keypad);
-        emojiKeyboard = new Keyboard(this, R.xml.emojis);
-        symbolKeyboard=new Keyboard(this, R.xml.symbols);
+        keyboard      = new Keyboard(wrap, R.xml.custom_keypad);
+        emojiKeyboard = new Keyboard(wrap, R.xml.emojis);
+        symbolKeyboard= new Keyboard(wrap, R.xml.symbols);
 
         kv.setKeyboard(keyboard);
         kv.setOnKeyboardActionListener(this);
         kv.setPreviewEnabled(false);
+        kv.setOnTouchListener((v, ev) -> {
+            if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+                lastTouchX = (int)ev.getX();
+                lastTouchY = (int)ev.getY();
+            }
+            if (ev.getAction() == MotionEvent.ACTION_UP) v.performClick();
+            return false;
+        });
 
-        kv.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        int viewW = kv.getMeasuredWidth(), kbW = kv.getKeyboard().getMinWidth();
-        int viewH = kv.getMeasuredHeight(), kbH = kv.getKeyboard().getHeight();
-        scaleX = (float)viewW/kbW;
-        scaleY = (float)viewH/kbH;
+        // 4) Compute scale *after* layout
+        scaleX = scaleY = 1f;
+        kv.post(() -> {
+            scaleX = (float)kv.getWidth()  / kv.getKeyboard().getMinWidth();
+            scaleY = (float)kv.getHeight() / kv.getKeyboard().getHeight();
+        });
+
+        // 5) Recreate your manual popup
+        previewText = new TextView(this);
+        previewText.setBackgroundColor(getResources().getColor(android.R.color.white));
+        previewText.setTextColor(getResources().getColor(android.R.color.black));
+        previewText.setTextSize(26f);
+        previewText.setGravity(Gravity.CENTER);
+
+        keyPreviewPopup = new PopupWindow(previewText,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        keyPreviewPopup.setAnimationStyle(0);
 
         updateCapsLabel();
         updateEmojiLabel();
+        ensureNative();
+        suggestionBar = root.findViewById(R.id.suggestion_bar_container);
+
         return root;
     }
 
