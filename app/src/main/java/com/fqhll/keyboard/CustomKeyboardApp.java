@@ -3,6 +3,7 @@ package com.fqhll.keyboard;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
@@ -67,6 +68,9 @@ public class CustomKeyboardApp extends InputMethodService
     private final Handler coyoteHandler = new Handler(Looper.getMainLooper());
     private final Runnable flushRunnable = this::flushPendingKeys;
 
+    private static final double AUTO_REPLACE_THRESHOLD = 0.6;
+    private boolean defaultAutocor = true;
+
     private void ensureNative() {
         if (!nativeLoaded) {
             try {
@@ -78,12 +82,13 @@ public class CustomKeyboardApp extends InputMethodService
         }
     }
 
-    private native String[] nativeSuggest(String prefix);
+    private native Suggestion nativeSuggest(String prefix);
 
     @Override
     public View onCreateInputView() {
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-        defaultCaps = prefs.getBoolean("default_caps_enabled", true);
+        defaultCaps = prefs.getBoolean("capsToggle", true);
+        defaultAutocor = prefs.getBoolean("autocorToggle", true);
         caps_state  = defaultCaps ? 1 : 0;
 
         root = buildKeyboardView();
@@ -186,7 +191,7 @@ public class CustomKeyboardApp extends InputMethodService
 
         // Always read latest defaultCaps but don't force caps_state here
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-        defaultCaps = prefs.getBoolean("default_caps_enabled", false);
+        defaultCaps = prefs.getBoolean("capsToggle", true);
 
         if (defaultCaps && isAtLineStart() && caps_state == 1) {
             applyCapsState();
@@ -259,16 +264,51 @@ public class CustomKeyboardApp extends InputMethodService
                 resetCaps();
                 showSuggestions("");
                 break;
-            case 32:  // SPACE
-                ic.commitText(" ", 1);
-                updateSuggestion(ic);
+            case 32: // SPACE
+            case 46:   // '.'
+            case 44:   // ','
+            case 63:   // '?'
+            case 33: { // '!'
+                // Figure out the last word before space
+                CharSequence beforeCs = ic.getTextBeforeCursor(50, 0);
+                String raw = (beforeCs == null ? "" : beforeCs.toString());
+                String trimmed = raw.replaceAll("\\s+$", ""); // Trim trailing whitespace
+                String[] parts = (trimmed.isEmpty() ? new String[0] : trimmed.split("\\s+"));
+                String lastWord = parts.length > 0 ? parts[parts.length - 1] : "";
 
-                // Auto-cap if punctuation (e.g., after ". ")
-                if (shouldAutoCap() && defaultCaps) {
-                    caps_state = 1;
-                    applyCapsState();
+                // Ask JNI for suggestions on lastWord
+                Suggestion s = nativeLoaded && !lastWord.isEmpty()
+                        ? nativeSuggest(lastWord)
+                        : new Suggestion(new String[]{"", "", ""}, new double[]{0, 0, 0});
+                String top = s.suggestions[1];
+                double score = s.scores.length > 0 ? s.scores[1] : 0;
+
+                // Read fresh prefs
+                prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+                defaultAutocor = prefs.getBoolean("autocorToggle", true);
+
+                // If we should auto‑replace:
+                if (defaultAutocor && score >= AUTO_REPLACE_THRESHOLD && !top.isEmpty()) {
+                    // Delete old lastWord + any trailing spaces
+                    int toDelete = lastWord.length();
+                    ic.deleteSurroundingText(toDelete, 0);
+                    ic.commitText(top + " ", 1); // Commit our suggestion + a space
+                    showSuggestions(""); // Clear UI
+                    return;
+                } else if (primaryCode == 32) {
+                    // Fallback: just insert space and show suggestions for the old word
+                    ic.commitText(" ", 1);
+                    showSuggestions(lastWord);
+
+                    // Auto-cap if punctuation (e.g., after ". ")
+                    if (shouldAutoCap() && defaultCaps) {
+                        caps_state = 1;
+                        applyCapsState();
+                    }
+                    return;
                 }
                 break;
+            }
             default:
                 commitChar(ic, primaryCode);
         }
@@ -323,31 +363,47 @@ public class CustomKeyboardApp extends InputMethodService
         showSuggestions(last_word);
     }
 
-    private void showSuggestions(String og) {
+    private void showSuggestions(String prefix) {
         ensureNative();
         suggestionBar.setVisibility(View.VISIBLE);
 
-        final String[] choices;
-        if (nativeLoaded && !og.isEmpty()) {
-            choices = nativeSuggest(og);
-        } else {
-            choices = new String[] {"", "", ""};
-        }
+        Suggestion s = nativeLoaded && !prefix.isEmpty()
+                ? nativeSuggest(prefix)
+                : new Suggestion(new String[]{"", "", ""}, new double[]{0,0,0});
+
+        String[] words  = s.suggestions;
+        double[] scores = s.scores;
+        SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+        defaultAutocor = prefs.getBoolean("autocorToggle", true);
 
         for (int i = 0; i < 3; i++) {
-            final String suggestion = choices[i];
+            final String word  = words[i];
+            final double score = (i < scores.length ? scores[i] : 0);
+
             TextView tv = (TextView) suggestionBar.getChildAt(i + 1);
-            tv.setText(suggestion);
+            tv.setText(word);
+
+            // bold if score >= threshold
+            tv.setTypeface(null, score >= AUTO_REPLACE_THRESHOLD && defaultAutocor ? Typeface.BOLD : Typeface.NORMAL);
+
             tv.setOnClickListener(v -> {
-                replaceCurrentWord(suggestion);
+                replaceCurrentWord(word);
                 showSuggestions("");
             });
+
+            // if this is the first slot, autocorrect is on, and score high enough → commit immediately
+            if (i == 0 && defaultAutocor && score >= AUTO_REPLACE_THRESHOLD) {
+                replaceCurrentWord(word);
+                // clear out suggestions
+                suggestionBar.setVisibility(View.GONE);
+                break;
+            }
         }
     }
 
     private void replaceCurrentWord(String suggestion) {
         InputConnection ic = getCurrentInputConnection();
-        if (ic == null) return;
+        if (ic == null || suggestion.equals(" ") || suggestion.equals("")) return;
 
         // Grab up to 50 chars before cursor
         CharSequence beforeCs = ic.getTextBeforeCursor(50, 0);
