@@ -83,7 +83,7 @@ public class CustomKeyboardApp extends InputMethodService
     @Override
     public View onCreateInputView() {
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-        defaultCaps = prefs.getBoolean("default_caps_enabled", false);
+        defaultCaps = prefs.getBoolean("default_caps_enabled", true);
         caps_state  = defaultCaps ? 1 : 0;
 
         root = buildKeyboardView();
@@ -182,6 +182,8 @@ public class CustomKeyboardApp extends InputMethodService
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
 
+        flushPendingKeys();
+
         // Always read latest defaultCaps but don't force caps_state here
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
         defaultCaps = prefs.getBoolean("default_caps_enabled", false);
@@ -258,7 +260,6 @@ public class CustomKeyboardApp extends InputMethodService
                 showSuggestions("");
                 break;
             case 32:  // SPACE
-                flushPendingKeys();
                 ic.commitText(" ", 1);
                 updateSuggestion(ic);
 
@@ -275,7 +276,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     private boolean isChordable(int code) {
         // Letters, digits, or space
-        return Character.isLetterOrDigit((char)code);
+        return code >= 0 && Character.isLetterOrDigit((char)code);
     }
 
     private void flushPendingKeys() {
