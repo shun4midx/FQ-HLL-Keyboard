@@ -85,4 +85,31 @@
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
+
+    <style name="Theme.FQHLLKeyboard.Purple" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/black</item>
+        <item name="keyTextColor">@color/custom_light_purple</item>
+        <item name="keyboardBackgroundColor">@color/custom_purple</item>
+        <item name="keyBorderColor">@color/black</item>
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+    </style>
+
+    <style name="Theme.FQHLLKeyboard.Green" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/black</item>
+        <item name="keyTextColor">@color/custom_light_green</item>
+        <item name="keyboardBackgroundColor">@color/custom_green</item>
+        <item name="keyBorderColor">@color/black</item>
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+    </style>
+
+    <style name="Theme.FQHLLKeyboard.Hammerhead" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/black</item>
+        <item name="keyTextColor">@color/custom_light_blue</item>
+        <item name="keyboardBackgroundColor">@color/custom_hammerhead_blue</item>
+        <item name="keyBorderColor">@color/black</item>
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+    </style>
 </resources>
