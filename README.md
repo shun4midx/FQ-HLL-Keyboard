@@ -14,6 +14,8 @@ Keyboard settings are saved across updates of the app.
 
 You can view the themes in the [themes folder](https://github.com/shun4midx/FQ-HLL-Keyboard/tree/main/themes#readme).
 
+Want a custom theme? Customisable themes may be implemented in the future, but until then you can open an issue to request one.
+
 ## Development usage
 
 setup android studio and link to phone
