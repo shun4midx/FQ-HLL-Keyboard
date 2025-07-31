@@ -13,10 +13,12 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         android:padding="16dp"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
         tools:context=".MainActivity">
 
         <androidx.appcompat.widget.SwitchCompat
@@ -47,9 +49,10 @@
         <TextView
             android:id="@+id/repoLink"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="bottom|center"
-            android:text="@string/repo_link"/>
+            android:text="@string/repo_link"
+            android:translationY="520dp" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
