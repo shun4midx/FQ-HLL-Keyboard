@@ -3,5 +3,5 @@
     <string name="enable_auto_caps">Enable Auto-Capitalization</string>
     <string name="enable_autocor">Enable Autocorrection</string>
     <string name="theme_switcher">Keyboard Theme</string>
-
+    <string name="repo_link"><a href="https://github.com/shun4midx/FQ-HLL-Keyboard">Github Repo</a></string>
 </resources>
