@@ -735,7 +735,7 @@ public class CustomKeyboardApp extends InputMethodService
         symbolKeyboard= new Keyboard(wrap, R.xml.symbols);
         clipKeyboard  = new Keyboard(wrap, R.xml.clipboard);
 
-        if (prefs.getString("keyboard_height", "Medium").equals("Short")) {
+        if (prefs.getString("keyboard_height", "Short").equals("Short")) {
             keyboard = new Keyboard(wrap, R.xml.custom_keypad_short);
         } else if (prefs.getString("keyboard_height", "Medium").equals("Medium")) {
             keyboard = new Keyboard(wrap, R.xml.custom_keypad_medium);

@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         prefs.edit { putString("key_color", savedColor) }
 
         val keyboardHeight: Spinner = findViewById(R.id.height_options)
-        val savedHeight = prefs.getString("keyboard_height", "Medium")
+        val savedHeight = prefs.getString("keyboard_height", "Short")
         prefs.edit { putString("keyboard_height", savedHeight) }
 
         val aa_color = ArrayAdapter(this, R.layout.spinner, themes)
