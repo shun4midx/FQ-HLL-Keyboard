@@ -11,7 +11,18 @@
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+
+        <item name="android:actionBarStyle">@style/FQHLL.ActionBar</item>
+        <item name="actionBarStyle">@style/FQHLL.ActionBar</item>
+    </style>
+
+    <style name="FQHLL.ActionBar" parent="Widget.AppCompat.ActionBar">
+        <item name="background">@color/custom_fqhll_banner_blue</item>
+        <item name="titleTextStyle">@style/FQHLL.ActionBar.TitleText</item>
+    </style>
+
+    <style name="FQHLL.ActionBar.TitleText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/custom_fqhll_logo_purple</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.Black" parent="Theme.FQHLLKeyboard">
