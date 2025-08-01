@@ -6,4 +6,5 @@
     <attr name="keyPopupTextColor"/>
     <attr name="keyPopupBackgroundColor"/>
     <attr name="keyBorderColor"/>
+    <attr name="keyPressedColor"/>
 </resources>
