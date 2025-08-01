@@ -735,7 +735,13 @@ public class CustomKeyboardApp extends InputMethodService
         emojiKeyboard = new Keyboard(wrap, R.xml.emojis);
         symbolKeyboard= new Keyboard(wrap, R.xml.symbols);
         clipKeyboard  = new Keyboard(wrap, R.xml.clipboard);
-        editorKeyboard= new Keyboard(wrap, R.xml.editor);
+
+        if (!prefs.getBoolean("gridToggle", false)) {
+            editorKeyboard = new Keyboard(wrap, R.xml.editor_maximize);
+        }
+        else {
+            editorKeyboard = new Keyboard(wrap, R.xml.editor_grid);
+        }
 
         // toggle clipboard and normal keyboard
         clipboard.setOnClickListener(v -> {

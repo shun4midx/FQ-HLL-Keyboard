@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         val capsToggle: SwitchCompat = findViewById(R.id.capsToggle)
         val autocorToggle: SwitchCompat = findViewById(R.id.autocorToggle)
+        val gridToggle: SwitchCompat = findViewById(R.id.gridToggle)
         val prefs = getSharedPreferences("keyboard_settings", Context.MODE_PRIVATE)
 
         if (!prefs.contains("capsToggle")) {
@@ -37,12 +38,16 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         if (!prefs.contains("autocorToggle")) {
             prefs.edit().putBoolean("autocorToggle", true).commit()
         }
+        if (!prefs.contains("gridToggle")) {
+            prefs.edit().putBoolean("gridToggle", true).commit()
+        }
 
         prefs.edit { putString("clipboard_text_1", "werwwqeriuyowiyueoqroiyuweqryuiowqeryuiowqeryuioer") }
 
         // Load saved toggle state
         capsToggle.isChecked = prefs.getBoolean("capsToggle", true)
         autocorToggle.isChecked = prefs.getBoolean("autocorToggle", true)
+        gridToggle.isChecked = prefs.getBoolean("gridToggle", false)
 
         // Save toggle changes
         capsToggle.setOnCheckedChangeListener { _, isChecked ->
@@ -50,6 +55,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
         autocorToggle.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit(commit = true) { putBoolean("autocorToggle", isChecked) }
+        }
+        gridToggle.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit(commit = true) { putBoolean("gridToggle", isChecked) }
         }
 
         val keyBackgroundColor: Spinner = findViewById(R.id.spinner_options)

@@ -35,6 +35,13 @@
             android:checked="true"
             android:text="@string/enable_autocor" />
 
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/gridToggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="@string/enable_editor_grid" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
