@@ -48,10 +48,21 @@
             android:text="@string/theme_switcher" />
 
         <Spinner
-            android:id="@+id/spinner_options"
+            android:id="@+id/color_options"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:spinnerMode="dialog" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/height_switcher" />
+
+        <Spinner
+            android:id="@+id/height_options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown" />
     </LinearLayout>
 
     <TextView

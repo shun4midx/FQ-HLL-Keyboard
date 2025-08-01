@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private lateinit var binding: ActivityMainBinding
 
     private var themes = arrayOf("Unselected", "Shun", "Ducky", "Cabbage", "Black", "DarkBlue", "Hammerhead", "Stargaze", "CottonCandy", "Yellow", "Teal", "Purple", "Green", "Cyan")
+    private var keyboardHeights = arrayOf("Unselected", "Short", "Medium", "Tall")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,16 +61,31 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             prefs.edit(commit = true) { putBoolean("gridToggle", isChecked) }
         }
 
-        val keyBackgroundColor: Spinner = findViewById(R.id.spinner_options)
+        val keyBackgroundColor: Spinner = findViewById(R.id.color_options)
         val savedColor = prefs.getString("key_color", "Shun")
         prefs.edit { putString("key_color", savedColor) }
 
-        // the dropdown
-        val aa = ArrayAdapter(this, R.layout.spinner, themes)
-        aa.setDropDownViewResource(R.layout.spinner)
+        val keyboardHeight: Spinner = findViewById(R.id.height_options)
+        val savedHeight = prefs.getString("keyboard_height", "Medium")
+        prefs.edit { putString("keyboard_height", savedHeight) }
 
+        val aa_color = ArrayAdapter(this, R.layout.spinner, themes)
+        aa_color.setDropDownViewResource(R.layout.spinner)
+
+        val aa_height = ArrayAdapter(this, R.layout.spinner, keyboardHeights)
+        aa_height.setDropDownViewResource(R.layout.spinner)
+
+        // the color dropdown
         with(keyBackgroundColor) {
-            adapter = aa
+            adapter = aa_color
+            setSelection(0, false)
+            onItemSelectedListener = this@MainActivity
+            setPopupBackgroundResource(R.color.custom_fqhll_banner_blue)
+        }
+
+        // the height dropdown
+        with(keyboardHeight) {
+            adapter = aa_height
             setSelection(0, false)
             onItemSelectedListener = this@MainActivity
             setPopupBackgroundResource(R.color.custom_fqhll_banner_blue)
@@ -78,10 +94,26 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val prefs = getSharedPreferences("keyboard_settings", Context.MODE_PRIVATE)
-        val selectedColor = themes[position] // Get the selected color
-        if (!selectedColor.equals("Unselected")) {
-            prefs.edit { putString("key_color", selectedColor) } // Save the selected color
-            showToast(message = "Selected theme: $selectedColor")
+        if (parent != null) {
+            when (parent.id) {
+
+                R.id.color_options -> {
+                    val selectedColor = themes[position] // Get the selected color
+                    if (!selectedColor.equals("Unselected")) {
+                        prefs.edit { putString("key_color", selectedColor) } // Save the selected color
+                        showToast(message = "Selected theme: $selectedColor")
+                    }
+                }
+
+                R.id.height_options -> {
+                    val selectedHeight = keyboardHeights[position]
+                    if (!selectedHeight.equals("Unselected")) {
+                        prefs.edit { putString("keyboard_height", selectedHeight) }
+                        showToast(message = "Selected height: $selectedHeight")
+                    }
+                }
+
+            }
         }
     }
 

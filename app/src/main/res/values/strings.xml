@@ -4,6 +4,7 @@
     <string name="enable_autocor">Enable Autocorrection</string>
     <string name="enable_editor_grid">Use text editor grid mode</string>
     <string name="theme_switcher">Keyboard Theme</string>
+    <string name="height_switcher">Keyboard Height</string>
     <string name="repo_link"><a href="https://github.com/shun4midx/FQ-HLL-Keyboard">FQ-HLL Keyboard</a> made by <a href="https://github.com/shun4midx">Shun</a> and <a href="https://github.com/ducky4life">Ducky</a></string>
     <string name="copyright_notice">Made with horrible Kotlin skills and Java coffee cups | © 2025 Shun and Ducky</string>
 </resources>
