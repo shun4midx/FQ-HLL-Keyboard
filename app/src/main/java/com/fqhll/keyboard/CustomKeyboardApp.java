@@ -505,6 +505,11 @@ public class CustomKeyboardApp extends InputMethodService
                 String clipboard_prefs = "clipboard_text_" + clipboard_pref_code;
                 String clipboard_text = prefs.getString(clipboard_prefs, "");
 
+                int truncate_length = 20;
+                if (clipboard_text.length() > truncate_length) {
+                    clipboard_text = clipboard_text.substring(0, truncate_length) + "...";
+                }
+
                 if (key.codes[0] == clipboard_keycode) {
                     key.label = clipboard_text;
                     break;

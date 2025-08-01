@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             prefs.edit().putBoolean("autocorToggle", true).commit()
         }
 
-        prefs.edit { putString("clipboard_text_1", "werwer") }
+        prefs.edit { putString("clipboard_text_1", "werwwqeriuyowiyueoqroiyuweqryuiowqeryuiowqeryuioer") }
 
         // Load saved toggle state
         capsToggle.isChecked = prefs.getBoolean("capsToggle", true)
