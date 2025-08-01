@@ -13,9 +13,9 @@
     </Row>
 
     <Row>
-        <Key android:codes="-42" android:keyLabel="left" android:keyHeight="141dp" android:keyEdgeFlags="left"/>
+        <Key android:codes="-42" android:keyLabel="left" android:keyHeight="@dimen/maximize_key_height" android:keyEdgeFlags="left"/>
         <Key android:codes="-62" android:keyLabel="up"/>
-        <Key android:codes="-52" android:keyLabel="right" android:keyHeight="141dp"/>
+        <Key android:codes="-52" android:keyLabel="right" android:keyHeight="@dimen/maximize_key_height"/>
         <Key android:codes="-69" android:keyLabel="copy" android:keyEdgeFlags="right"/>
     </Row>
 
