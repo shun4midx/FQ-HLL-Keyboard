@@ -30,6 +30,7 @@ import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.text.BreakIterator;
 
 public class CustomKeyboardApp extends InputMethodService
         implements KeyboardView.OnKeyboardActionListener, SharedPreferences.OnSharedPreferenceChangeListener {
@@ -72,6 +73,9 @@ public class CustomKeyboardApp extends InputMethodService
 
     private static final double AUTO_REPLACE_THRESHOLD = 0.6;
     private boolean defaultAutocor = true;
+
+    private static final int LOOKBACK = 64;
+    private final BreakIterator graphemeIter = BreakIterator.getCharacterInstance();
 
     private void ensureNative() {
         if (!nativeLoaded) {
@@ -201,10 +205,6 @@ public class CustomKeyboardApp extends InputMethodService
 
         flushPendingKeys();
 
-        // Always read latest defaultCaps but don't force caps_state here
-        SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-        defaultCaps = prefs.getBoolean("default_caps_enabled", true);
-
         if (defaultCaps && isAtLineStart() && caps_state == 1) {
             applyCapsState();
         }
@@ -218,9 +218,8 @@ public class CustomKeyboardApp extends InputMethodService
                     ic.commitText("", 1);
                     adjustCapsAfterDeletion();
                 } else {
-                    // No selection, fall back to single‐char delete
-                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DEL));
-                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DEL));
+                    handleDelete();
+                    updateSuggestion(getCurrentInputConnection());
                     adjustCapsAfterDeletion();
                 }
                 updateSuggestion(ic);
@@ -296,10 +295,6 @@ public class CustomKeyboardApp extends InputMethodService
                 String top = s.suggestions[1];
                 double score = s.scores.length > 0 ? s.scores[1] : 0;
 
-                // Read fresh prefs
-                prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-                defaultAutocor = prefs.getBoolean("autocorToggle", true);
-
                 // If we should auto‑replace:
                 if (defaultAutocor && score >= AUTO_REPLACE_THRESHOLD && !top.isEmpty()) {
                     // Delete old lastWord + any trailing spaces
@@ -320,6 +315,25 @@ public class CustomKeyboardApp extends InputMethodService
                 }
             }
         }
+    }
+
+    private void handleDelete() {
+        InputConnection ic = getCurrentInputConnection();
+        if (ic == null) return;
+
+        // Grab up to LOOKBACK code units before the cursor
+        CharSequence beforeCs = ic.getTextBeforeCursor(LOOKBACK, 0);
+        if (beforeCs == null || beforeCs.length() == 0) return;
+        String before = beforeCs.toString();
+
+        // Compute last grapheme boundary
+        graphemeIter.setText(before);
+        int cursor = before.length();
+        int prev = graphemeIter.preceding(cursor);
+        if (prev == BreakIterator.DONE) prev = 0;
+        int unitsToDelete = cursor - prev;
+
+        ic.deleteSurroundingText(unitsToDelete, 0);
     }
 
     private boolean isAlphabet(int primaryCode) {
@@ -385,7 +399,6 @@ public class CustomKeyboardApp extends InputMethodService
 
         String[] words  = s.suggestions;
         double[] scores = s.scores;
-        SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
 
         for (int i = 0; i < 3; i++) {
             final String word  = words[i];
