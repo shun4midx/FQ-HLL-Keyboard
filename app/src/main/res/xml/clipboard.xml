@@ -2,7 +2,7 @@
     android:keyWidth="50%p"
     android:horizontalGap="0px"
     android:verticalGap="3dp"
-    android:keyHeight="45dp"
+    android:keyHeight="@dimen/key_height"
     >
 
     <Row>
