@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             prefs.edit().putBoolean("autocorToggle", true).commit()
         }
         if (!prefs.contains("gridToggle")) {
-            prefs.edit().putBoolean("gridToggle", true).commit()
+            prefs.edit().putBoolean("gridToggle", false).commit()
         }
 
         prefs.edit { putString("clipboard_text_1", "werwwqeriuyowiyueoqroiyuweqryuiowqeryuiowqeryuioer") }
