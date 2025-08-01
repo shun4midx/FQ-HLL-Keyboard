@@ -697,7 +697,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        if (!"key_color".equals(key) && !"gridToggle".equals(key)) {
+        if (!"key_color".equals(key) && !"gridToggle".equals(key) && !"keyboard_height".equals(key)) {
             return;
         }
         View newRoot = buildKeyboardView();
@@ -731,10 +731,17 @@ public class CustomKeyboardApp extends InputMethodService
         View clipboard = root.findViewById(R.id.btn_clipboard);
         View textEditor = root.findViewById(R.id.btn_editor);
 
-        keyboard      = new Keyboard(wrap, R.xml.custom_keypad);
         emojiKeyboard = new Keyboard(wrap, R.xml.emojis);
         symbolKeyboard= new Keyboard(wrap, R.xml.symbols);
         clipKeyboard  = new Keyboard(wrap, R.xml.clipboard);
+
+        if (prefs.getString("keyboard_height", "Medium").equals("Short")) {
+            keyboard = new Keyboard(wrap, R.xml.custom_keypad_short);
+        } else if (prefs.getString("keyboard_height", "Medium").equals("Medium")) {
+            keyboard = new Keyboard(wrap, R.xml.custom_keypad_medium);
+        } else {
+            keyboard = new Keyboard(wrap, R.xml.custom_keypad_tall);
+        }
 
         if (!prefs.getBoolean("gridToggle", false)) {
             editorKeyboard = new Keyboard(wrap, R.xml.editor_maximize);
