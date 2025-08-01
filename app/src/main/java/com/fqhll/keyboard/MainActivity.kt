@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val capsToggle: SwitchCompat = findViewById(R.id.capsToggle)
         val autocorToggle: SwitchCompat = findViewById(R.id.autocorToggle)
         val prefs = getSharedPreferences("keyboard_settings", Context.MODE_PRIVATE)
+        prefs.edit { putString("clipboard_text_1", "werwer") }
 
         // Load saved toggle state
         capsToggle.isChecked = prefs.getBoolean("default_caps_enabled", true)

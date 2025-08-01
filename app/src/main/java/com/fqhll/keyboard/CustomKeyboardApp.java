@@ -39,6 +39,7 @@ public class CustomKeyboardApp extends InputMethodService
     private Keyboard keyboard;
     private Keyboard emojiKeyboard;
     private Keyboard symbolKeyboard;
+    private Keyboard clipKeyboard;
 
     private PopupWindow keyPreviewPopup;
     private TextView previewText;
@@ -281,6 +282,19 @@ public class CustomKeyboardApp extends InputMethodService
                     break;
                 }
 
+                // if clipboard button, commit text in clipboard
+                else if (-99 <= primaryCode && primaryCode <= -90) {
+                    int clipboardCode = primaryCode + 90;
+                    clipboardCode = -clipboardCode; // get code without -9 in front
+                    clipboardCode = clipboardCode + 1; // since codes start from 0 but clipboard start from 1
+
+                    SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+                    String clipboardPref = "clipboard_text_" + clipboardCode;
+                    String clipboardText = prefs.getString(clipboardPref, "");
+                    ic.commitText(clipboardText, 1);
+                    break;
+                }
+
                 // Figure out the last word before space
                 CharSequence beforeCs = ic.getTextBeforeCursor(50, 0);
                 String raw = (beforeCs == null ? "" : beforeCs.toString());
@@ -478,6 +492,27 @@ public class CustomKeyboardApp extends InputMethodService
         }
     }
 
+    private void updateClipboardLabel() {
+        for (Keyboard.Key key : clipKeyboard.getKeys()) {
+            SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+
+            for (int i = 0; i < 10; i++) {
+                int clipboard_keycode = 90 + i;
+                clipboard_keycode = -clipboard_keycode; // just add the negative sign for negative keycode
+
+                int clipboard_pref_code = i + 1;
+
+                String clipboard_prefs = "clipboard_text_" + clipboard_pref_code;
+                String clipboard_text = prefs.getString(clipboard_prefs, "");
+
+                if (key.codes[0] == clipboard_keycode) {
+                    key.label = clipboard_text;
+                    break;
+                }
+            }
+        }
+    }
+
     private boolean shouldAutoCap() {
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return false;
@@ -665,9 +700,23 @@ public class CustomKeyboardApp extends InputMethodService
 
         // 3) (Exactly as before) wire up your KeyboardView + pop‑up machinery
         kv = root.findViewById(R.id.keyboard_view);
+        View clipboard = root.findViewById(R.id.btn_clipboard);
+
         keyboard      = new Keyboard(wrap, R.xml.custom_keypad);
         emojiKeyboard = new Keyboard(wrap, R.xml.emojis);
         symbolKeyboard= new Keyboard(wrap, R.xml.symbols);
+        clipKeyboard  = new Keyboard(wrap, R.xml.clipboard);
+
+        // toggle clipboard and normal keyboard
+        clipboard.setOnClickListener(v -> {
+            if (kv.getKeyboard() == keyboard) {
+                kv.setKeyboard(clipKeyboard);
+            }
+            else {
+                kv.setKeyboard(keyboard);
+            }
+            kv.invalidateAllKeys();
+        });
 
         kv.setKeyboard(keyboard);
         kv.setOnKeyboardActionListener(this);
@@ -702,6 +751,7 @@ public class CustomKeyboardApp extends InputMethodService
 
         updateCapsLabel();
         updateEmojiLabel();
+        updateClipboardLabel();
         ensureNative();
         suggestionBar = root.findViewById(R.id.suggestion_bar_container);
 

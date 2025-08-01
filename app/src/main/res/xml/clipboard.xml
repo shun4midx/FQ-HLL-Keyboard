@@ -1,0 +1,32 @@
+<Keyboard xmlns:android="http://schemas.android.com/apk/res/android"
+    android:keyWidth="50%p"
+    android:horizontalGap="0px"
+    android:verticalGap="3dp"
+    android:keyHeight="45dp"
+    >
+
+    <Row>
+        <Key android:codes="-90" android:keyLabel="2" android:keyEdgeFlags="left"/>
+        <Key android:codes="-91" android:keyLabel="0" android:keyEdgeFlags="right"/>
+    </Row>
+
+    <Row>
+        <Key android:codes="-92" android:keyLabel="2" android:keyEdgeFlags="left"/>
+        <Key android:codes="-93" android:keyLabel="0" android:keyEdgeFlags="right"/>
+    </Row>
+
+    <Row>
+        <Key android:codes="-94" android:keyLabel="2" android:keyEdgeFlags="left"/>
+        <Key android:codes="-95" android:keyLabel="0" android:keyEdgeFlags="right"/>
+    </Row>
+
+    <Row>
+        <Key android:codes="-96" android:keyLabel="2" android:keyEdgeFlags="left"/>
+        <Key android:codes="-97" android:keyLabel="0" android:keyEdgeFlags="right"/>
+    </Row>
+
+    <Row android:rowEdgeFlags="bottom">
+        <Key android:codes="-98" android:keyLabel="2" android:keyEdgeFlags="left"/>
+        <Key android:codes="-99" android:keyLabel="0" android:keyEdgeFlags="right"/>
+    </Row>
+</Keyboard>
