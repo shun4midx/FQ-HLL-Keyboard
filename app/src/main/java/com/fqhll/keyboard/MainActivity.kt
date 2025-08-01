@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             adapter = aa_height
             setSelection(0, false)
             onItemSelectedListener = this@MainActivity
-            setPopupBackgroundResource(R.color.custom_fqhll_banner_blue)
+            setPopupBackgroundResource(R.color.shun_blue)
         }
     }
 
