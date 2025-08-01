@@ -107,6 +107,8 @@ public class CustomKeyboardApp extends InputMethodService
     public void onPress(int primaryCode) {
         if (NO_POPUP.contains(primaryCode)) return;
 
+        if (-99 <= primaryCode && primaryCode <= -90) return; // clipboard
+
         // 1) Un‑scale into keyboard coords (you already have scaleX/scaleY set up)
         int kx = (int)((lastTouchX - kv.getPaddingLeft()) / scaleX);
         int ky = (int)((lastTouchY - kv.getPaddingTop())  / scaleY);
