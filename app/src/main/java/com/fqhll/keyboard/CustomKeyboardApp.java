@@ -697,7 +697,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        if (!"key_color".equals(key)) {
+        if (!"key_color".equals(key) && !"gridToggle".equals(key)) {
             return;
         }
         View newRoot = buildKeyboardView();
