@@ -30,18 +30,26 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val capsToggle: SwitchCompat = findViewById(R.id.capsToggle)
         val autocorToggle: SwitchCompat = findViewById(R.id.autocorToggle)
         val prefs = getSharedPreferences("keyboard_settings", Context.MODE_PRIVATE)
+
+        if (!prefs.contains("capsToggle")) {
+            prefs.edit().putBoolean("capsToggle", true).commit()
+        }
+        if (!prefs.contains("autocorToggle")) {
+            prefs.edit().putBoolean("autocorToggle", true).commit()
+        }
+
         prefs.edit { putString("clipboard_text_1", "werwer") }
 
         // Load saved toggle state
-        capsToggle.isChecked = prefs.getBoolean("default_caps_enabled", true)
+        capsToggle.isChecked = prefs.getBoolean("capsToggle", true)
         autocorToggle.isChecked = prefs.getBoolean("autocorToggle", true)
 
         // Save toggle changes
         capsToggle.setOnCheckedChangeListener { _, isChecked ->
-            prefs.edit { putBoolean("default_caps_enabled", isChecked) }
+            prefs.edit(commit = true) { putBoolean("capsToggle", isChecked) }
         }
         autocorToggle.setOnCheckedChangeListener { _, isChecked ->
-            prefs.edit { putBoolean("autocorToggle", isChecked) }
+            prefs.edit(commit = true) { putBoolean("autocorToggle", isChecked) }
         }
 
         val keyBackgroundColor: Spinner = findViewById(R.id.spinner_options)

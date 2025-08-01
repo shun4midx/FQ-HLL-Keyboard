@@ -94,9 +94,9 @@ public class CustomKeyboardApp extends InputMethodService
     @Override
     public View onCreateInputView() {
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-        defaultCaps = prefs.getBoolean("default_caps_enabled", true);
+        defaultCaps = prefs.getBoolean("capsToggle", true);
         defaultAutocor = prefs.getBoolean("autocorToggle", true);
-        caps_state  = defaultCaps ? 1 : 0;
+        caps_state = defaultCaps ? 1 : 0;
 
         root = buildKeyboardView();
         applyCapsState();
@@ -661,6 +661,10 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onStartInputView(EditorInfo info, boolean restarting) {
+        SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+        defaultCaps = prefs.getBoolean("capsToggle", true);
+        defaultAutocor = prefs.getBoolean("autocorToggle", true);
+
         kv.setKeyboard(keyboard);
         showSuggestions("");
         caps_state = (defaultCaps && shouldAutoCap()) ? 1 : 0;

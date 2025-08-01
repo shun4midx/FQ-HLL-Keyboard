@@ -45,22 +45,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:spinnerMode="dialog" />
-
-        <TextView
-            android:id="@+id/repoLink"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="bottom|center"
-            android:text="@string/repo_link"
-            android:translationY="520dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="bottom|center"
-            android:text="@string/copyright_notice"
-            android:textSize="10sp"
-            android:translationY="525dp" />
-
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/repoLink"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom|center"
+        android:text="@string/repo_link"
+        app:layout_constraintBottom_toTopOf="@id/copyrightNotice"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+        android:id="@+id/copyrightNotice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom|center"
+        android:text="@string/copyright_notice"
+        android:textSize="10sp"
+        android:layout_marginBottom="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
