@@ -22,7 +22,9 @@ Want a custom theme? Customisable themes may be implemented in the future, but u
 - emoji/symbol support
 - coyote-time-like handling of simutaneous key presses
 - autocorrect/autocapitalization toggle
-- lots of themes and customisability (key colour, key text colour, key pressed colour, key border colour, keyboard background colour)
+- lots of themes and theme customisability (key colour, key text colour, key pressed colour, key border colour, keyboard background colour)
+- height customisation (short, medium, tall)
+- text editor mode customisation (maximize, grid)
 
 ## Development usage
 
