@@ -31,6 +31,8 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
                                                  {"Id", "I'd"},
                                                  {"isnt", "isn't"},
                                                  {"Isnt", "Isn't"},
+                                                 {"wasnt", "wasn't"},
+                                                 {"Wasnt", "Wasn't"},
                                                  {"arent", "aren't"},
                                                  {"Arent", "Aren't"},
                                                  {"ill", "I'll"},

@@ -171,6 +171,16 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
+        Map<Integer,String> emojis = getEmojiCodes();
+
+        if (emojis.containsKey(primaryCode)) {
+            InputConnection ic = getCurrentInputConnection();
+            if (ic != null) {
+                ic.commitText(emojis.get(primaryCode), 1);
+            }
+            return;
+        }
+
         if (isChordable(primaryCode)) {
             synchronized (pendingKeys) {
                 pendingKeys.add(primaryCode);
@@ -459,8 +469,21 @@ public class CustomKeyboardApp extends InputMethodService
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return false;
 
+        // If there is no character before the cursor, we're at the very start, auto-cap
+        CharSequence oneBefore = ic.getTextBeforeCursor(1, 0);
+        if (oneBefore == null || oneBefore.length() == 0) {
+            return true;
+        }
+
+        // If the character immediately before is a newline, auto-cap
+        if (oneBefore.charAt(oneBefore.length() - 1) == '\n') {
+            return true;
+        }
+
         CharSequence beforeText = ic.getTextBeforeCursor(4, 0); // Check last 4 chars
-        if (beforeText == null || beforeText.length() < 2) return false;
+        if (beforeText == null) return true;
+
+        if (beforeText.length() < 2) return false;
 
         String lastText = beforeText.toString();
 
@@ -512,35 +535,10 @@ public class CustomKeyboardApp extends InputMethodService
         CharSequence text = ic.getExtractedText(new ExtractedTextRequest(), 0).text;
         if (text == null) return;
 
-        // Case 1: Empty field (new message)
-        if (text.length() == 0) {
-            if (defaultCaps) {
-                caps_state = 1; // Auto-cap new message
-            } else {
-                caps_state = 0;
-            }
-            applyCapsState();
-            return;
-        }
-
-        // Case 2: Cursor at start of line or after newline
-        CharSequence before = ic.getTextBeforeCursor(1, 0);
-        if (before != null && (before.length() == 0 || before.charAt(0) == '\n')) {
-            if (caps_state != 2) {
-                if (defaultCaps) {
-                    caps_state = 1;
-                } else {
-                    caps_state = 0;
-                }
-            }
-        }
-
-        // Case 3: Check if deletion leads to beginning of line
-        CharSequence prevChar = ic.getTextBeforeCursor(2, 0);
-        if (prevChar != null && prevChar.length() >= 1 && prevChar.charAt(prevChar.length() - 1) == '\n') {
-            if (defaultCaps) {
-                caps_state = 1; // Capitalize again after deleting to new line start
-            }
+        if (defaultCaps && shouldAutoCap()) {
+            caps_state = 1;
+        } else if (caps_state != 2) {
+            caps_state = 0;
         }
 
         applyCapsState();
@@ -617,7 +615,7 @@ public class CustomKeyboardApp extends InputMethodService
     public void onStartInputView(EditorInfo info, boolean restarting) {
         kv.setKeyboard(keyboard);
         showSuggestions("");
-        caps_state = defaultCaps ? 1 : 0;
+        caps_state = (defaultCaps && shouldAutoCap()) ? 1 : 0;
         applyCapsState();  // Just updates the shift key appearance
     }
 
