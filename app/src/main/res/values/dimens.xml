@@ -1,3 +1,4 @@
 <resources>
     <dimen name="key_height">45dp</dimen>
+    <dimen name="maximize_key_height">141dp</dimen>
 </resources>
