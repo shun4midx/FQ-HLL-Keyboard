@@ -40,6 +40,7 @@ public class CustomKeyboardApp extends InputMethodService
     private Keyboard emojiKeyboard;
     private Keyboard symbolKeyboard;
     private Keyboard clipKeyboard;
+    private Keyboard editorKeyboard;
 
     private PopupWindow keyPreviewPopup;
     private TextView previewText;
@@ -264,6 +265,22 @@ public class CustomKeyboardApp extends InputMethodService
                 if (after != null && after.length() > 0) {
                     ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT));
                     ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT));
+                    showSuggestions("");
+                }
+                return;
+            case -62: // up arrow
+                CharSequence before2 = ic.getTextBeforeCursor(1, 0);
+                if (before2 != null && before2.length() > 0) {
+                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP));
+                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_UP));
+                    showSuggestions("");
+                }
+                return;
+            case -64: // down arrow
+                CharSequence after2 = ic.getTextAfterCursor(1, 0);
+                if (after2 != null && after2.length() > 0) {
+                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN));
+                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN));
                     showSuggestions("");
                 }
                 return;
@@ -712,16 +729,29 @@ public class CustomKeyboardApp extends InputMethodService
         // 3) (Exactly as before) wire up your KeyboardView + pop‑up machinery
         kv = root.findViewById(R.id.keyboard_view);
         View clipboard = root.findViewById(R.id.btn_clipboard);
+        View textEditor = root.findViewById(R.id.btn_editor);
 
         keyboard      = new Keyboard(wrap, R.xml.custom_keypad);
         emojiKeyboard = new Keyboard(wrap, R.xml.emojis);
         symbolKeyboard= new Keyboard(wrap, R.xml.symbols);
         clipKeyboard  = new Keyboard(wrap, R.xml.clipboard);
+        editorKeyboard= new Keyboard(wrap, R.xml.editor);
 
         // toggle clipboard and normal keyboard
         clipboard.setOnClickListener(v -> {
             if (kv.getKeyboard() == keyboard) {
                 kv.setKeyboard(clipKeyboard);
+            }
+            else {
+                kv.setKeyboard(keyboard);
+            }
+            kv.invalidateAllKeys();
+        });
+
+        // toggle text editor and normal keyboard
+        textEditor.setOnClickListener(v -> {
+            if (kv.getKeyboard() == keyboard) {
+                kv.setKeyboard(editorKeyboard);
             }
             else {
                 kv.setKeyboard(keyboard);
