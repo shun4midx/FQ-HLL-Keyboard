@@ -109,6 +109,7 @@ public class CustomKeyboardApp extends InputMethodService
         if (NO_POPUP.contains(primaryCode)) return;
 
         if (-99 <= primaryCode && primaryCode <= -90) return; // clipboard
+        if (-79 <= primaryCode && primaryCode <= -60) return; // text editor
 
         // 1) Un‑scale into keyboard coords (you already have scaleX/scaleY set up)
         int kx = (int)((lastTouchX - kv.getPaddingLeft()) / scaleX);
@@ -284,6 +285,12 @@ public class CustomKeyboardApp extends InputMethodService
                     showSuggestions("");
                 }
                 return;
+            case -69: // copy
+                CharSequence copyText = ic.getSelectedText(0);
+                if (copyText != null) {
+                    copyToClipboard(copyText.toString());
+                }
+                break;
             case Keyboard.KEYCODE_DONE:
                 EditorInfo editorInfo = getCurrentInputEditorInfo();
                 if (editorInfo != null && (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) != 0) {
@@ -697,7 +704,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        if (!"key_color".equals(key) && !"gridToggle".equals(key) && !"keyboard_height".equals(key)) {
+        if (!"key_color".equals(key) && !"gridToggle".equals(key) && !"keyboard_height".equals(key) && !key.startsWith("clipboard") && !"clipboard_text_2".equals(key)) {
             return;
         }
         View newRoot = buildKeyboardView();
@@ -810,6 +817,38 @@ public class CustomKeyboardApp extends InputMethodService
         suggestionBar = root.findViewById(R.id.suggestion_bar_container);
 
         return root;
+    }
+
+    private void moveClipboardContent(int i) {
+        SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+        for (int j = i-1; j > 0; j--) {
+            String prev_pref = "clipboard_text_" + j;
+            String curr_pref = "clipboard_text_" + (j+1);
+            String prev_text = prefs.getString(prev_pref, "none");
+            prefs.edit().putString(curr_pref, prev_text).apply();
+        }
+    }
+
+    private void copyToClipboard(String text) {
+        SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+
+        // slot names start from 1, ends at 10
+        for (int i = 1; i < 11; i++) {
+            String clipboard_pref = "clipboard_text_" + i;
+            String clipboard_text = prefs.getString(clipboard_pref, "nothing here in this FQ-HLL clipboard slot"); // not naturally occurring def value
+
+            // if theres an empty slot, move everything below 1 slot then copy to first
+            if (clipboard_text.equals("nothing here in this FQ-HLL clipboard slot")) {
+
+                moveClipboardContent(i);
+                prefs.edit().putString("clipboard_text_1", text).apply();
+                return;
+            }
+        }
+
+        // if no empty slots, copy the top 9 slots down, then copy to first
+        moveClipboardContent(9);
+        prefs.edit().putString("clipboard_text_1", text).apply();
     }
 
     @Override
