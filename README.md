@@ -14,7 +14,15 @@ Keyboard settings are saved across updates of the app.
 
 You can view the themes in the [themes folder](https://github.com/shun4midx/FQ-HLL-Keyboard/tree/main/themes#readme).
 
-Want a custom theme? Customisable themes may be implemented in the future, but until then you can open an issue to request one.
+Want a custom theme? Customisable themes may be implemented in the future, but until then you can open an issue to request one. Please include hex codes of key colour, key text colour, key pressed colour, key border colour, and keyboard background colour
+
+## Features
+
+- FQ-HLL autocorrect algorithm
+- emoji/symbol support
+- coyote-time-like handling of simutaneous key presses
+- autocorrect/autocapitalization toggle
+- lots of themes and customisability (key colour, key text colour, key pressed colour, key border colour, keyboard background colour)
 
 ## Development usage
 
