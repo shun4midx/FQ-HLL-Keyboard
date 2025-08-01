@@ -51,6 +51,8 @@ public class CustomKeyboardApp extends InputMethodService
     private static final Set<Integer> NO_POPUP = new HashSet<>(Arrays.asList(32, -1, -5, -10, -2, -4));
     private static final Set<String> CAPITALIZE_ENDS = new HashSet<>(Arrays.asList(". ", "! ", "? "));
 
+    private static final Set<Character> LETTERS = new HashSet<>(Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'));
+
     private float scaleX, scaleY;
     private int lastTouchX, lastTouchY;
 
@@ -264,11 +266,12 @@ public class CustomKeyboardApp extends InputMethodService
                 resetCaps();
                 showSuggestions("");
                 break;
-            case 32: // SPACE
-            case 46:   // '.'
-            case 44:   // ','
-            case 63:   // '?'
-            case 33: { // '!'
+            default: {
+                if (isAlphabet(primaryCode)) {
+                    commitChar(ic, primaryCode);
+                    break;
+                }
+
                 // Figure out the last word before space
                 CharSequence beforeCs = ic.getTextBeforeCursor(50, 0);
                 String raw = (beforeCs == null ? "" : beforeCs.toString());
@@ -292,26 +295,25 @@ public class CustomKeyboardApp extends InputMethodService
                     // Delete old lastWord + any trailing spaces
                     int toDelete = lastWord.length();
                     ic.deleteSurroundingText(toDelete, 0);
-                    ic.commitText(top + " ", 1); // Commit our suggestion + a space
+                    ic.commitText(top + (char) (primaryCode), 1); // Commit our suggestion + a space
                     showSuggestions(""); // Clear UI
-                    return;
-                } else if (primaryCode == 32) {
-                    // Fallback: just insert space and show suggestions for the old word
-                    ic.commitText(" ", 1);
-                    showSuggestions(lastWord);
+                    break;
+                } else {
+                    ic.commitText(Character.toString((char) (primaryCode)), 1);
 
-                    // Auto-cap if punctuation (e.g., after ". ")
-                    if (shouldAutoCap() && defaultCaps) {
+                    // Auto-cap if punctuation (e.g., after ". ") ans space
+                    if (primaryCode == 32 && shouldAutoCap() && defaultCaps) {
                         caps_state = 1;
                         applyCapsState();
                     }
-                    return;
+                    break;
                 }
-                break;
             }
-            default:
-                commitChar(ic, primaryCode);
         }
+    }
+
+    private boolean isAlphabet(int primaryCode) {
+        return LETTERS.contains((char)(primaryCode));
     }
 
     private boolean isChordable(int code) {

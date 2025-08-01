@@ -60,7 +60,19 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
                                                  {"wouldnt", "wouldn't"},
                                                  {"Wouldnt", "Wouldn't"},
                                                  {"didnt", "didn't"},
-                                                 {"Didnt", "Didn't"}};
+                                                 {"Didnt", "Didn't"},
+                                                 {"yall", "y'all"},
+                                                 {"Yall", "Y'all"},
+                                                 {"theyre", "they're"},
+                                                 {"Theyre", "They're"},
+                                                 {"havent", "haven't"},
+                                                 {"Havent", "Haven't"},
+                                                 {"theres", "there's"},
+                                                 {"Theres", "There's"},
+                                                 {"thats", "that's"},
+                                                 {"Thats", "That's"},
+                                                 {"hasnt", "hasn't"},
+                                                 {"Hasnt", "Hasn't"}};
 
     if (key.empty() || key == " ") {
         results = {{" ", " ", " "},
