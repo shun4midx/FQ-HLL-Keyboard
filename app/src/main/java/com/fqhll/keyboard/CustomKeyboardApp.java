@@ -388,7 +388,10 @@ public class CustomKeyboardApp extends InputMethodService
                     SharedPreferences prefs2 = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
                     String clipboardPref = "clipboard_text_" + clipboardCode;
                     String clipboardText = prefs2.getString(clipboardPref, "");
-                    ic.commitText(clipboardText, 1);
+
+                    if (!clipboardText.isEmpty()) {
+                        ic.commitText(clipboardText, 1);
+                    }
                     break;
                 }
 
