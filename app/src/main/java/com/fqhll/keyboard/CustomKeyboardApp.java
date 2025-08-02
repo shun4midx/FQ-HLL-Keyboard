@@ -47,6 +47,7 @@ public class CustomKeyboardApp extends InputMethodService
     private Keyboard symbolKeyboard;
     private Keyboard clipKeyboard;
     private Keyboard editorKeyboard;
+    private Keyboard numpadKeyboard;
 
     private PopupWindow keyPreviewPopup;
     private TextView previewText;
@@ -57,7 +58,7 @@ public class CustomKeyboardApp extends InputMethodService
     private static final int DOUBLE_TAP_TIMEOUT = 300; // Smth like Gboard capping
 
     // Don't show pop-up for SPACE, CAPS (-1), DELETE (-5), Symbols (-10 from symbols page and -2 from main page), or ENTER (-4)
-    private static final Set<Integer> NO_POPUP = new HashSet<>(Arrays.asList(32, -1, -5, -10, -2, -4));
+    private static final Set<Integer> NO_POPUP = new HashSet<>(Arrays.asList(32, -1, -5, -10, -2, -4, -42, -52));
     private static final Set<String> CAPITALIZE_ENDS = new HashSet<>(Arrays.asList(". ", "! ", "? "));
 
     private static final Set<Character> LETTERS = new HashSet<>(Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'));
@@ -285,6 +286,10 @@ public class CustomKeyboardApp extends InputMethodService
                 launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
                 startActivity(launchIntent);
                 break;
+            case -13: // numpad
+                kv.setKeyboard(numpadKeyboard);
+                kv.invalidateAllKeys();
+                break;
             case -42: // Left arrow
                 // Look at the char immediately before the cursor
                 CharSequence before = ic.getTextBeforeCursor(1, 0);
@@ -319,6 +324,19 @@ public class CustomKeyboardApp extends InputMethodService
                     showSuggestions("");
                 }
                 return;
+            case -65: // leftest
+                ic.setSelection(0, 0);
+                break;
+            case -66: // select all
+                CharSequence selectAllText = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0)
+                        .toString() + ic.getTextAfterCursor(Integer.MAX_VALUE, 0).toString();
+                ic.setSelection(0, selectAllText.length());
+                break;
+            case -67: // rightest
+                CharSequence rightestText = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0)
+                        .toString() + ic.getTextAfterCursor(Integer.MAX_VALUE, 0).toString();
+                ic.setSelection(rightestText.length(), rightestText.length());
+                break;
             case -68: // cut
                 CharSequence cutText = ic.getSelectedText(0);
                 if (cutText != null) {
@@ -337,6 +355,8 @@ public class CustomKeyboardApp extends InputMethodService
                 SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
                 String pasteText = prefs.getString("clipboard_text_1", "");
                 ic.commitText(pasteText, 1);
+                break;
+            case -71: // invis key
                 break;
             case Keyboard.KEYCODE_DONE:
                 EditorInfo editorInfo = getCurrentInputEditorInfo();
@@ -788,6 +808,7 @@ public class CustomKeyboardApp extends InputMethodService
         emojiKeyboard = new Keyboard(wrap, R.xml.emojis);
         symbolKeyboard= new Keyboard(wrap, R.xml.symbols);
         clipKeyboard  = new Keyboard(wrap, R.xml.clipboard);
+        numpadKeyboard= new Keyboard(wrap, R.xml.numpad);
 
         if (prefs.getString("keyboard_height", "Short").equals("Short")) {
             keyboard = new Keyboard(wrap, R.xml.custom_keypad_short);
@@ -806,22 +827,22 @@ public class CustomKeyboardApp extends InputMethodService
 
         // toggle clipboard and normal keyboard
         clipboard.setOnClickListener(v -> {
-            if (kv.getKeyboard() == keyboard) {
-                kv.setKeyboard(clipKeyboard);
+            if (kv.getKeyboard() == clipKeyboard) {
+                kv.setKeyboard(keyboard);
             }
             else {
-                kv.setKeyboard(keyboard);
+                kv.setKeyboard(clipKeyboard);
             }
             kv.invalidateAllKeys();
         });
 
         // toggle text editor and normal keyboard
         textEditor.setOnClickListener(v -> {
-            if (kv.getKeyboard() == keyboard) {
-                kv.setKeyboard(editorKeyboard);
+            if (kv.getKeyboard() == editorKeyboard) {
+                kv.setKeyboard(keyboard);
             }
             else {
-                kv.setKeyboard(keyboard);
+                kv.setKeyboard(editorKeyboard);
             }
             kv.invalidateAllKeys();
         });

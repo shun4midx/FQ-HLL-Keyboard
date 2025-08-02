@@ -100,7 +100,7 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [ ] customise symbols
 - [ ] fully customise themes
 - [x] emoji support (emoji page like symbols?)
-- [ ] clipboard
+- [x] clipboard
 - [ ] settings app layout
 - [ ] hold keys for symbols
 - [ ] multiple languages support?
@@ -118,6 +118,12 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [ ] an easy way to add word to dictionary
 - [ ] emoji suggestions in place of predictive text
 - [ ] bypass autocorrected word by long pressing space
+- [ ] numpad
+- [ ] add grid/maximize mode previews to readme
+= [ ] changing non main keyboard height
+- [ ] text editor symbols
+- [ ] fully finish text editor
+- [ ] clipboard being able to access/use android copy key
 
 ## Contact
 

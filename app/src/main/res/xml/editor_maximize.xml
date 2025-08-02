@@ -6,16 +6,16 @@
     >
 
     <Row>
-        <Key android:codes="-60" android:keyLabel="undo" android:keyEdgeFlags="left"/>
-        <Key android:codes="-11" android:keyLabel="emoji"/>
-        <Key android:codes="-61" android:keyLabel="redo"/>
-        <Key android:codes="-68" android:keyLabel="cut" android:keyEdgeFlags="right"/>
+        <Key android:codes="-60" android:keyLabel="↶" android:keyEdgeFlags="left"/>
+        <Key android:codes="-11" android:keyLabel="☻"/>
+        <Key android:codes="-61" android:keyLabel="↷"/>
+        <Key android:codes="-68" android:keyLabel="✄" android:keyEdgeFlags="right"/>
     </Row>
 
     <Row>
-        <Key android:codes="-42" android:keyLabel="left" android:keyHeight="@dimen/maximize_key_height" android:keyEdgeFlags="left"/>
-        <Key android:codes="-62" android:keyLabel="up"/>
-        <Key android:codes="-52" android:keyLabel="right" android:keyHeight="@dimen/maximize_key_height"/>
+        <Key android:codes="-42" android:keyLabel="˂" android:keyHeight="@dimen/maximize_key_height" android:keyEdgeFlags="left"/>
+        <Key android:codes="-62" android:keyLabel="˄"/>
+        <Key android:codes="-52" android:keyLabel="˃" android:keyHeight="@dimen/maximize_key_height"/>
         <Key android:codes="-69" android:keyLabel="copy" android:keyEdgeFlags="right"/>
     </Row>
 
@@ -25,14 +25,14 @@
     </Row>
 
     <Row>
-        <Key android:codes="-64" android:keyLabel="down" android:horizontalGap="25%p"/>
+        <Key android:codes="-64" android:keyLabel="˅" android:horizontalGap="25%p"/>
         <Key android:codes="-5" android:keyLabel="⌫" android:isRepeatable="true" android:horizontalGap="25%p" android:keyEdgeFlags="right"/>
     </Row>
 
     <Row android:rowEdgeFlags="bottom">
-        <Key android:codes="-65" android:keyLabel="leftest" android:keyEdgeFlags="left"/>
+        <Key android:codes="-65" android:keyLabel="⇤" android:keyEdgeFlags="left"/>
         <Key android:codes="-66" android:keyLabel="select all"/>
-        <Key android:codes="-67" android:keyLabel="rightest"/>
+        <Key android:codes="-67" android:keyLabel="⇥"/>
         <Key android:codes="-4" android:keyLabel="↵" android:keyEdgeFlags="right"/>
     </Row>
 </Keyboard>
