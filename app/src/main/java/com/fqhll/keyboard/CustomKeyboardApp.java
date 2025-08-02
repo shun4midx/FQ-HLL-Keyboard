@@ -285,11 +285,24 @@ public class CustomKeyboardApp extends InputMethodService
                     showSuggestions("");
                 }
                 return;
+            case -68: // cut
+                CharSequence cutText = ic.getSelectedText(0);
+                if (cutText != null) {
+                    copyToClipboard(cutText.toString());
+                    ic.commitText("", 1);
+                    adjustCapsAfterDeletion();
+                }
+                break;
             case -69: // copy
                 CharSequence copyText = ic.getSelectedText(0);
                 if (copyText != null) {
                     copyToClipboard(copyText.toString());
                 }
+                break;
+            case -70: // paste
+                SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+                String pasteText = prefs.getString("clipboard_text_1", "");
+                ic.commitText(pasteText, 1);
                 break;
             case Keyboard.KEYCODE_DONE:
                 EditorInfo editorInfo = getCurrentInputEditorInfo();
@@ -314,9 +327,9 @@ public class CustomKeyboardApp extends InputMethodService
                     clipboardCode = -clipboardCode; // get code without -9 in front
                     clipboardCode = clipboardCode + 1; // since codes start from 0 but clipboard start from 1
 
-                    SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+                    SharedPreferences prefs2 = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
                     String clipboardPref = "clipboard_text_" + clipboardCode;
-                    String clipboardText = prefs.getString(clipboardPref, "");
+                    String clipboardText = prefs2.getString(clipboardPref, "");
                     ic.commitText(clipboardText, 1);
                     break;
                 }
