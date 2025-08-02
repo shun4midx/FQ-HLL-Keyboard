@@ -934,22 +934,24 @@ public class CustomKeyboardApp extends InputMethodService
     private void copyToClipboard(String text) {
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
 
-        // slot names start from 1, ends at 10
-        for (int i = 1; i < 11; i++) {
-            String clipboard_pref = "clipboard_text_" + i;
-            String clipboard_text = prefs.getString(clipboard_pref, "nothing here in this FQ-HLL clipboard slot"); // not naturally occurring def value
+//        // slot names start from 1, ends at 10
+//        for (int i = 1; i < 11; i++) {
+//            String clipboard_pref = "clipboard_text_" + i;
+//            String clipboard_text = prefs.getString(clipboard_pref, "nothing here in this FQ-HLL clipboard slot"); // not naturally occurring def value
+//
+//            // if theres an empty slot, move everything below 1 slot then copy to first
+//            if (clipboard_text.equals("nothing here in this FQ-HLL clipboard slot")) {
+//
+//                moveClipboardContent(i);
+//                prefs.edit().putString("clipboard_text_1", text).apply();
+//                return;
+//            }
+//        }
+//
+//        // if no empty slots, copy all slots down, then copy to first
 
-            // if theres an empty slot, move everything below 1 slot then copy to first
-            if (clipboard_text.equals("nothing here in this FQ-HLL clipboard slot")) {
-
-                moveClipboardContent(i);
-                prefs.edit().putString("clipboard_text_1", text).apply();
-                return;
-            }
-        }
-
-        // if no empty slots, copy the top 9 slots down, then copy to first
-        moveClipboardContent(9);
+        // copy all slots down then copy to first
+        moveClipboardContent(10);
         prefs.edit().putString("clipboard_text_1", text).apply();
     }
 

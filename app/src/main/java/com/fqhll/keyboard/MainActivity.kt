@@ -43,8 +43,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             prefs.edit().putBoolean("gridToggle", false).commit()
         }
 
-        prefs.edit { putString("clipboard_text_1", "werwwqeriuyowiyueoqroiyuweqryuiowqeryuiowqeryuioer") }
-
         // Load saved toggle state
         capsToggle.isChecked = prefs.getBoolean("capsToggle", true)
         autocorToggle.isChecked = prefs.getBoolean("autocorToggle", true)
