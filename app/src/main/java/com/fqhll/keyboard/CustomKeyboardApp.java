@@ -285,6 +285,19 @@ public class CustomKeyboardApp extends InputMethodService
                     showSuggestions("");
                 }
                 return;
+            case -65: // leftest
+                ic.setSelection(0, 0);
+                break;
+            case -66: // select all
+                CharSequence selectAllText = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0)
+                        .toString() + ic.getTextAfterCursor(Integer.MAX_VALUE, 0).toString();
+                ic.setSelection(0, selectAllText.length());
+                break;
+            case -67: // rightest
+                CharSequence rightestText = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0)
+                        .toString() + ic.getTextAfterCursor(Integer.MAX_VALUE, 0).toString();
+                ic.setSelection(rightestText.length(), rightestText.length());
+                break;
             case -68: // cut
                 CharSequence cutText = ic.getSelectedText(0);
                 if (cutText != null) {
@@ -303,6 +316,8 @@ public class CustomKeyboardApp extends InputMethodService
                 SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
                 String pasteText = prefs.getString("clipboard_text_1", "");
                 ic.commitText(pasteText, 1);
+                break;
+            case -71: // invis key
                 break;
             case Keyboard.KEYCODE_DONE:
                 EditorInfo editorInfo = getCurrentInputEditorInfo();
