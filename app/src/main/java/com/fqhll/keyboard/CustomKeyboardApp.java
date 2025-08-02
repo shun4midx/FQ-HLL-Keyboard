@@ -75,7 +75,7 @@ public class CustomKeyboardApp extends InputMethodService
     private boolean nativeLoaded = false;
 
     // Coyote‑time window for grouping near‑simultaneous presses
-    private static final long COYOTE_WINDOW_MS = 3;
+    private static final long COYOTE_WINDOW_MS = 1;
     private final List<Integer> pendingKeys = new ArrayList<>();
     private final Handler coyoteHandler = new Handler(Looper.getMainLooper());
     private final Runnable flushRunnable = this::flushPendingKeys;
