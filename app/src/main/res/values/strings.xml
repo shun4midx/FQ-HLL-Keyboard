@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">FQ-HLL Keyboard</string>
     <string name="enable_auto_caps">Enable Auto-Capitalization</string>
-    <string name="enable_autocor">Enable Autocorrection</string>
+    <string name="enable_autocor">Enable Auto-Replacing Words</string>
     <string name="enable_editor_grid">Use text editor grid mode</string>
     <string name="theme_switcher">Keyboard Theme</string>
     <string name="height_switcher">Keyboard Height</string>

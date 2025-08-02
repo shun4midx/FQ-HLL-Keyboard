@@ -1,5 +1,6 @@
 package com.fqhll.keyboard;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -23,6 +24,11 @@ import android.widget.TextView;
 import android.view.Gravity;
 import android.view.ViewGroup;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -90,6 +96,7 @@ public class CustomKeyboardApp extends InputMethodService
         }
     }
 
+    private native void nativeInitAutocorrector(String path);
     private native Suggestion nativeSuggest(String prefix);
 
     @Override
@@ -101,7 +108,34 @@ public class CustomKeyboardApp extends InputMethodService
 
         root = buildKeyboardView();
         applyCapsState();
+        copyAssetToInternal(getApplicationContext(), "test_files/20k_texting.txt");
+
+        String absPath = getFilesDir().getAbsolutePath() + "/test_files/20k_texting.txt";
+        ensureNative();
+        nativeInitAutocorrector(absPath);
         return root;
+    }
+
+    private void copyAssetToInternal(Context ctx, String assetName) {
+        try {
+            File outFile = new File(ctx.getFilesDir(), assetName);
+            if (outFile.exists()) return;
+
+            InputStream is = ctx.getAssets().open(assetName);
+            outFile.getParentFile().mkdirs();
+            OutputStream os = new FileOutputStream(outFile);
+
+            byte[] buffer = new byte[4096];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+
+            is.close();
+            os.close();
+        } catch (IOException e) {
+
+        }
     }
 
     @Override
@@ -318,7 +352,7 @@ public class CustomKeyboardApp extends InputMethodService
             default: {
                 if (isAlphabet(primaryCode)) {
                     commitChar(ic, primaryCode);
-                    break;
+                    return;
                 }
 
                 // if clipboard button, commit text in clipboard
@@ -395,7 +429,15 @@ public class CustomKeyboardApp extends InputMethodService
 
     private boolean isChordable(int code) {
         // Letters, digits, or space
-        return code >= 0 && Character.isLetterOrDigit((char)code);
+        return code >= 0 && isLetterOrDigit((char)code);
+    }
+
+    private boolean isLetterOrDigit(char code) {
+        if (code >= '0' && code <= '9') {
+            return true;
+        }
+
+        return isAlphabet(code);
     }
 
     private void flushPendingKeys() {
@@ -460,21 +502,13 @@ public class CustomKeyboardApp extends InputMethodService
             TextView tv = (TextView) suggestionBar.getChildAt(i + 1);
             tv.setText(word);
 
-            // bold if score >= threshold
-            tv.setTypeface(null, score >= AUTO_REPLACE_THRESHOLD && defaultAutocor ? Typeface.BOLD : Typeface.NORMAL);
+            // bold if score >= threshold and middle
+            tv.setTypeface(null, score >= AUTO_REPLACE_THRESHOLD && defaultAutocor && i == 1 ? Typeface.BOLD : Typeface.NORMAL);
 
             tv.setOnClickListener(v -> {
                 replaceCurrentWord(word);
                 showSuggestions("");
             });
-
-            // if this is the first slot, autocorrect is on, and score high enough → commit immediately
-            if (i == 0 && defaultAutocor && score >= AUTO_REPLACE_THRESHOLD) {
-                replaceCurrentWord(word);
-                // clear out suggestions
-                suggestionBar.setVisibility(View.GONE);
-                break;
-            }
         }
     }
 
