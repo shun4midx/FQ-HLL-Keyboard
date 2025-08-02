@@ -857,6 +857,19 @@ public class CustomKeyboardApp extends InputMethodService
             kv.invalidateAllKeys();
         });
 
+        clipboard.setOnLongClickListener(v -> {
+            if (kv.getKeyboard() == clipKeyboard) {
+                for (int i = 1; i < 11; i++) {
+                    String clipboardPrefs = "clipboard_text_" + i;
+                    prefs.edit().putString(clipboardPrefs, "").apply();
+                }
+                return true;
+            }
+            else {
+                return false;
+            }
+        });
+
         // toggle text editor and normal keyboard
         textEditor.setOnClickListener(v -> {
             if (kv.getKeyboard() == editorKeyboard) {
