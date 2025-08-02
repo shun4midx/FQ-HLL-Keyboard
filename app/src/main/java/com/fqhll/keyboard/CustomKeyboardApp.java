@@ -41,6 +41,7 @@ public class CustomKeyboardApp extends InputMethodService
     private Keyboard symbolKeyboard;
     private Keyboard clipKeyboard;
     private Keyboard editorKeyboard;
+    private Keyboard numpadKeyboard;
 
     private PopupWindow keyPreviewPopup;
     private TextView previewText;
@@ -250,6 +251,10 @@ public class CustomKeyboardApp extends InputMethodService
                 Intent launchIntent = manager.getLaunchIntentForPackage("com.fqhll.keyboard");
                 launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
                 startActivity(launchIntent);
+                break;
+            case -13: // numpad
+                kv.setKeyboard(numpadKeyboard);
+                kv.invalidateAllKeys();
                 break;
             case -42: // Left arrow
                 // Look at the char immediately before the cursor
@@ -769,6 +774,7 @@ public class CustomKeyboardApp extends InputMethodService
         emojiKeyboard = new Keyboard(wrap, R.xml.emojis);
         symbolKeyboard= new Keyboard(wrap, R.xml.symbols);
         clipKeyboard  = new Keyboard(wrap, R.xml.clipboard);
+        numpadKeyboard= new Keyboard(wrap, R.xml.numpad);
 
         if (prefs.getString("keyboard_height", "Short").equals("Short")) {
             keyboard = new Keyboard(wrap, R.xml.custom_keypad_short);
