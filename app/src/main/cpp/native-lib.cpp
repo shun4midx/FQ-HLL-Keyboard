@@ -119,6 +119,13 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
             }
         }
 
+        // Replace autocorrect words with their suggestions
+        for (int i = 0; i < 3; ++i) {
+            if (autoreplace.find(suggestions[i]) != autoreplace.end()) {
+                suggestions[i] = autoreplace[suggestions[i]];
+            }
+        }
+
         // Reorder suggestions: {second, first, third}
         vector<string> reordered = {suggestions[1], suggestions[0], suggestions[2]};
         vector<double> reordered_scores = {confidences[1], confidences[0], confidences[2]};

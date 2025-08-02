@@ -366,7 +366,11 @@ public class CustomKeyboardApp extends InputMethodService
                     ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
                     ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER));
                 }
-                resetCaps();
+
+                if (caps_state != 2) {
+                    resetCaps();
+                }
+
                 showSuggestions("");
                 break;
             default: {
@@ -405,11 +409,21 @@ public class CustomKeyboardApp extends InputMethodService
                 // If we should auto‑replace:
                 CharSequence beforeChar = ic.getTextBeforeCursor(1, 0);
                 char prevChar = (beforeChar != null && beforeChar.length() > 0) ? beforeChar.charAt(0) : '\0';
-                if (defaultAutocor && score >= AUTO_REPLACE_THRESHOLD && !top.isEmpty() && prevChar != ' ') {
-                    // Delete old lastWord + any trailing spaces
+
+                String beforeStr = ic.getTextBeforeCursor(50, 0).toString();
+                String trimmedStr = beforeStr.replaceAll("\\s+$", "");
+                String[] partsStr = trimmedStr.split("\\s+");
+                String lastWordStr = partsStr.length > 0 ? partsStr[partsStr.length - 1] : "";
+
+                if (defaultAutocor && score >= AUTO_REPLACE_THRESHOLD && !top.isEmpty() && !top.equals(lastWordStr) && prevChar != ' ') {
                     int toDelete = lastWord.length();
+                    String newText = top + (char)(primaryCode);
+
+                    ic.beginBatchEdit();
                     ic.deleteSurroundingText(toDelete, 0);
-                    ic.commitText(top + (char) (primaryCode), 1); // Commit our suggestion + a space
+                    ic.commitText(newText, 1);
+                    ic.endBatchEdit();
+
                     showSuggestions(""); // Clear UI
                     break;
                 } else {
@@ -683,9 +697,11 @@ public class CustomKeyboardApp extends InputMethodService
         CharSequence text = ic.getExtractedText(new ExtractedTextRequest(), 0).text;
         if (text == null) return;
 
-        if (defaultCaps && shouldAutoCap()) {
+        if (caps_state == 2) {
+
+        } else if (defaultCaps && shouldAutoCap()) {
             caps_state = 1;
-        } else if (caps_state != 2) {
+        } else {
             caps_state = 0;
         }
 
