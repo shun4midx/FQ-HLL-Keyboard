@@ -403,7 +403,9 @@ public class CustomKeyboardApp extends InputMethodService
                 double score = s.scores.length > 0 ? s.scores[1] : 0;
 
                 // If we should auto‑replace:
-                if (defaultAutocor && score >= AUTO_REPLACE_THRESHOLD && !top.isEmpty()) {
+                CharSequence beforeChar = ic.getTextBeforeCursor(1, 0);
+                char prevChar = (beforeChar != null && beforeChar.length() > 0) ? beforeChar.charAt(0) : '\0';
+                if (defaultAutocor && score >= AUTO_REPLACE_THRESHOLD && !top.isEmpty() && prevChar != ' ') {
                     // Delete old lastWord + any trailing spaces
                     int toDelete = lastWord.length();
                     ic.deleteSurroundingText(toDelete, 0);
