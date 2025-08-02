@@ -522,8 +522,8 @@ public class CustomKeyboardApp extends InputMethodService
             TextView tv = (TextView) suggestionBar.getChildAt(i + 1);
             tv.setText(word);
 
-            // bold if score >= threshold and middle
-            tv.setTypeface(null, score >= AUTO_REPLACE_THRESHOLD && defaultAutocor && i == 1 ? Typeface.BOLD : Typeface.NORMAL);
+            // bold if score >= threshold and middle and also not equal to current word
+            tv.setTypeface(null, score >= AUTO_REPLACE_THRESHOLD && defaultAutocor && i == 1 && !prefix.equals(word) ? Typeface.BOLD : Typeface.NORMAL);
 
             tv.setOnClickListener(v -> {
                 replaceCurrentWord(word);
