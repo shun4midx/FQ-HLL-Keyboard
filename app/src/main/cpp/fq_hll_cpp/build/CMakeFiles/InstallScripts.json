@@ -1,8 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"/Users/shun4midx/Documents/Shun4miCodes/Shun4miPersonal/Projects/HLL_Autocorrect/FQ-HLL-Keyboard/app/src/main/cpp/FQ-HyperLogLog-Autocorrect/fq_hll_cpp/build/cmake_install.cmake",
-		"/Users/shun4midx/Documents/Shun4miCodes/Shun4miPersonal/Projects/HLL_Autocorrect/FQ-HLL-Keyboard/app/src/main/cpp/FQ-HyperLogLog-Autocorrect/fq_hll_cpp/build/src/cmake_install.cmake"
-	],
-	"Parallel" : false
-}
