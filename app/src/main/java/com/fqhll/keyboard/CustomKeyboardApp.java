@@ -857,6 +857,7 @@ public class CustomKeyboardApp extends InputMethodService
             kv.invalidateAllKeys();
         });
 
+        // long click to clear clipboard
         clipboard.setOnLongClickListener(v -> {
             if (kv.getKeyboard() == clipKeyboard) {
                 for (int i = 1; i < 11; i++) {
@@ -874,11 +875,19 @@ public class CustomKeyboardApp extends InputMethodService
         textEditor.setOnClickListener(v -> {
             if (kv.getKeyboard() == editorKeyboard) {
                 kv.setKeyboard(keyboard);
+                kv.invalidateAllKeys();
             }
-            else {
+            else if (kv.getKeyboard() != numpadKeyboard) { // prevent long press for numpad on release go back to editor
                 kv.setKeyboard(editorKeyboard);
+                kv.invalidateAllKeys();
             }
+        });
+
+        // long press text editor to open numpad
+        textEditor.setOnLongClickListener(v -> {
+            kv.setKeyboard(numpadKeyboard);
             kv.invalidateAllKeys();
+            return true;
         });
 
         kv.setKeyboard(keyboard);
