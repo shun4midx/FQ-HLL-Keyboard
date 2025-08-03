@@ -120,7 +120,7 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [ ] bypass autocorrected word by long pressing space
 - [ ] numpad
 - [ ] add grid/maximize mode previews to readme
-= [ ] changing non main keyboard height
+- [ ] changing non main keyboard height
 - [ ] text editor symbols
 - [ ] fully finish text editor
 - [ ] clipboard being able to access/use android copy key
