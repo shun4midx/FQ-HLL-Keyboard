@@ -883,12 +883,22 @@ public class CustomKeyboardApp extends InputMethodService
             }
         });
 
-        // long press text editor to open numpad
+        // Long press text editor to commit a space without autocorrecting
         textEditor.setOnLongClickListener(v -> {
-            kv.setKeyboard(numpadKeyboard);
-            kv.invalidateAllKeys();
+            InputConnection ic = getCurrentInputConnection();
+            if (ic != null) {
+                ic.commitText(" ", 1);
+                showSuggestions("");
+            }
             return true;
         });
+
+//        // long press text editor to open numpad
+//        textEditor.setOnLongClickListener(v -> {
+//            kv.setKeyboard(numpadKeyboard);
+//            kv.invalidateAllKeys();
+//            return true;
+//        });
 
         kv.setKeyboard(keyboard);
         kv.setOnKeyboardActionListener(this);
