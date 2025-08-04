@@ -13,7 +13,7 @@ Thus, here we present the FQ-HLL keyboard which uses the fast and low memory FQ-
 
 Download the latest release of the app [here](https://github.com/shun4midx/FQ-HLL-Keyboard/releases/latest), install the apk and head to your phone's keyboard settings. Enable `FQ-HLL Keyboard` and switch to the keyboard.
 
-Keyboard settings can be found by launching the FQ-HLL Keyboard app installed with the apk.
+Keyboard settings can be found by launching the FQ-HLL Keyboard app installed with the apk, or by pressing the `⎋` button on the keyboard.
 
 Keyboard settings are saved across updates of the app.
 
@@ -32,6 +32,7 @@ Want a custom theme? Customisable themes may be implemented in the future, but u
 - lots of themes and theme customisability (key colour, key text colour, key pressed colour, key border colour, keyboard background colour)
 - height customisation (short, medium, tall)
 - text editor mode customisation (maximize, grid)
+- multiple keyboard layouts (qwerty, azerty, qwertz, dvorak, colemak)
 
 ## Development usage
 
@@ -60,20 +61,25 @@ switch to the keyboard in a text editor
 `symbols.xml`: the symbols tab of the keyboard
 
 ```
-app/src/main/
+app/src/main
 |-- AndroidManifest.xml
 |-- cpp
 |   |-- CMakeLists.txt
+|   |-- FQ-HyperLogLog-Autocorrect (repo)
 |   `-- native-lib.cpp
-|-- java/com.fqhll.keyboard
-|    |-- CustomKeyboardApp.java
-|    |-- CustomKeyboardView.java
-|     `-- MainActivity.kt
+|-- ic_launcher-playstore.png
+|-- java.com.fqhll.keyboard
+|   |-- CustomKeyboardApp.java
+|   |-- CustomKeyboardView.java
+|   |-- MainActivity.kt
+|   `-- Suggestion.java
 `-- res
     |-- drawable
     |   |-- key_background.xml
     |   |-- key_popup_background.xml
-    |   `-- key_popup_view.xml
+    |   |-- key_popup_view.xml
+    |   |-- key_pressed_background.xml
+    |   `-- key_unpressed_background.xml
     |-- layout
     |   |-- activity_main.xml
     |   |-- custom_keyboard_layout.xml
@@ -82,15 +88,24 @@ app/src/main/
     |-- values
     |   |-- attrs.xml
     |   |-- colors.xml
+    |   |-- dimens.xml
     |   |-- strings.xml
     |   `-- themes.xml
-    |-- values-night
-    |   `-- themes.xml
     `-- xml
-        |-- backup_rules.xml
-        |-- custom_keypad.xml
+        |-- clipboard.xml
+        |-- custom_keypad_azerty.xml
+        |-- custom_keypad_colemak.xml
+        |-- custom_keypad_dvorak.xml
+        |-- custom_keypad_medium.xml
+        |-- custom_keypad_qwerty.xml
+        |-- custom_keypad_qwertz.xml
+        |-- custom_keypad_short.xml
+        |-- custom_keypad_tall.xml
         |-- custom_method.xml
+        |-- editor_grid.xml
+        |-- editor_maximize.xml
         |-- emojis.xml
+        |-- numpad.xml
         `-- symbols.xml
 ```
 
@@ -131,6 +146,7 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [ ] text editor symbols
 - [ ] fully finish text editor
 - [ ] clipboard being able to access/use android copy key
+- [x] add different keyboard layouts
 
 ## Contact
 
