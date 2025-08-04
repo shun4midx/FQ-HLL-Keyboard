@@ -830,7 +830,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        if (!"key_color".equals(key) && !"gridToggle".equals(key) && !"keyboard_height".equals(key) && !key.startsWith("clipboard") && !"clipboard_text_2".equals(key)) {
+        if (!"key_color".equals(key) && !"gridToggle".equals(key) && !"keyboard_height".equals(key) && !key.startsWith("clipboard") && !"keyboard_layout".equals(key)) {
             return;
         }
         View newRoot = buildKeyboardView();
@@ -863,21 +863,29 @@ public class CustomKeyboardApp extends InputMethodService
         kv = root.findViewById(R.id.keyboard_view);
         View clipboard = root.findViewById(R.id.btn_clipboard);
         View textEditor = root.findViewById(R.id.btn_editor);
-        View suggestion1 = root.findViewById(R.id.suggestion_1);
-        View suggestion2 = root.findViewById(R.id.suggestion_2);
-        View suggestion3 = root.findViewById(R.id.suggestion_3);
 
         emojiKeyboard = new Keyboard(wrap, R.xml.emojis);
         symbolKeyboard= new Keyboard(wrap, R.xml.symbols);
         clipKeyboard  = new Keyboard(wrap, R.xml.clipboard);
         numpadKeyboard= new Keyboard(wrap, R.xml.numpad);
 
-        if (prefs.getString("keyboard_height", "Short").equals("Short")) {
-            keyboard = new Keyboard(wrap, R.xml.custom_keypad_short);
-        } else if (prefs.getString("keyboard_height", "Medium").equals("Medium")) {
-            keyboard = new Keyboard(wrap, R.xml.custom_keypad_medium);
-        } else {
-            keyboard = new Keyboard(wrap, R.xml.custom_keypad_tall);
+        String keyboardHeight = prefs.getString("keyboard_height", "Short");
+        String keyboardLayout = prefs.getString("keyboard_layout", "qwerty").toLowerCase();
+
+        if (keyboardLayout.equals("qwerty")) {
+            if (keyboardHeight.equals("Short")) {
+                keyboard = new Keyboard(wrap, R.xml.custom_keypad_short);
+            } else if (keyboardHeight.equals("Medium")) {
+                keyboard = new Keyboard(wrap, R.xml.custom_keypad_medium);
+            } else {
+                keyboard = new Keyboard(wrap, R.xml.custom_keypad_tall);
+            }
+        }
+
+        else {
+            String layoutName = "custom_keypad_" + keyboardLayout;
+            int layoutXml = getResources().getIdentifier(layoutName, "xml", getPackageName());
+            keyboard = new Keyboard(wrap, layoutXml);
         }
 
         if (!prefs.getBoolean("gridToggle", false)) {
