@@ -23,6 +23,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.view.Gravity;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,6 +33,7 @@ import java.io.OutputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
@@ -548,7 +550,43 @@ public class CustomKeyboardApp extends InputMethodService
                 replaceCurrentWord(word);
                 showSuggestions("");
             });
+
+            int finalI = i; // idk android studio told me to
+
+            tv.setOnLongClickListener(v -> {
+                InputConnection ic = getCurrentInputConnection();
+                if (ic != null && !words[1].isEmpty()) {
+
+                    CharSequence committedText = "";
+
+                    // if long press on user typed word (0 if has suggestions, 1 if no suggestions), add the word to dictionary
+                    if ((finalI == 0 && scores[0] != 0) || (finalI == 1 && scores[0] == 0)) {
+                        // TODO: add user typed word to dictionary, show toast
+                        committedText = word + " is added to dictionary!";
+                        ic.commitText(committedText, 1);
+                    }
+
+                    // if long press on suggestions, remove the suggestion from dictionary
+                    else if (finalI != 0 && scores[0] != 0) {
+                        // TODO: remove current suggestion from dictionary, show toast confirmation
+                        committedText = word + " is removed from dictionary!";
+                        ic.commitText(committedText, 1);
+                    }
+
+                    showSuggestions("");
+                    showToast(committedText);
+                    return true;
+                }
+                return false;
+            });
         }
+    }
+
+    public void showToast(CharSequence text) {
+        int duration = Toast.LENGTH_LONG;
+
+        Toast toast = Toast.makeText(this, text, duration);
+        toast.show();
     }
 
     private void replaceCurrentWord(String suggestion) {
@@ -825,6 +863,9 @@ public class CustomKeyboardApp extends InputMethodService
         kv = root.findViewById(R.id.keyboard_view);
         View clipboard = root.findViewById(R.id.btn_clipboard);
         View textEditor = root.findViewById(R.id.btn_editor);
+        View suggestion1 = root.findViewById(R.id.suggestion_1);
+        View suggestion2 = root.findViewById(R.id.suggestion_2);
+        View suggestion3 = root.findViewById(R.id.suggestion_3);
 
         emojiKeyboard = new Keyboard(wrap, R.xml.emojis);
         symbolKeyboard= new Keyboard(wrap, R.xml.symbols);
@@ -897,6 +938,15 @@ public class CustomKeyboardApp extends InputMethodService
 //        textEditor.setOnLongClickListener(v -> {
 //            kv.setKeyboard(numpadKeyboard);
 //            kv.invalidateAllKeys();
+//            return true;
+//        });
+
+//        suggestion1.setOnLongClickListener(v -> {
+//            InputConnection ic = getCurrentInputConnection();
+//            if (ic != null) {
+//                ic.commitText("added", 1);
+//                showSuggestions("");
+//            }
 //            return true;
 //        });
 
