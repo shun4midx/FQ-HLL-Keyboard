@@ -70,11 +70,15 @@ public class CustomKeyboardApp extends InputMethodService
 
     // (jperm voice) hope you can turn on word wrap            
     public static final String[] emoji_list = new String[]{"😭", "😂", "💀", "😔", "🫠", "💁‍♂️", "🧍‍♂️", "💩", "💅", "🫂", "🔥", "🍀", "👾", "👀", "✨️", "🐟", "✅️", "❌️", "🐸", "🌸", "🎀", "🤡", "😡", "🙏", "👻", "🥺", "😐", "👍", "😤", "🤓", "😀", "🦆", "🥬", "🐒", "🌚", "🌃", "🌌"};
-
     private LinearLayout suggestionBar;
     private View root;
 
     private boolean nativeLoaded = false;
+
+    private final Handler longPressHandler = new Handler(Looper.getMainLooper());
+    private Runnable longPressRunnable;
+    private static final long LONG_PRESS_MS = 350;
+    private boolean isLongPress = false;
 
     // Coyote‑time window for grouping near‑simultaneous presses
     private static final long COYOTE_WINDOW_MS = 1;
@@ -141,8 +145,27 @@ public class CustomKeyboardApp extends InputMethodService
         }
     }
 
+    private void handleLongPress(int primaryCode) {
+        switch (primaryCode) {
+            case -2: // symbols -> numpad
+                kv.setKeyboard(numpadKeyboard);
+                kv.invalidateAllKeys();
+                break;
+            default:
+                break;
+        }
+    }
+
     @Override
     public void onPress(int primaryCode) {
+        isLongPress = false;
+
+        longPressRunnable = () -> {
+            handleLongPress(primaryCode);
+            isLongPress = true;
+        };
+        longPressHandler.postDelayed(longPressRunnable, LONG_PRESS_MS);
+
         if (NO_POPUP.contains(primaryCode)) return;
 
         if (-99 <= primaryCode && primaryCode <= -90) return; // clipboard
@@ -210,6 +233,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onRelease(int primaryCode) {
+        longPressHandler.removeCallbacks(longPressRunnable);
         if (keyPreviewPopup != null && keyPreviewPopup.isShowing()) {
             keyPreviewPopup.dismiss();
         }
@@ -217,6 +241,10 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
+        if (isLongPress) {
+            return;
+        }
+
         Map<Integer,String> emojis = getEmojiCodes();
 
         if (emojis.containsKey(primaryCode)) {
