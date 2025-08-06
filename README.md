@@ -85,12 +85,6 @@ app/src/main
     |   |-- custom_keyboard_layout.xml
     |   |-- custom_keyboard_preview.xml
     |   `-- spinner.xml
-    |-- values
-    |   |-- attrs.xml
-    |   |-- colors.xml
-    |   |-- dimens.xml
-    |   |-- strings.xml
-    |   `-- themes.xml
     `-- xml
         |-- clipboard.xml
         |-- custom_keypad_azerty.xml
@@ -123,7 +117,7 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [ ] fully customise themes
 - [x] emoji support (emoji page like symbols?)
 - [x] clipboard
-- [ ] settings app layout
+- [x] settings app layout
 - [ ] hold keys for symbols
 - [ ] multiple languages support?
 - [ ] customise keyboard height
@@ -139,11 +133,11 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [x] coyote-time-like queueing of handling simutaneous key presses
 - [ ] an easy way to add word to dictionary
 - [ ] emoji suggestions in place of predictive text
-- [ ] bypass autocorrected word by long pressing space
-- [ ] numpad
+- [ ] bypass autocorrected word by long pressing space (long presses editor for now)
+- [x] numpad
 - [ ] add grid/maximize mode previews to readme
 - [ ] changing non main keyboard height
-- [ ] text editor symbols
+- [x] text editor symbols
 - [ ] fully finish text editor
 - [ ] clipboard being able to access/use android copy key
 - [x] add different keyboard layouts
