@@ -68,7 +68,7 @@ public class CustomKeyboardApp extends InputMethodService
     private float scaleX, scaleY;
     private int lastTouchX, lastTouchY;
 
-    // (jperm voice) hope you can turn on word wrap            
+    // (jperm voice) hope you can turn on word wrap
     public static final String[] emoji_list = new String[]{"😭", "😂", "💀", "😔", "🫠", "💁‍♂️", "🧍‍♂️", "💩", "💅", "🫂", "🔥", "🍀", "👾", "👀", "✨️", "🐟", "✅️", "❌️", "🐸", "🌸", "🎀", "🤡", "😡", "🙏", "👻", "🥺", "😐", "👍", "😤", "🤓", "😀", "🦆", "🥬", "🐒", "🌚", "🌃", "🌌"};
     private LinearLayout suggestionBar;
     private View root;
@@ -105,6 +105,10 @@ public class CustomKeyboardApp extends InputMethodService
 
     private native void nativeInitAutocorrector(String path);
     private native Suggestion nativeSuggest(String prefix);
+    private static native void nativeAddWord(String word, String path);
+    private static native void nativeRemoveWord(String word, String path);
+
+    private static native void nativeSetLayout(String layout, String path);
 
     @Override
     public View onCreateInputView() {
@@ -388,21 +392,6 @@ public class CustomKeyboardApp extends InputMethodService
                 break;
             case -71: // invis key
                 break;
-            case Keyboard.KEYCODE_DONE:
-                EditorInfo editorInfo = getCurrentInputEditorInfo();
-                if (editorInfo != null && (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) != 0) {
-                    ic.commitText("\n", 1);  // Insert newline
-                } else {
-                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
-                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER));
-                }
-
-                if (caps_state != 2) {
-                    resetCaps();
-                }
-
-                showSuggestions("");
-                break;
             default: {
                 if (isAlphabet(primaryCode)) {
                     commitChar(ic, primaryCode);
@@ -450,7 +439,7 @@ public class CustomKeyboardApp extends InputMethodService
 
                 if (defaultAutocor && score >= AUTO_REPLACE_THRESHOLD && !top.isEmpty() && !top.equals(lastWordStr) && prevChar != ' ') {
                     int toDelete = lastWord.length();
-                    String newText = top + (char)(primaryCode);
+                    String newText = top + (primaryCode == Keyboard.KEYCODE_DONE ? "\n" : (char)(primaryCode));
 
                     ic.beginBatchEdit();
                     ic.deleteSurroundingText(toDelete, 0);
@@ -460,18 +449,70 @@ public class CustomKeyboardApp extends InputMethodService
                     showSuggestions(""); // Clear UI
                     break;
                 } else {
-                    ic.commitText(Character.toString((char) (primaryCode)), 1);
+                    if (primaryCode == Keyboard.KEYCODE_DONE) {
+                        EditorInfo editorInfo = getCurrentInputEditorInfo();
+                        if (editorInfo != null && (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) != 0) {
+                            ic.commitText("\n", 1);
+                        } else {
+                            ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
+                            ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER));
+                        }
 
-                    // Auto-cap if punctuation (e.g., after ". ") ans space
-                    if (primaryCode == 32 && shouldAutoCap() && defaultCaps) {
-                        caps_state = 1;
-                        applyCapsState();
+                        if (caps_state != 2) {
+                            resetCaps();
+                        }
+
+                        showSuggestions(""); // Clear bar
                     }
-                    break;
+
+                    else {
+                        ic.commitText(Character.toString((char) (primaryCode)), 1);
+
+                        // Auto-cap if punctuation (e.g., after ". ") ans space
+                        if (primaryCode == 32 && shouldAutoCap() && defaultCaps) {
+                            caps_state = 1;
+                            applyCapsState();
+                        }
+                        break;
+                    }
                 }
             }
         }
     }
+
+    private void safeReplaceLastWord(InputConnection ic, String lastWord, String replacement) {
+        CharSequence beforeCs = ic.getTextBeforeCursor(50, 0);
+        if (beforeCs == null) return;
+
+        String before = beforeCs.toString();
+        int lastNewline = Math.max(before.lastIndexOf('\n'), before.lastIndexOf('\r'));
+        String currentLine = lastNewline == -1 ? before : before.substring(lastNewline + 1);
+        currentLine = currentLine.replaceAll("\\s+$", "");
+
+        if (currentLine.endsWith(lastWord)) {
+            int deleteCount = lastWord.codePointCount(0, lastWord.length()); // more accurate for emojis
+            ic.beginBatchEdit();
+            ic.deleteSurroundingText(deleteCount, 0);
+            ic.commitText(replacement, 1);
+            ic.endBatchEdit();
+        }
+    }
+
+    private String getLastWordOnCurrentLine(InputConnection ic) {
+        CharSequence before = ic.getTextBeforeCursor(50, 0);
+        if (before == null) return "";
+
+        String raw = before.toString();
+        int lastNewline = Math.max(raw.lastIndexOf('\n'), raw.lastIndexOf('\r'));
+        if (lastNewline != -1) {
+            raw = raw.substring(lastNewline + 1);
+        }
+
+        raw = raw.replaceAll("\\s+$", "");
+        String[] parts = raw.isEmpty() ? new String[0] : raw.split("\\s+");
+        return parts.length > 0 ? parts[parts.length - 1] : "";
+    }
+
 
     private void handleDelete() {
         InputConnection ic = getCurrentInputConnection();
@@ -587,17 +628,21 @@ public class CustomKeyboardApp extends InputMethodService
 
                     CharSequence committedText = "";
 
+                    String absPath = getFilesDir().getAbsolutePath() + "/test_files/20k_texting.txt";
+
                     // if long press on user typed word (0 if has suggestions, 1 if no suggestions), add the word to dictionary
-                    if ((finalI == 0 && scores[0] != 0) || (finalI == 1 && scores[0] == 0)) {
+                    if (finalI == 0 && words[0].length() != 0 && !words[0].equals(" ")) {
                         // TODO: add user typed word to dictionary, show toast
-                        committedText = word + " is added to dictionary!";
+                        CustomKeyboardApp.nativeAddWord(word, absPath);
+                        committedText = "\n\n" + word + " is added to dictionary!";
                         ic.commitText(committedText, 1);
                     }
 
                     // if long press on suggestions, remove the suggestion from dictionary
-                    else if (finalI != 0 && scores[0] != 0) {
+                    else {
                         // TODO: remove current suggestion from dictionary, show toast confirmation
-                        committedText = word + " is removed from dictionary!";
+                        CustomKeyboardApp.nativeRemoveWord(word, absPath);
+                        committedText = "\n\n" + word + " is removed from dictionary!";
                         ic.commitText(committedText, 1);
                     }
 
@@ -626,8 +671,9 @@ public class CustomKeyboardApp extends InputMethodService
         String before = beforeCs == null ? "" : beforeCs.toString();
 
         // Find the start of the curr word
+        int lastNewline = Math.max(before.lastIndexOf('\n'), before.lastIndexOf('\r'));
         int lastSpace = before.lastIndexOf(' ');
-        int wordStart = lastSpace + 1; // if no space, this is 0
+        int wordStart = Math.max(lastNewline, lastSpace) + 1; // if no space, this is 0
         int wordLength = before.length() - wordStart;
 
         // Delete that many chars before the cursor
@@ -915,6 +961,11 @@ public class CustomKeyboardApp extends InputMethodService
             int layoutXml = getResources().getIdentifier(layoutName, "xml", getPackageName());
             keyboard = new Keyboard(wrap, layoutXml);
         }
+
+        // Update layout
+        String absPath = getFilesDir().getAbsolutePath() + "/test_files/20k_texting.txt";
+        ensureNative();
+        nativeSetLayout(keyboardLayout, absPath);
 
         if (!prefs.getBoolean("gridToggle", false)) {
             editorKeyboard = new Keyboard(wrap, R.xml.editor_maximize);

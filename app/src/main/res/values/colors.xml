@@ -44,4 +44,9 @@
     <color name="custom_fqhll_banner_pink">#ff1fa9</color>
     <color name="custom_fqhll_banner_purple">#bc3fde</color>
     <color name="custom_fqhll_banner_blue">#0b259b</color>
+
+    <color name="sage_letter">#78c7c7</color>
+    <color name="sage_bg">#348781</color>
+    <color name="sage_keys">#11354f</color>
+    <color name="sage_border">#bdf3ff</color>
 </resources>

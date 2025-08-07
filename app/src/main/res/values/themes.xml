@@ -154,4 +154,14 @@
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
+
+    <style name="Theme.FQHLLKeyboard.Sage" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/sage_keys</item>
+        <item name="keyTextColor">@color/sage_letter</item>
+        <item name="keyboardBackgroundColor">@color/sage_bg</item>
+        <item name="keyBorderColor">@color/sage_border</item>
+        <item name="keyPressedColor">@color/black</item>
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+    </style>
 </resources>

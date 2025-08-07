@@ -58,6 +58,63 @@ int getCaseState(const std::string& word) {
 
 extern "C"
 JNIEXPORT void JNICALL
+Java_com_fqhll_keyboard_CustomKeyboardApp_nativeAddWord(JNIEnv* env, jobject /* this */, jstring jword, jstring jpath) {
+    if (!g_ac) return;
+
+    const char* c_word = env->GetStringUTFChars(jword, nullptr);
+    std::string word(c_word);
+    env->ReleaseStringUTFChars(jword, c_word);
+
+    g_ac->add_dictionary(word);
+    g_ac->save_dictionary();
+
+    // Append to dictionary file
+    const char* c_path = env->GetStringUTFChars(jpath, nullptr);
+    std::string path(c_path);
+    env->ReleaseStringUTFChars(jpath, c_path);
+
+    std::ofstream file(path, std::ios::app);
+    if (file.is_open()) {
+        file << word << "\n";
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_fqhll_keyboard_CustomKeyboardApp_nativeRemoveWord(JNIEnv* env, jobject /* this */, jstring jword, jstring jpath) {
+    if (!g_ac) return;
+
+    const char* c_word = env->GetStringUTFChars(jword, nullptr);
+    std::string word(c_word);
+    env->ReleaseStringUTFChars(jword, c_word);
+
+    g_ac->remove_dictionary(word);
+    g_ac->save_dictionary();
+
+    // Rewrite the file without this word
+    const char* c_path = env->GetStringUTFChars(jpath, nullptr);
+    std::string path(c_path);
+    env->ReleaseStringUTFChars(jpath, c_path);
+
+    std::ifstream in(path);
+    std::vector<std::string> lines;
+    std::string line;
+
+    while (std::getline(in, line)) {
+        if (line != word && !line.empty()) {
+            lines.push_back(line);
+        }
+    }
+    in.close();
+
+    std::ofstream out(path);
+    for (const auto& l : lines) {
+        out << l << "\n";
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
 Java_com_fqhll_keyboard_CustomKeyboardApp_nativeInitAutocorrector(JNIEnv* env, jobject /* this */, jstring jpath) {
     const char* c_path = env->GetStringUTFChars(jpath, nullptr);
     std::string path(c_path);
@@ -90,7 +147,8 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
                                                  {"wont", "won't"}, {"Wont", "Won't"}, {"hes", "he's"}, {"Hes", "He's"}, {"shes", "she's"}, {"Shes", "She's"}, {"its", "it's"}, {"Its",  "It's"}, {"lets", "let's"}, {"Lets", "Let's"},
                                                  {"hed", "he'd"}, {"Hed", "He'd"}, {"aint", "ain't"}, {"Aint", "Ain't"}, {"cant", "can't"}, {"Cant", "Can't"}, {"shouldnt", "shouldn't"}, {"Shouldnt", "Shouldn't"},
                                                  {"couldnt", "couldn't"}, {"Couldnt", "Couldn't"}, {"wouldnt", "wouldn't"}, {"Wouldnt", "Wouldn't"}, {"didnt", "didn't"}, {"Didnt", "Didn't"}, {"yall", "y'all"}, {"Yall", "Y'all"}, {"theyre", "they're"}, {"Theyre", "They're"},
-                                                 {"havent", "haven't"}, {"Havent", "Haven't"}, {"theres", "there's"}, {"Theres", "There's"}, {"thats", "that's"}, {"Thats", "That's"}, {"hasnt", "hasn't"}, {"Hasnt", "Hasn't"}, {"ive", "I've"}, {"Ive", "I've"}};
+                                                 {"havent", "haven't"}, {"Havent", "Haven't"}, {"theres", "there's"}, {"Theres", "There's"}, {"thats", "that's"}, {"Thats", "That's"}, {"hasnt", "hasn't"}, {"Hasnt", "Hasn't"}, {"ive", "I've"}, {"Ive", "I've"},
+                                                 {"youre", "you're"}, {"Youre", "You're"}, {"whats", "what's"}, {"Whats", "What's"}, {"theyll", "they'll"}, {"Theyll", "They'll"}};
 
     if (key.empty() || key == " ") {
         results = {{" ", " ", " "},
@@ -126,9 +184,17 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
             }
         }
 
-        // Reorder suggestions: {second, first, third}
-        vector<string> reordered = {suggestions[1], suggestions[0], suggestions[2]};
-        vector<double> reordered_scores = {confidences[1], confidences[0], confidences[2]};
+        // Reorder suggestions: {second, first, third}, reorder again for high accuracy added response
+        vector<string> reordered;
+        vector<double> reordered_scores;
+
+        if (confidences[0] > 0.6 && suggestions[0] != key) {
+            reordered = {key, suggestions[0], suggestions[1]};
+            reordered_scores = {0, confidences[0], confidences[1]};
+        } else {
+            reordered = {suggestions[1], suggestions[0], suggestions[2]};
+            reordered_scores = {confidences[1], confidences[0], confidences[2]};
+        }
 
         results = {reordered, reordered_scores};
     }
@@ -165,4 +231,23 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
 
     // Create and return your Suggestion
     return env->NewObject(suggCls, ctor, jWords, jScores);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSetLayout(JNIEnv* env, jclass, jstring jlayout, jstring jpath) {
+    if (!g_ac) return;
+
+    const char* c_path = env->GetStringUTFChars(jpath, nullptr);
+    std::string path(c_path);
+    env->ReleaseStringUTFChars(jpath, c_path);
+
+    const char* c_layout = env->GetStringUTFChars(jlayout, nullptr);
+    std::string layout(c_layout);
+    env->ReleaseStringUTFChars(jlayout, c_layout);
+
+    AutocorrectorCfg cfg;
+    cfg.dictionary_list = getWords(path);
+    cfg.keyboard = layout;
+    g_ac = std::make_unique<Autocorrector>(cfg);
 }
