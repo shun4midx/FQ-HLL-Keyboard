@@ -25,11 +25,16 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -105,10 +110,19 @@ public class CustomKeyboardApp extends InputMethodService
 
     private native void nativeInitAutocorrector(String path);
     private native Suggestion nativeSuggest(String prefix);
-    private static native void nativeAddWord(String word, String path);
-    private static native void nativeRemoveWord(String word, String path);
+    public static native void nativeAddWord(String word, String path);
+    public static native void nativeRemoveWord(String word, String path);
 
     private static native void nativeSetLayout(String layout, String path);
+
+    public boolean inDictionary(String word) throws IOException {
+        Path path = Paths.get(getFilesDir().getAbsolutePath() + "/test_files/20k_texting.txt");
+
+        List<String> lines = Files.readAllLines(path);
+        Set<String> word_set = new HashSet<>(lines);
+
+        return word_set.contains(word);
+    }
 
     @Override
     public View onCreateInputView() {
@@ -632,22 +646,29 @@ public class CustomKeyboardApp extends InputMethodService
 
                     // if long press on user typed word (0 if has suggestions, 1 if no suggestions), add the word to dictionary
                     if (finalI == 0 && words[0].length() != 0 && !words[0].equals(" ")) {
-                        // TODO: add user typed word to dictionary, show toast
-                        CustomKeyboardApp.nativeAddWord(word, absPath);
-                        committedText = "\n\n" + word + " is added to dictionary!";
-                        ic.commitText(committedText, 1);
+
+                        try {
+                            if (!inDictionary(word)) {
+                                CustomKeyboardApp.nativeAddWord(word, absPath);
+                                committedText = "\n\n" + word + " is added to dictionary!";
+                                ic.commitText(committedText, 1);
+                            }
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
                     }
 
                     // if long press on suggestions, remove the suggestion from dictionary
                     else {
-                        // TODO: remove current suggestion from dictionary, show toast confirmation
                         CustomKeyboardApp.nativeRemoveWord(word, absPath);
                         committedText = "\n\n" + word + " is removed from dictionary!";
                         ic.commitText(committedText, 1);
                     }
 
                     showSuggestions("");
-                    showToast(committedText);
+
+                    // TODO: fix show toast
+                    showToast(committedText); // works but needs notification permission to show toast in background
                     return true;
                 }
                 return false;

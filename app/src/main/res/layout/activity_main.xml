@@ -74,6 +74,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:spinnerMode="dropdown" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/edit_dictionary" />
+
+        <EditText
+            android:id="@+id/edit_dict_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/edit_dict_word"
+            android:ems="10"
+            android:inputType="text"/>
+
+        <Button
+            android:id="@+id/add_dict_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/add_to_dictionary" />
+
+        <Button
+            android:id="@+id/remove_dict_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/remove_from_dictionary" />
     </LinearLayout>
 
     <TextView

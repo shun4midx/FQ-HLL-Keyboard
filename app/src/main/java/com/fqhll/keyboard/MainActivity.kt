@@ -6,13 +6,18 @@ import android.text.method.LinkMovementMethod
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import com.fqhll.keyboard.databinding.ActivityMainBinding
 import androidx.core.content.edit
+import com.fqhll.keyboard.databinding.ActivityMainBinding
+import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.Paths
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
@@ -104,6 +109,40 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             onItemSelectedListener = this@MainActivity
             setPopupBackgroundResource(R.color.shun_blue)
         }
+
+
+        // edit dictionary stuff
+
+        val editDictField: EditText = findViewById(R.id.edit_dict_input)
+        val addDictButton: Button = findViewById(R.id.add_dict_btn)
+        val removeDictButton: Button = findViewById(R.id.remove_dict_btn)
+
+        addDictButton.setOnClickListener {
+            val inputWord = editDictField.text.toString()
+
+            if (!inDictionary(inputWord)) {
+                showToast(message = "adding $inputWord to dictionary...")
+                addToDictionary(inputWord)
+            }
+
+            else {
+                showToast(message = "$inputWord is already in your dictionary!")
+            }
+        }
+
+        removeDictButton.setOnClickListener {
+            val inputWord = editDictField.text.toString()
+
+            if (inDictionary(inputWord)) {
+                showToast(message = "removing $inputWord to dictionary...")
+                removeFromDictionary(inputWord)
+            }
+
+            else {
+                showToast(message = "$inputWord is not in your dictionary!")
+            }
+        }
+
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -149,6 +188,25 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
 
     external fun getSuggestion(input: String): String
+
+    private fun addToDictionary(word: String) {
+        val absPath = filesDir.absolutePath + "/test_files/20k_texting.txt"
+        CustomKeyboardApp.nativeAddWord(word, absPath)
+    }
+
+    private fun removeFromDictionary(word: String) {
+        val absPath = filesDir.absolutePath + "/test_files/20k_texting.txt"
+        CustomKeyboardApp.nativeRemoveWord(word, absPath)
+    }
+
+    private fun inDictionary(word: String): Boolean {
+        val path = Paths.get(filesDir.absolutePath + "/test_files/20k_texting.txt")
+
+        val lines = Files.readAllLines(path)
+        val wordSet: Set<String> = HashSet(lines)
+
+        return wordSet.contains(word)
+    }
 
     companion object {
         init {
