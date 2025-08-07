@@ -17,6 +17,19 @@ Keyboard settings can be found by launching the FQ-HLL Keyboard app installed wi
 
 Keyboard settings are saved across updates of the app.
 
+### Usage
+
+#### clipboard
+
+- copy from text editor
+- paste by clicking on a clipboard box
+- clear entire clipboard by holding down clipboard button
+- (delete individual clipboard entries by holding their box)
+
+#### numpad
+
+- open by holding down symbols button
+
 ## Themes
 
 You can view the themes in the [themes folder](https://github.com/shun4midx/FQ-HLL-Keyboard/tree/main/themes#readme).
