@@ -154,6 +154,10 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [ ] fully finish text editor
 - [ ] clipboard being able to access/use android copy key
 - [x] add different keyboard layouts
+- [ ] hold down clipboard button to delete individual entries
+- [ ] edit dictionary by holding down button
+- [ ] edit dictionary in app
+- [ ] custom keyboard layout autocorrection
 
 ## Contact
 
