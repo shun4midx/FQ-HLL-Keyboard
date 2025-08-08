@@ -164,6 +164,17 @@ public class CustomKeyboardApp extends InputMethodService
     }
 
     private void handleLongPress(int primaryCode) {
+        if (-99 <= primaryCode && primaryCode <= -90) { // long press to delete clipboard item
+            int clipboardCode = primaryCode + 90;
+            clipboardCode = -clipboardCode; // get code without -9 in front
+            clipboardCode = clipboardCode + 1; // since codes start from 0 but clipboard start from 1
+
+            SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+            String clipboardPref = "clipboard_text_" + clipboardCode;
+            prefs.edit().putString(clipboardPref, "").apply();
+            return;
+        }
+
         switch (primaryCode) {
             case -2: // symbols -> numpad
                 kv.setKeyboard(numpadKeyboard);

@@ -30,6 +30,12 @@ Keyboard settings are saved across updates of the app.
 
 - open by holding down symbols button
 
+#### text editor
+
+- grid mode/maximize mode
+
+<img src="grid.png" width="250"> <img src="maximize.png" width="250">
+
 ## Themes
 
 You can view the themes in the [themes folder](https://github.com/shun4midx/FQ-HLL-Keyboard/tree/main/themes#readme).
@@ -80,7 +86,6 @@ app/src/main
 |   |-- CMakeLists.txt
 |   |-- FQ-HyperLogLog-Autocorrect (repo)
 |   `-- native-lib.cpp
-|-- ic_launcher-playstore.png
 |-- java.com.fqhll.keyboard
 |   |-- CustomKeyboardApp.java
 |   |-- CustomKeyboardView.java
@@ -151,10 +156,10 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [ ] add grid/maximize mode previews to readme
 - [ ] changing non main keyboard height
 - [x] text editor symbols
-- [ ] fully finish text editor
+- [x] fully finish text editor
 - [ ] clipboard being able to access/use android copy key
 - [x] add different keyboard layouts
-- [ ] hold down clipboard button to delete individual entries
+- [x] hold down clipboard button to delete individual entries
 - [ ] edit dictionary by holding down button
 - [ ] edit dictionary in app
 - [ ] custom keyboard layout autocorrection
