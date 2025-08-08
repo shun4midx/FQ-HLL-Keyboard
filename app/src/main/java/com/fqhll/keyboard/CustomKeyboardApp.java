@@ -182,7 +182,7 @@ public class CustomKeyboardApp extends InputMethodService
                 kv.invalidateAllKeys();
                 break;
             case 47: // slash -> backslash
-                ic.commitText("\", 1)
+                ic.commitText("\", 1);
                 break;
             default:
                 break;
