@@ -19,6 +19,15 @@ Keyboard settings are saved across updates of the app.
 
 ### Usage
 
+#### main keyboard autocorrection bar
+
+- bold word: autoreplace
+- first suggestion to the left when there is a bolded suggestion is your input
+- hold down user inputted suggestion to add word to dictionary
+- hold down autocorrected suggestion to remove word from dictionary
+- hold down space key/text editor button to skip autoreplace
+- hold down symbols button to access numpad
+
 #### clipboard
 
 - copy from text editor
