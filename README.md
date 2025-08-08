@@ -149,7 +149,7 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [x] be able to delete highlighted text
 - [x] load changed themes without needing a refresh of keyboard (and without breaking popup/preview)
 - [x] coyote-time-like queueing of handling simutaneous key presses
-- [ ] an easy way to add word to dictionary
+- [x] an easy way to add word to dictionary
 - [ ] emoji suggestions in place of predictive text
 - [ ] bypass autocorrected word by long pressing space (long presses editor for now)
 - [x] numpad
@@ -162,8 +162,9 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [x] hold down clipboard button to delete individual entries
 - [x] edit dictionary by holding down button
 - [x] edit dictionary in app
-- [ ] custom keyboard layout autocorrection
+- [x] custom keyboard layout autocorrection
 - [ ] export/import custom dictionary
+- [ ] check if word is null before adding/removing
 
 ## Contact
 
