@@ -165,6 +165,7 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [x] custom keyboard layout autocorrection
 - [ ] export/import custom dictionary
 - [ ] check if word is null before adding/removing
+- [ ] add key sound
 
 ## Contact
 
