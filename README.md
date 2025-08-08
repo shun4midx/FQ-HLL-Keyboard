@@ -24,7 +24,7 @@ Keyboard settings are saved across updates of the app.
 - copy from text editor
 - paste by clicking on a clipboard box
 - clear entire clipboard by holding down clipboard button
-- (delete individual clipboard entries by holding their box)
+- delete individual clipboard entries by holding their box
 
 #### numpad
 
@@ -32,9 +32,9 @@ Keyboard settings are saved across updates of the app.
 
 #### text editor
 
-- grid mode/maximize mode
+- grid mode (left), maximize mode (right)
 
-<img src="grid.png" width="250"> <img src="maximize.png" width="250">
+<img src="grid.png" width="150"> <img src="maximize.png" width="150">
 
 ## Themes
 
@@ -153,16 +153,17 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [ ] emoji suggestions in place of predictive text
 - [ ] bypass autocorrected word by long pressing space (long presses editor for now)
 - [x] numpad
-- [ ] add grid/maximize mode previews to readme
+- [x] add grid/maximize mode previews to readme
 - [ ] changing non main keyboard height
 - [x] text editor symbols
 - [x] fully finish text editor
 - [ ] clipboard being able to access/use android copy key
 - [x] add different keyboard layouts
 - [x] hold down clipboard button to delete individual entries
-- [ ] edit dictionary by holding down button
-- [ ] edit dictionary in app
+- [x] edit dictionary by holding down button
+- [x] edit dictionary in app
 - [ ] custom keyboard layout autocorrection
+- [ ] export/import custom dictionary
 
 ## Contact
 
