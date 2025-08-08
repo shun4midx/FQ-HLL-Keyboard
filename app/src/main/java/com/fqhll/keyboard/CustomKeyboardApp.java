@@ -175,8 +175,9 @@ public class CustomKeyboardApp extends InputMethodService
             return;
         }
 
+        InputConnection ic = getCurrentInputConnection();
+
         switch (primaryCode) {
-            InputConnection ic = getCurrentInputConnection();
             case -2: // symbols -> numpad
                 kv.setKeyboard(numpadKeyboard);
                 kv.invalidateAllKeys();
