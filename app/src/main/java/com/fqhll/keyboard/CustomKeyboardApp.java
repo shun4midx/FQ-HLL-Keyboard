@@ -216,6 +216,7 @@ public class CustomKeyboardApp extends InputMethodService
 
         if (-99 <= primaryCode && primaryCode <= -90) return; // clipboard
         if (-79 <= primaryCode && primaryCode <= -60) return; // text editor
+        if (-1049 <= primaryCode && primaryCode <= -1000) return; // math symbols
 
         // 1) Un‑scale into keyboard coords (you already have scaleX/scaleY set up)
         int kx = (int)((lastTouchX - kv.getPaddingLeft()) / scaleX);
@@ -814,7 +815,7 @@ public class CustomKeyboardApp extends InputMethodService
     }
 
     private void updateMathLabel() {
-        for (Keyboard.Key key : emojiKeyboard.getKeys()) {
+        for (Keyboard.Key key : mathKeyboard.getKeys()) {
 
             for (int i = 0; i < math_symbol_list.length; i++) {
                 int math_keycode = 1000 + i;
