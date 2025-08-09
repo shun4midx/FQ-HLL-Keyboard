@@ -310,24 +310,24 @@ public class CustomKeyboardApp extends InputMethodService
             return;
         }
 
-        Map<Integer,String> emojis = getEmojiCodes();
-        Map<Integer,String> math_symbols = getMathCodes();
+        // Map<Integer,String> emojis = getEmojiCodes();
+        // Map<Integer,String> math_symbols = getMathCodes();
 
-        if (emojis.containsKey(primaryCode)) {
-            InputConnection ic = getCurrentInputConnection();
-            if (ic != null) {
-                ic.commitText(emojis.get(primaryCode), 1);
-            }
-            return;
-        }
+        // if (emojis.containsKey(primaryCode)) {
+        //     InputConnection ic = getCurrentInputConnection();
+        //     if (ic != null) {
+        //         ic.commitText(emojis.get(primaryCode), 1);
+        //     }
+        //     return;
+        // }
 
-        if (math_symbols.containsKey(primaryCode)) {
-            InputConnection ic = getCurrentInputConnection();
-            if (ic != null) {
-                ic.commitText(math_symbols.get(primaryCode), 1);
-            }
-            return;
-        }
+        // if (math_symbols.containsKey(primaryCode)) {
+        //     InputConnection ic = getCurrentInputConnection();
+        //     if (ic != null) {
+        //         ic.commitText(math_symbols.get(primaryCode), 1);
+        //     }
+        //     return;
+        // }
 
         if (isChordable(primaryCode)) {
             synchronized (pendingKeys) {
