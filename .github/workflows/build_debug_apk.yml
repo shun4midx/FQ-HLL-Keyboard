@@ -27,6 +27,11 @@ jobs:
       - name: make properties
         run: |
           touch keystore.properties
+          touch placeholder
+          echo "keyAlias=placeholder" >> keystore.properties
+          echo "keyPassword=placeholder" >> keystore.properties
+          echo "storeFile=placeholder" >> keystore.properties
+          echo "storePassword=placeholder" >> keystore.properties
           
 
       - name: build gradle project
