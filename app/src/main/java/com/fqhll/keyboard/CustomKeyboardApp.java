@@ -8,6 +8,7 @@ import android.graphics.Typeface;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
+import android.media.AudioManager;
 import android.os.Looper;
 import android.os.Handler;
 import android.view.ContextThemeWrapper;
@@ -273,8 +274,28 @@ public class CustomKeyboardApp extends InputMethodService
         }
     }
 
+    private void playClick(int keyCode){
+        AudioManager am = (AudioManager)getSystemService(AUDIO_SERVICE);
+        switch(keyCode){
+            case 32:
+                am.playSoundEffect(AudioManager.FX_KEYPRESS_SPACEBAR);
+                break;
+            case Keyboard.KEYCODE_DONE:
+            case 10:
+                am.playSoundEffect(AudioManager.FX_KEYPRESS_RETURN);
+                break;
+            case Keyboard.KEYCODE_DELETE:
+                am.playSoundEffect(AudioManager.FX_KEYPRESS_DELETE);
+                break;
+            default: am.playSoundEffect(AudioManager.FX_KEYPRESS_STANDARD);
+        }
+    }
+
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
+
+        playClick(primaryCode);
+
         if (isLongPress) {
             return;
         }
