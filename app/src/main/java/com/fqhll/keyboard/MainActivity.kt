@@ -1,6 +1,7 @@
 package com.fqhll.keyboard
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import android.view.View
@@ -15,6 +16,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.edit
 import com.fqhll.keyboard.databinding.ActivityMainBinding
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
 import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
@@ -116,13 +120,18 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val editDictField: EditText = findViewById(R.id.edit_dict_input)
         val addDictButton: Button = findViewById(R.id.add_dict_btn)
         val removeDictButton: Button = findViewById(R.id.remove_dict_btn)
+        val getDictButton: Button = findViewById(R.id.get_dict_btn)
 
         addDictButton.setOnClickListener {
             val inputWord = editDictField.text.toString()
 
-            if (!inDictionary(inputWord)) {
+            if (!inDictionary(inputWord) && inputWord != "") {
                 showToast(message = "adding $inputWord to dictionary...")
                 addToDictionary(inputWord)
+            }
+
+            else if (inputWord == "") {
+                showToast(message = "word cannot be empty!")
             }
 
             else {
@@ -134,13 +143,21 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             val inputWord = editDictField.text.toString()
 
             if (inDictionary(inputWord)) {
-                showToast(message = "removing $inputWord to dictionary...")
+                showToast(message = "removing $inputWord from dictionary...")
                 removeFromDictionary(inputWord)
+            }
+
+            else if (inputWord == "") {
+                showToast(message = "word cannot be empty!")
             }
 
             else {
                 showToast(message = "$inputWord is not in your dictionary!")
             }
+        }
+
+        getDictButton.setOnClickListener {
+            saveFile()
         }
 
     }
@@ -190,13 +207,17 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     external fun getSuggestion(input: String): String
 
     private fun addToDictionary(word: String) {
-        val absPath = filesDir.absolutePath + "/test_files/20k_texting.txt"
-        CustomKeyboardApp.nativeAddWord(word, absPath)
+        val dictPath = filesDir.absolutePath + "/test_files/20k_texting.txt"
+        val customWordsPath = filesDir.absolutePath + "/test_files/custom_words.txt"
+        CustomKeyboardApp.nativeAddWord(word, dictPath)
+        CustomKeyboardApp.nativeAddWord(word, customWordsPath)
     }
 
     private fun removeFromDictionary(word: String) {
-        val absPath = filesDir.absolutePath + "/test_files/20k_texting.txt"
-        CustomKeyboardApp.nativeRemoveWord(word, absPath)
+        val dictPath = filesDir.absolutePath + "/test_files/20k_texting.txt"
+        val customWordsPath = filesDir.absolutePath + "/test_files/custom_words.txt"
+        CustomKeyboardApp.nativeRemoveWord(word, dictPath)
+        CustomKeyboardApp.nativeRemoveWord(word, customWordsPath)
     }
 
     private fun inDictionary(word: String): Boolean {
@@ -206,6 +227,39 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val wordSet: Set<String> = HashSet(lines)
 
         return wordSet.contains(word)
+    }
+
+    private fun getCustomWords(): Set<String> {
+        val path = Paths.get(filesDir.absolutePath + "/test_files/custom_words.txt")
+
+        val lines = Files.readAllLines(path)
+        val wordSet: Set<String> = HashSet(lines)
+
+        return wordSet
+    }
+    
+    private val CREATE_FILE = 1
+
+    private fun saveFile() {
+        val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TITLE, "FQ-HLL_Keyboard_Custom_Dictionary_Export.txt")
+        }
+
+        val fileName = intent.getStringExtra(Intent.EXTRA_TITLE)
+        val file = fileName?.let { File(this.filesDir, it) }
+
+        showToast(message = fileName.toString())
+
+        startActivityForResult(intent, CREATE_FILE)
+        if (file != null) {
+            alterDocument(file)
+        }
+    }
+
+    private fun alterDocument(file: File) {
+        FileOutputStream(file).use { fos -> fos.write("This is my custom file content.".toByteArray()) }
     }
 
     companion object {

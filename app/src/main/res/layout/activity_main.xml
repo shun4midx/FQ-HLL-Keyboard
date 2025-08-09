@@ -99,6 +99,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/remove_from_dictionary" />
+
+        <Button
+            android:id="@+id/get_dict_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Export dictionary to file" />
     </LinearLayout>
 
     <TextView
