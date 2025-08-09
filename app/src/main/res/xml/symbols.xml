@@ -48,7 +48,7 @@
         <Key android:keyLabel="1/2"
             android:keyWidth="15%p"
             android:keyEdgeFlags="left"
-            android:codes="-10"/>
+            android:codes="-14"/>
 
         <Key android:keyLabel="-" android:codes="45"/>
         <Key android:keyLabel="&apos;" android:codes="39"/>

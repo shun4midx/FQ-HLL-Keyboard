@@ -310,24 +310,24 @@ public class CustomKeyboardApp extends InputMethodService
             return;
         }
 
-        // Map<Integer,String> emojis = getEmojiCodes();
-        // Map<Integer,String> math_symbols = getMathCodes();
+        Map<Integer,String> emojis = getEmojiCodes();
+        Map<Integer,String> math_symbols = getMathCodes();
 
-        // if (emojis.containsKey(primaryCode)) {
-        //     InputConnection ic = getCurrentInputConnection();
-        //     if (ic != null) {
-        //         ic.commitText(emojis.get(primaryCode), 1);
-        //     }
-        //     return;
-        // }
+        if (emojis.containsKey(primaryCode)) {
+            InputConnection ic = getCurrentInputConnection();
+            if (ic != null) {
+                ic.commitText(emojis.get(primaryCode), 1);
+            }
+            return;
+        }
 
-        // if (math_symbols.containsKey(primaryCode)) {
-        //     InputConnection ic = getCurrentInputConnection();
-        //     if (ic != null) {
-        //         ic.commitText(math_symbols.get(primaryCode), 1);
-        //     }
-        //     return;
-        // }
+        if (math_symbols.containsKey(primaryCode)) {
+            InputConnection ic = getCurrentInputConnection();
+            if (ic != null) {
+                ic.commitText(math_symbols.get(primaryCode), 1);
+            }
+            return;
+        }
 
         if (isChordable(primaryCode)) {
             synchronized (pendingKeys) {
@@ -392,6 +392,10 @@ public class CustomKeyboardApp extends InputMethodService
                 break;
             case -13: // numpad
                 kv.setKeyboard(numpadKeyboard);
+                kv.invalidateAllKeys();
+                break;
+            case -14: // math symbols
+                kv.setKeyboard(mathKeyboard);
                 kv.invalidateAllKeys();
                 break;
             case -42: // Left arrow
@@ -1047,6 +1051,7 @@ public class CustomKeyboardApp extends InputMethodService
 
         emojiKeyboard = new Keyboard(wrap, R.xml.emojis);
         symbolKeyboard= new Keyboard(wrap, R.xml.symbols);
+        mathKeyboard  = new Keyboard(wrap, R.xml.math_symbols);
         clipKeyboard  = new Keyboard(wrap, R.xml.clipboard);
         numpadKeyboard= new Keyboard(wrap, R.xml.numpad);
 
