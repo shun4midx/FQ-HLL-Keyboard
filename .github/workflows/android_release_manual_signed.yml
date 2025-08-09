@@ -1,4 +1,4 @@
-name: publish app
+name: publish signed apk
 
 on:
   workflow_dispatch:
