@@ -148,7 +148,7 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
                                                  {"hed", "he'd"}, {"Hed", "He'd"}, {"aint", "ain't"}, {"Aint", "Ain't"}, {"cant", "can't"}, {"Cant", "Can't"}, {"shouldnt", "shouldn't"}, {"Shouldnt", "Shouldn't"},
                                                  {"couldnt", "couldn't"}, {"Couldnt", "Couldn't"}, {"wouldnt", "wouldn't"}, {"Wouldnt", "Wouldn't"}, {"didnt", "didn't"}, {"Didnt", "Didn't"}, {"yall", "y'all"}, {"Yall", "Y'all"}, {"theyre", "they're"}, {"Theyre", "They're"},
                                                  {"havent", "haven't"}, {"Havent", "Haven't"}, {"theres", "there's"}, {"Theres", "There's"}, {"thats", "that's"}, {"Thats", "That's"}, {"hasnt", "hasn't"}, {"Hasnt", "Hasn't"}, {"ive", "I've"}, {"Ive", "I've"},
-                                                 {"youre", "you're"}, {"Youre", "You're"}, {"whats", "what's"}, {"Whats", "What's"}, {"theyll", "they'll"}, {"Theyll", "They'll"}};
+                                                 {"youre", "you're"}, {"Youre", "You're"}, {"whats", "what's"}, {"Whats", "What's"}, {"theyll", "they'll"}, {"Theyll", "They'll"}, {"well", "we'll"}, {"Well", "We'll"}};
 
     if (key.empty() || key == " ") {
         results = {{" ", " ", " "},
@@ -188,7 +188,7 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
         vector<string> reordered;
         vector<double> reordered_scores;
 
-        if (confidences[0] > 0.6 && suggestions[0] != key) {
+        if (confidences[0] >= 0.6 && suggestions[0] != key) {
             reordered = {key, suggestions[0], suggestions[1]};
             reordered_scores = {0, confidences[0], confidences[1]};
         } else {
