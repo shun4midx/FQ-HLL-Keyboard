@@ -60,7 +60,7 @@ Want a custom theme? Customisable themes may be implemented in the future, but u
 - lots of themes and theme customisability (key colour, key text colour, key pressed colour, key border colour, keyboard background colour)
 - height customisation (short, medium, tall)
 - text editor mode customisation (maximize, grid)
-- multiple keyboard layouts (qwerty, azerty, qwertz, dvorak, colemak)
+- multiple keyboard layouts with layout specific autocorrection (qwerty, azerty, qwertz, dvorak, colemak)
 
 ## Development usage
 
@@ -152,9 +152,9 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [ ] key opacity
 - [ ] custom key preview colour
 - [ ] figure out a way to build gradle project using github actions
-- [ ] fix unsigned release apk not working
-- [ ] sign apk
-- [ ] second page of symbols
+- [x] fix unsigned release apk not working
+- [x] sign apk
+- [x] second page of symbols
 - [x] be able to delete highlighted text
 - [x] load changed themes without needing a refresh of keyboard (and without breaking popup/preview)
 - [x] coyote-time-like queueing of handling simutaneous key presses
@@ -173,7 +173,7 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [x] edit dictionary in app
 - [x] custom keyboard layout autocorrection
 - [ ] export/import custom dictionary
-- [ ] check if word is null before adding/removing
+- [x] check if word is null before adding/removing
 - [ ] add key sound
 
 ## Contact
