@@ -76,6 +76,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     // (jperm voice) hope you can turn on word wrap
     public static final String[] emoji_list = new String[]{"😭", "😂", "💀", "😔", "🫠", "💁‍♂️", "🧍‍♂️", "💩", "💅", "🫂", "🔥", "🍀", "👾", "👀", "✨️", "🐟", "✅️", "❌️", "🐸", "🌸", "🎀", "🤡", "😡", "🙏", "👻", "🥺", "😐", "👍", "😤", "🤓", "😀", "🦆", "🥬", "🐒", "🌚", "🌃", "🌌"};
+    public static final String[] math_symbol_list = new String[]{"e"};
     private LinearLayout suggestionBar;
     private View root;
 
@@ -310,11 +311,20 @@ public class CustomKeyboardApp extends InputMethodService
         }
 
         Map<Integer,String> emojis = getEmojiCodes();
+        Map<Integer,String> math_symbols = getMathCodes();
 
         if (emojis.containsKey(primaryCode)) {
             InputConnection ic = getCurrentInputConnection();
             if (ic != null) {
                 ic.commitText(emojis.get(primaryCode), 1);
+            }
+            return;
+        }
+
+        if (math_symbols.containsKey(primaryCode)) {
+            InputConnection ic = getCurrentInputConnection();
+            if (ic != null) {
+                ic.commitText(math_symbols.get(primaryCode), 1);
             }
             return;
         }
@@ -625,8 +635,11 @@ public class CustomKeyboardApp extends InputMethodService
     }
     private void commitChar(InputConnection ic, int code) {
         Map<Integer,String> emojis = getEmojiCodes();
+        Map<Integer,String> math_symbols = getMathCodes();
         if (emojis.containsKey(code)) {
             ic.commitText(emojis.get(code), 1);
+        } else if (math_symbols.containsKey(code)) {
+            ic.commitText(math_symbols.get(code), 1);
         } else {
             char c = (char)code;
             if (Character.isLetter(c) && caps_state > 0) {
@@ -777,6 +790,33 @@ public class CustomKeyboardApp extends InputMethodService
 
                 if (key.codes[0] == emoji_keycode) {
                     key.label = emoji_list[i];
+                    break;
+                }
+            }
+        }
+    }
+    private static Map<Integer, String> getMathCodes() {
+        Map<Integer, String> math_codes = new HashMap<>();
+
+        for (int i = 0; i < math_symbol_list.length; i++) {
+            int math_keycode = 1000 + i;
+            math_keycode = -math_keycode; // just add the negative sign for negative keycode
+
+            emoji_codes.put(math_keycode, math_symbol_list[i]);
+        }
+
+        return emoji_codes;
+    }
+
+    private void updateMathLabel() {
+        for (Keyboard.Key key : emojiKeyboard.getKeys()) {
+
+            for (int i = 0; i < math_symbol_list.length; i++) {
+                int math_keycode = 1000 + i;
+                math_keycode = -math_keycode; // just add the negative sign for negative keycode
+
+                if (key.codes[0] == math_keycode) {
+                    key.label = math_symbol_list[i];
                     break;
                 }
             }
@@ -1137,6 +1177,7 @@ public class CustomKeyboardApp extends InputMethodService
 
         updateCapsLabel();
         updateEmojiLabel();
+        updateMathLabel();
         updateClipboardLabel();
         ensureNative();
         suggestionBar = root.findViewById(R.id.suggestion_bar_container);
