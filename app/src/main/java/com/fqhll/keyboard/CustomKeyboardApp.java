@@ -802,10 +802,10 @@ public class CustomKeyboardApp extends InputMethodService
             int math_keycode = 1000 + i;
             math_keycode = -math_keycode; // just add the negative sign for negative keycode
 
-            emoji_codes.put(math_keycode, math_symbol_list[i]);
+            math_codes.put(math_keycode, math_symbol_list[i]);
         }
 
-        return emoji_codes;
+        return math_codes;
     }
 
     private void updateMathLabel() {
