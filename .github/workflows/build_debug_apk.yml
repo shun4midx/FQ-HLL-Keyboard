@@ -3,6 +3,9 @@ name: build debug apk
 on:
   workflow_dispatch:
 
+env:
+  keystore_properties : ${{ secrets.KEY_PROP }}
+
 jobs:
   build:
 
@@ -20,6 +23,11 @@ jobs:
 
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
+
+      - name: make properties
+        run: |
+          touch keystore.properties
+          
 
       - name: build gradle project
         run: ./gradlew build
