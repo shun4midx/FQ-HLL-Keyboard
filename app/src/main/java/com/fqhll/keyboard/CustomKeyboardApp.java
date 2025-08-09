@@ -183,6 +183,15 @@ public class CustomKeyboardApp extends InputMethodService
                 kv.setKeyboard(numpadKeyboard);
                 kv.invalidateAllKeys();
                 break;
+            case 44: // comma -> select all
+                CharSequence selectAllText = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0)
+                        .toString() + ic.getTextAfterCursor(Integer.MAX_VALUE, 0).toString();
+                ic.setSelection(0, selectAllText.length());
+            case 32: // space -> skip word
+                if (ic != null) {
+                    ic.commitText(" ", 1);
+                    showSuggestions("");
+                }
             case 47: // slash -> backslash
                 ic.commitText("\\", 1);
                 break;
