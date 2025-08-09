@@ -53,6 +53,7 @@ public class CustomKeyboardApp extends InputMethodService
     private Keyboard keyboard;
     private Keyboard emojiKeyboard;
     private Keyboard symbolKeyboard;
+    private Keyboard mathKeyboard;
     private Keyboard clipKeyboard;
     private Keyboard editorKeyboard;
     private Keyboard numpadKeyboard;
