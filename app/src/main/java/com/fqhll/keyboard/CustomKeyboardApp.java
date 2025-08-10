@@ -193,6 +193,9 @@ public class CustomKeyboardApp extends InputMethodService
             case 47: // slash -> backslash
                 ic.commitText("\\", 1);
                 break;
+            case 65292: // chi comma -> chi full stop
+                ic.commitText("。", 1);
+                break;
             default:
                 break;
         }
