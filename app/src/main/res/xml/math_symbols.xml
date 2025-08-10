@@ -6,19 +6,6 @@
     >
 
     <Row>
-        <Key android:codes="49" android:keyLabel="1" android:keyEdgeFlags="left"/>
-        <Key android:codes="50" android:keyLabel="2"/>
-        <Key android:codes="51" android:keyLabel="3"/>
-        <Key android:codes="52" android:keyLabel="4"/>
-        <Key android:codes="53" android:keyLabel="5"/>
-        <Key android:codes="54" android:keyLabel="6"/>
-        <Key android:codes="55" android:keyLabel="7"/>
-        <Key android:codes="56" android:keyLabel="8"/>
-        <Key android:codes="57" android:keyLabel="9"/>
-        <Key android:codes="48" android:keyLabel="0" android:keyEdgeFlags="right"/>
-    </Row>
-
-    <Row>
         <Key android:codes="-1000" android:keyEdgeFlags="left"/>
         <Key android:codes="-1001"/>
         <Key android:codes="-1002"/>
@@ -45,14 +32,27 @@
     </Row>
 
     <Row>
-        <Key android:keyLabel="2/2" android:keyWidth="15%p" android:keyEdgeFlags="left" android:codes="-12"/>
-        <Key android:codes="-1020"/>
+        <Key android:codes="-1020" android:keyEdgeFlags="left"/>
         <Key android:codes="-1021"/>
         <Key android:codes="-1022"/>
         <Key android:codes="-1023"/>
         <Key android:codes="-1024"/>
         <Key android:codes="-1025"/>
         <Key android:codes="-1026"/>
+        <Key android:codes="-1027"/>
+        <Key android:codes="-1028"/>
+        <Key android:codes="-1029" android:keyEdgeFlags="right"/>
+    </Row>
+
+    <Row>
+        <Key android:keyLabel="2/2" android:keyWidth="15%p" android:keyEdgeFlags="left" android:codes="-12"/>
+        <Key android:codes="-1030"/>
+        <Key android:codes="-1031"/>
+        <Key android:codes="-1032"/>
+        <Key android:codes="-1033"/>
+        <Key android:codes="-1034"/>
+        <Key android:codes="-1035"/>
+        <Key android:codes="-1036"/>
         <Key android:codes="-5" android:keyLabel="⌫" android:keyWidth="15%p" android:isRepeatable="true" android:keyEdgeFlags="right"/>
     </Row>
 
