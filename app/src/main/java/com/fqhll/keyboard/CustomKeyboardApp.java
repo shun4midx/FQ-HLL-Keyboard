@@ -13,6 +13,7 @@ import android.os.Looper;
 import android.os.Handler;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
+import android.view.KeyboardShortcutGroup;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,6 +37,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.Key;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -57,6 +59,8 @@ public class CustomKeyboardApp extends InputMethodService
     private Keyboard clipKeyboard;
     private Keyboard editorKeyboard;
     private Keyboard numpadKeyboard;
+    private Keyboard zhuyinKeyboard;
+    private Keyboard engKeyboard;
 
     private PopupWindow keyPreviewPopup;
     private TextView previewText;
@@ -980,7 +984,7 @@ public class CustomKeyboardApp extends InputMethodService
     }
 
     private void updateCapsLabel() {
-        for (Keyboard.Key key : keyboard.getKeys()) {
+        for (Keyboard.Key key : kv.getKeyboard().getKeys()) {
             if (key.codes[0] == -1) { // CAPS key
                 if (caps_state == 0) {
                     key.label = "caps";
@@ -995,7 +999,7 @@ public class CustomKeyboardApp extends InputMethodService
     }
 
     private void applyCapsState() {
-        keyboard.setShifted(caps_state > 0);
+        kv.getKeyboard().setShifted(caps_state > 0);
         updateCapsLabel();
         kv.invalidateAllKeys();
     }
@@ -1069,6 +1073,7 @@ public class CustomKeyboardApp extends InputMethodService
         mathKeyboard  = new Keyboard(wrap, R.xml.math_symbols);
         clipKeyboard  = new Keyboard(wrap, R.xml.clipboard);
         numpadKeyboard= new Keyboard(wrap, R.xml.numpad);
+        zhuyinKeyboard= new Keyboard(wrap, R.xml.custom_keypad_zhuyin);
 
         String keyboardHeight = prefs.getString("keyboard_height", "Short");
         String keyboardLayout = prefs.getString("keyboard_layout", "qwerty").toLowerCase();
@@ -1081,12 +1086,19 @@ public class CustomKeyboardApp extends InputMethodService
             } else {
                 keyboard = new Keyboard(wrap, R.xml.custom_keypad_tall);
             }
+            engKeyboard = keyboard;
+        }
+
+        else if (keyboardLayout.equals("zhuyin")) {
+            keyboard = zhuyinKeyboard;
+            engKeyboard = new Keyboard(wrap, R.xml.custom_keypad_qwerty);
         }
 
         else {
             String layoutName = "custom_keypad_" + keyboardLayout;
             int layoutXml = getResources().getIdentifier(layoutName, "xml", getPackageName());
             keyboard = new Keyboard(wrap, layoutXml);
+            engKeyboard = keyboard;
         }
 
         // Update layout
@@ -1140,11 +1152,16 @@ public class CustomKeyboardApp extends InputMethodService
 
         // Long press text editor to commit a space without autocorrecting
         textEditor.setOnLongClickListener(v -> {
-            InputConnection ic = getCurrentInputConnection();
-            if (ic != null) {
-                ic.commitText(" ", 1);
-                showSuggestions("");
+            if (kv.getKeyboard() == zhuyinKeyboard && !keyboard.equals(zhuyinKeyboard)) {
+                kv.setKeyboard(keyboard);
             }
+            else if (kv.getKeyboard() == zhuyinKeyboard && keyboard.equals(zhuyinKeyboard)) {
+                kv.setKeyboard(engKeyboard);
+            }
+            else {
+                kv.setKeyboard(zhuyinKeyboard);
+            }
+            kv.invalidateAllKeys();
             return true;
         });
 
