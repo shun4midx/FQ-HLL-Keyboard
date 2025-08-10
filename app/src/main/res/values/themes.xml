@@ -90,7 +90,7 @@
         <item name="keyTextColor">@color/custom_yellow</item>
         <item name="keyboardBackgroundColor">@color/black</item>
         <item name="keyBorderColor">@color/black</item>
-        <item name="keyPressedColor">@color/black</item>
+        <item name="keyPressedColor">@color/custom_light_yellow</item>
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
@@ -100,7 +100,7 @@
         <item name="keyTextColor">@color/teal_200</item>
         <item name="keyboardBackgroundColor">@color/black</item>
         <item name="keyBorderColor">@color/black</item>
-        <item name="keyPressedColor">@color/black</item>
+        <item name="keyPressedColor">@color/teal_gradient_2</item>
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
@@ -109,8 +109,8 @@
         <item name="keyColor">@color/black</item>
         <item name="keyTextColor">@color/custom_light_purple</item>
         <item name="keyboardBackgroundColor">@color/custom_purple</item>
-        <item name="keyBorderColor">@color/black</item>
-        <item name="keyPressedColor">@color/black</item>
+        <item name="keyBorderColor">@color/custom_purple</item>
+        <item name="keyPressedColor">@color/purple_200</item>
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
@@ -119,8 +119,8 @@
         <item name="keyColor">@color/black</item>
         <item name="keyTextColor">@color/custom_light_green</item>
         <item name="keyboardBackgroundColor">@color/custom_green</item>
-        <item name="keyBorderColor">@color/black</item>
-        <item name="keyPressedColor">@color/black</item>
+        <item name="keyBorderColor">@color/custom_green</item>
+        <item name="keyPressedColor">@color/cabbage_green</item>
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
@@ -129,8 +129,8 @@
         <item name="keyColor">@color/black</item>
         <item name="keyTextColor">@color/custom_light_blue</item>
         <item name="keyboardBackgroundColor">@color/custom_hammerhead_blue</item>
-        <item name="keyBorderColor">@color/black</item>
-        <item name="keyPressedColor">@color/black</item>
+        <item name="keyBorderColor">@color/custom_hammerhead_blue</item>
+        <item name="keyPressedColor">@color/shun_blue</item>
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
@@ -161,6 +161,16 @@
         <item name="keyboardBackgroundColor">@color/sage_bg</item>
         <item name="keyBorderColor">@color/sage_border</item>
         <item name="keyPressedColor">@color/black</item>
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+    </style>
+
+    <style name="Theme.FQHLLKeyboard.ThisIsFine" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/this_is_fine_yellow</item>
+        <item name="keyTextColor">@color/this_is_fine_brown</item>
+        <item name="keyboardBackgroundColor">@color/this_is_fine_orange</item>
+        <item name="keyBorderColor">@color/black</item>
+        <item name="keyPressedColor">@color/this_is_fine_green</item>
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>

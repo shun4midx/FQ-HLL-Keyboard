@@ -49,4 +49,9 @@
     <color name="sage_bg">#348781</color>
     <color name="sage_keys">#11354f</color>
     <color name="sage_border">#bdf3ff</color>
+
+    <color name="this_is_fine_orange">#fb8a06</color>
+    <color name="this_is_fine_yellow">#fcdc6c</color>
+    <color name="this_is_fine_brown">#53320d</color>
+    <color name="this_is_fine_green">#968f0d</color>
 </resources>

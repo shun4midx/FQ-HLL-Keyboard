@@ -189,6 +189,7 @@ public class CustomKeyboardApp extends InputMethodService
                 CharSequence selectAllText = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0)
                         .toString() + ic.getTextAfterCursor(Integer.MAX_VALUE, 0).toString();
                 ic.setSelection(0, selectAllText.length());
+                break;
             case 47: // slash -> backslash
                 ic.commitText("\\", 1);
                 break;
@@ -711,7 +712,6 @@ public class CustomKeyboardApp extends InputMethodService
                             if (!inDictionary(word)) {
                                 CustomKeyboardApp.nativeAddWord(word, absPath);
                                 committedText = "\n\n" + word + " is added to dictionary!";
-                                ic.commitText(committedText, 1);
                             }
                         } catch (IOException e) {
                             throw new RuntimeException(e);
@@ -722,7 +722,6 @@ public class CustomKeyboardApp extends InputMethodService
                     else {
                         CustomKeyboardApp.nativeRemoveWord(word, absPath);
                         committedText = "\n\n" + word + " is removed from dictionary!";
-                        ic.commitText(committedText, 1);
                     }
 
                     showSuggestions("");
