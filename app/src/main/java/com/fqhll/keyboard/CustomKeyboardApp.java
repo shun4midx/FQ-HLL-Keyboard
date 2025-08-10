@@ -196,6 +196,22 @@ public class CustomKeyboardApp extends InputMethodService
             case 65292: // chi comma -> chi full stop
                 ic.commitText("。", 1);
                 break;
+            case -4: // zhuyin enter -> open settings, eng enter -> skip word
+                SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+                String keyboardLayout = prefs.getString("keyboard_layout", "qwerty").toLowerCase();
+                if (keyboardLayout.equals("zhuyin")) {
+                    PackageManager manager = getPackageManager();
+                    Intent launchIntent = manager.getLaunchIntentForPackage("com.fqhll.keyboard");
+                    launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                    startActivity(launchIntent);
+                }
+                else {
+                    if (ic != null) {
+                        ic.commitText(" ", 1);
+                        showSuggestions("");
+                    }
+                }
+                break;
             default:
                 break;
         }
