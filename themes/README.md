@@ -8,11 +8,11 @@
 
 ## ThisIsFine
 
-<img width="400px" src="ThisIsFine.png"/> <img width="400px" src="ThisIsFine_Reference.png"/>
+<img width="400px" src="ThisIsFine.png"/> <img width="300px" src="ThisIsFine_Reference.png"/>
 
 ## AntiThisIsFine
 
-<img width="400px" src="AntiThisIsFine.png"/> <img width="400px" src="AntiThisIsFine_Reference.png"/>
+<img width="400px" src="AntiThisIsFine.png"/> <img width="300px" src="AntiThisIsFine_Reference.png"/>
 
 ## Black
 
