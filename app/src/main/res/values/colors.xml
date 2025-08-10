@@ -54,4 +54,7 @@
     <color name="this_is_fine_yellow">#fcdc6c</color>
     <color name="this_is_fine_brown">#53320d</color>
     <color name="this_is_fine_green">#968f0d</color>
+
+    <color name="anti_this_is_fine_light_blue">#45b5f5</color>
+    <color name="anti_this_is_fine_blue">#161b52</color>
 </resources>

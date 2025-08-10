@@ -31,6 +31,10 @@
         <item name="keyboardBackgroundColor">@color/black</item>
         <item name="keyBorderColor">@color/custom_dark_grey</item>
         <item name="keyPressedColor">@color/black</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">?attr/keyColor</item>
+
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
@@ -41,6 +45,10 @@
         <item name="keyboardBackgroundColor">@color/black</item>
         <item name="keyBorderColor">@color/custom_fqhll_logo_wire_light_blue</item>
         <item name="keyPressedColor">@color/black</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">?attr/keyColor</item>
+
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
@@ -51,6 +59,10 @@
         <item name="keyboardBackgroundColor">@color/purple_900</item>
         <item name="keyBorderColor">@color/custom_blue</item>
         <item name="keyPressedColor">@color/black</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">?attr/keyColor</item>
+
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
@@ -61,6 +73,10 @@
         <item name="keyboardBackgroundColor">@color/custom_hammerhead_blue</item>
         <item name="keyBorderColor">@color/teal_gradient_5</item>
         <item name="keyPressedColor">@color/black</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">?attr/keyColor</item>
+
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
@@ -71,6 +87,10 @@
         <item name="keyboardBackgroundColor">@color/cotton_candy_light_blue</item>
         <item name="keyBorderColor">@color/custom_blue</item>
         <item name="keyPressedColor">@color/custom_fqhll_banner_pink</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">?attr/keyColor</item>
+
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
@@ -81,6 +101,10 @@
         <item name="keyboardBackgroundColor">@color/cabbage_blue</item>
         <item name="keyBorderColor">@color/cabbage_green</item>
         <item name="keyPressedColor">@color/black</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">?attr/keyColor</item>
+
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
@@ -91,6 +115,10 @@
         <item name="keyboardBackgroundColor">@color/black</item>
         <item name="keyBorderColor">@color/black</item>
         <item name="keyPressedColor">@color/custom_light_yellow</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">?attr/keyColor</item>
+
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
@@ -101,6 +129,10 @@
         <item name="keyboardBackgroundColor">@color/black</item>
         <item name="keyBorderColor">@color/black</item>
         <item name="keyPressedColor">@color/teal_gradient_2</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">?attr/keyColor</item>
+
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
@@ -111,6 +143,10 @@
         <item name="keyboardBackgroundColor">@color/custom_purple</item>
         <item name="keyBorderColor">@color/custom_purple</item>
         <item name="keyPressedColor">@color/purple_200</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">?attr/keyColor</item>
+
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
@@ -121,6 +157,10 @@
         <item name="keyboardBackgroundColor">@color/custom_green</item>
         <item name="keyBorderColor">@color/custom_green</item>
         <item name="keyPressedColor">@color/cabbage_green</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">?attr/keyColor</item>
+
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
@@ -131,6 +171,10 @@
         <item name="keyboardBackgroundColor">@color/custom_hammerhead_blue</item>
         <item name="keyBorderColor">@color/custom_hammerhead_blue</item>
         <item name="keyPressedColor">@color/shun_blue</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">?attr/keyColor</item>
+
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
@@ -141,6 +185,10 @@
         <item name="keyboardBackgroundColor">@color/teal_gradient_1</item>
         <item name="keyBorderColor">@color/teal_gradient_5</item>
         <item name="keyPressedColor">@color/black</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">?attr/keyColor</item>
+
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
@@ -151,6 +199,10 @@
         <item name="keyboardBackgroundColor">@color/custom_dark_blue</item>
         <item name="keyBorderColor">@color/custom_hammerhead_blue</item>
         <item name="keyPressedColor">@color/black</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">?attr/keyColor</item>
+
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
@@ -161,6 +213,10 @@
         <item name="keyboardBackgroundColor">@color/sage_bg</item>
         <item name="keyBorderColor">@color/sage_border</item>
         <item name="keyPressedColor">@color/black</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">?attr/keyColor</item>
+
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
@@ -171,6 +227,24 @@
         <item name="keyboardBackgroundColor">@color/this_is_fine_orange</item>
         <item name="keyBorderColor">@color/black</item>
         <item name="keyPressedColor">@color/this_is_fine_green</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">?attr/keyColor</item>
+
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+    </style>
+
+    <style name="Theme.FQHLLKeyboard.AntiThisIsFine" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/anti_this_is_fine_light_blue</item>
+        <item name="keyTextColor">@color/this_is_fine_yellow</item>
+        <item name="keyboardBackgroundColor">@color/anti_this_is_fine_blue</item>
+        <item name="keyBorderColor">@color/black</item>
+        <item name="keyPressedColor">@color/this_is_fine_green</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">?attr/keyColor</item>
+
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>

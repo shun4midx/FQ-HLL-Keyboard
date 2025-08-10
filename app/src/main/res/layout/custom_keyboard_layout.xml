@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:gravity="center_vertical"
-        android:background="?attr/keyTextColor"
+        android:background="?attr/suggestionBarColor"
         android:padding="4dp"
 
         android:focusable="false"
@@ -24,8 +24,8 @@
             android:layout_height="match_parent"
             android:text="⎘"
             android:textSize="18sp"
-            android:textColor="?attr/keyColor"
-            android:background="?attr/keyTextColor"
+            android:textColor="?attr/suggestionBarTextColor"
+            android:background="?attr/suggestionBarColor"
             android:padding="4dp"
             android:layout_marginEnd="4dp"
             android:clickable="true"/>
@@ -37,7 +37,7 @@
             android:layout_weight="1"
             android:autoSizeTextType="uniform"
             android:singleLine="true"
-            android:textColor="?attr/keyColor"
+            android:textColor="?attr/suggestionBarTextColor"
             android:gravity="center"
             android:clickable="true"/>
 
@@ -48,7 +48,7 @@
             android:layout_weight="1"
             android:autoSizeTextType="uniform"
             android:singleLine="true"
-            android:textColor="?attr/keyColor"
+            android:textColor="?attr/suggestionBarTextColor"
             android:gravity="center"
             android:clickable="true"/>
 
@@ -59,7 +59,7 @@
             android:layout_weight="1"
             android:autoSizeTextType="uniform"
             android:singleLine="true"
-            android:textColor="?attr/keyColor"
+            android:textColor="?attr/suggestionBarTextColor"
             android:gravity="center"
             android:clickable="true"/>
 
@@ -69,8 +69,8 @@
             android:layout_height="match_parent"
             android:text="️𝙸"
             android:textSize="18sp"
-            android:textColor="?attr/keyColor"
-            android:background="?attr/keyTextColor"
+            android:textColor="?attr/suggestionBarTextColor"
+            android:background="?attr/suggestionBarColor"
             android:padding="4dp"
             android:layout_marginStart="4dp"
             android:clickable="true"/>
