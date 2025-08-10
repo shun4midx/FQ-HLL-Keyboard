@@ -222,8 +222,8 @@
     </style>
 
     <style name="Theme.FQHLLKeyboard.ThisIsFine" parent="Theme.FQHLLKeyboard">
-        <item name="keyColor">@color/this_is_fine_yellow</item>
-        <item name="keyTextColor">@color/this_is_fine_brown</item>
+        <item name="keyColor">@color/this_is_fine_brown</item>
+        <item name="keyTextColor">@color/this_is_fine_yellow</item>
         <item name="keyboardBackgroundColor">@color/this_is_fine_orange</item>
         <item name="keyBorderColor">@color/black</item>
         <item name="keyPressedColor">@color/this_is_fine_green</item>
@@ -236,14 +236,14 @@
     </style>
 
     <style name="Theme.FQHLLKeyboard.AntiThisIsFine" parent="Theme.FQHLLKeyboard">
-        <item name="keyColor">@color/anti_this_is_fine_light_blue</item>
+        <item name="keyColor">@color/anti_this_is_fine_light_blue_2</item>
         <item name="keyTextColor">@color/this_is_fine_yellow</item>
         <item name="keyboardBackgroundColor">@color/anti_this_is_fine_blue</item>
         <item name="keyBorderColor">@color/black</item>
         <item name="keyPressedColor">@color/this_is_fine_green</item>
 
-        <item name="suggestionBarColor">?attr/keyTextColor</item>
-        <item name="suggestionBarTextColor">?attr/keyColor</item>
+        <item name="suggestionBarColor">@color/this_is_fine_orange</item>
+        <item name="suggestionBarTextColor">@color/custom_light_yellow</item>
 
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
