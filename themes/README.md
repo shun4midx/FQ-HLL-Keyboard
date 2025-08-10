@@ -1,63 +1,63 @@
 ## Shun
 
-<img width="400px" src="Shun.png"/>
+<img height="320px" src="Shun.png"/>
 
 ## Ducky
 
-<img width="400px" src="Ducky.png"/>
+<img height="320px" src="Ducky.png"/>
 
 ## ThisIsFine
 
-<img width="400px" src="ThisIsFine.png"/> <img width="400px" src="ThisIsFine_Reference.png"/>
+<img height="320px" src="ThisIsFine.png"/> <img height="320px" src="ThisIsFine_Reference.png"/>
 
 ## AntiThisIsFine
 
-<img width="400px" src="AntiThisIsFine.png"/> <img width="400px" src="AntiThisIsFine_Reference.png"/>
+<img height="320px" src="AntiThisIsFine.png"/> <img height="320px" src="AntiThisIsFine_Reference.png"/>
 
 ## Black
 
-<img width="400px" src="Black.png"/>
+<img height="320px" src="Black.png"/>
 
 ## Cabbage
 
-<img width="400px" src="Cabbage.png"/>
+<img height="320px" src="Cabbage.png"/>
 
 ## CottonCandy
 
-<img width="400px" src="CottonCandy.png"/>
+<img height="320px" src="CottonCandy.png"/>
 
 ## Cyan
 
-<img width="400px" src="Cyan.png"/>
+<img height="320px" src="Cyan.png"/>
 
 ## DarkBlue
 
-<img width="400px" src="DarkBlue.png"/>
+<img height="320px" src="DarkBlue.png"/>
 
 ## Green
 
-<img width="400px" src="Green.png"/>
+<img height="320px" src="Green.png"/>
 
 ## Hammerhead
 
-<img width="400px" src="Hammerhead.png"/>
+<img height="320px" src="Hammerhead.png"/>
 
 ## Purple
 
-<img width="400px" src="Purple.png"/>
+<img height="320px" src="Purple.png"/>
 
 ## Sage
 
-<img width="400px" src="Sage.png"/>
+<img height="320px" src="Sage.png"/>
 
 ## Stargaze
 
-<img width="400px" src="Stargaze.png"/>
+<img height="320px" src="Stargaze.png"/>
 
 ## Teal
 
-<img width="400px" src="Teal.png"/>
+<img height="320px" src="Teal.png"/>
 
 ## Yellow
 
-<img width="400px" src="Yellow.png"/>
+<img height="320px" src="Yellow.png"/>
