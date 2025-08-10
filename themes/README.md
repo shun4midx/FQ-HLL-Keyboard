@@ -6,6 +6,14 @@
 
 <img width="400px" src="Ducky.png"/>
 
+## ThisIsFine
+
+<img width="400px" src="ThisIsFine.png"/> <img width="400px" src="ThisIsFine_Reference.png"/>
+
+## AntiThisIsFine
+
+<img width="400px" src="AntiThisIsFine.png"/> <img width="400px" src="AntiThisIsFine_Reference.png"/>
+
 ## Black
 
 <img width="400px" src="Black.png"/>
