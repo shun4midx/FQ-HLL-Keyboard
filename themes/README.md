@@ -1,55 +1,55 @@
 ## Shun
 
-<img src="Shun.png"/>
+<img width="400px" src="Shun.png"/>
 
 ## Ducky
 
-<img src="Ducky.png"/>
+<img width="400px" src="Ducky.png"/>
 
 ## Black
 
-<img src="Black.png"/>
+<img width="400px" src="Black.png"/>
 
 ## Cabbage
 
-<img src="Cabbage.png"/>
+<img width="400px" src="Cabbage.png"/>
 
 ## CottonCandy
 
-<img src="CottonCandy.png"/>
+<img width="400px" src="CottonCandy.png"/>
 
 ## Cyan
 
-<img src="Cyan.png"/>
+<img width="400px" src="Cyan.png"/>
 
 ## DarkBlue
 
-<img src="DarkBlue.png"/>
+<img width="400px" src="DarkBlue.png"/>
 
 ## Green
 
-<img src="Green.png"/>
+<img width="400px" src="Green.png"/>
 
 ## Hammerhead
 
-<img src="Hammerhead.png"/>
+<img width="400px" src="Hammerhead.png"/>
 
 ## Purple
 
-<img src="Purple.png"/>
+<img width="400px" src="Purple.png"/>
 
 ## Sage
 
-<img src="Sage.png"/>
+<img width="400px" src="Sage.png"/>
 
 ## Stargaze
 
-<img src="Stargaze.png"/>
+<img width="400px" src="Stargaze.png"/>
 
 ## Teal
 
-<img src="Teal.png"/>
+<img width="400px" src="Teal.png"/>
 
 ## Yellow
 
-<img src="Yellow.png"/>
+<img width="400px" src="Yellow.png"/>
