@@ -13,19 +13,20 @@ Thus, here we present the FQ-HLL keyboard which uses the fast and low memory FQ-
 
 Download the latest release of the app [here](https://github.com/shun4midx/FQ-HLL-Keyboard/releases/latest), install the apk and head to your phone's keyboard settings. Enable `FQ-HLL Keyboard` and switch to the keyboard.
 
-Keyboard settings can be found by launching the FQ-HLL Keyboard app installed with the apk, or by pressing the `⎋` button on the keyboard.
+Keyboard settings can be found by launching the FQ-HLL Keyboard app installed with the apk, or by pressing the `⎋` button on the keyboard/holding down enter key in zhuyin keyboard.
 
 Keyboard settings are saved across updates of the app.
 
 ### Usage
 
-#### main keyboard autocorrection bar
+#### main keyboard/autocorrection bar
 
 - bold word: autoreplace
 - first suggestion to the left when there is a bolded suggestion is your input
 - hold down user inputted suggestion to add word to dictionary
 - hold down autocorrected suggestion to remove word from dictionary
-- hold down space key/text editor button to skip autoreplace
+- hold down text editor button to change languages
+- hold down enter skip autoreplace
 - hold down symbols button to access numpad
 
 #### clipboard
@@ -44,9 +45,6 @@ Keyboard settings are saved across updates of the app.
 - grid mode (left), maximize mode (right)
 
 <img src="grid.png" width="150"> <img src="maximize.png" width="150">
-
-#### Zhuyin
-As of currently, there is a separate "keyboard layout" called "Zhuyin". It is important to note that it does not support Traditional Chinese typing yet and only has symbols offered **without autocorrection**. We plan to support Zhuyin typing in the future, as Shun uses Zhuyin often, but it would probably not use the same FQ-HLL algorithm, since Chinese is not a letter-based language. However, it would still be released under the same name "FQ-HLL keyboard".
 
 ## Themes
 
@@ -125,6 +123,7 @@ app/src/main
         |-- custom_keypad_qwertz.xml
         |-- custom_keypad_short.xml
         |-- custom_keypad_tall.xml
+        |-- custom_keypad_zhuyin.xml
         |-- custom_method.xml
         |-- editor_grid.xml
         |-- editor_maximize.xml
@@ -154,7 +153,7 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [ ] custom background image
 - [ ] key opacity
 - [ ] custom key preview colour
-- [ ] figure out a way to build gradle project using github actions
+- [x] figure out a way to build gradle project using github actions
 - [x] fix unsigned release apk not working
 - [x] sign apk
 - [x] second page of symbols
@@ -163,7 +162,7 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [x] coyote-time-like queueing of handling simutaneous key presses
 - [x] an easy way to add word to dictionary
 - [ ] emoji suggestions in place of predictive text
-- [ ] bypass autocorrected word by long pressing space (long presses editor for now)
+- [x] bypass autocorrected word by long pressing enter
 - [x] numpad
 - [x] add grid/maximize mode previews to readme
 - [ ] changing non main keyboard height
