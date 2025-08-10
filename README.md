@@ -45,6 +45,9 @@ Keyboard settings are saved across updates of the app.
 
 <img src="grid.png" width="150"> <img src="maximize.png" width="150">
 
+#### Zhuyin
+As of currently, there is a separate "keyboard layout" called "Zhuyin". It is important to note that it does not support Traditional Chinese typing yet and only has symbols offered **without autocorrection**. We plan to support Zhuyin typing in the future, as Shun uses Zhuyin often, but it would probably not use the same FQ-HLL algorithm, since Chinese is not a letter-based language. However, it would still be released under the same name "FQ-HLL keyboard".
+
 ## Themes
 
 You can view the themes in the [themes folder](https://github.com/shun4midx/FQ-HLL-Keyboard/tree/main/themes#readme).
