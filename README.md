@@ -99,29 +99,11 @@ Want a custom theme? Customisable themes may be implemented in the future, but u
 
 ## Development usage
 
-setup android studio and link to phone
-
-run the main app, then head to phone settings and search for keyboard
-
-enable `FQ-HLL Keyboard` in the settings
-
-switch to the keyboard in a text editor
+Install android studio and run the app. The usage after installation is the same as [installing from apk](https://github.com/shun4midx/FQ-HLL-Keyboard?tab=readme-ov-file#installation).
 
 ### Keyboard files
 
-`java/com.fqhll.keyboard`: the actual code of the keyboard
-
-`native-lib.cpp`: how the app starts
-
-`activity_main.xml`: the initial layout of the app
-
-`custom_keyboard_preview.xml`: the layout of the popup when holding down a key
-
-`custom_keypad.xml`: the entire layout of the keyboard
-
-`key_background.xml`: the background of the keyboard
-
-`symbols.xml`: the symbols tab of the keyboard
+`CustomKeyboardApp.java` and `MainActivity.kt` contains the code of the keyboard and the settings app respectively.
 
 ```
 app/src/main
@@ -168,11 +150,11 @@ app/src/main
 
 ### latest development apk
 
-might not work, but you get the latest stuff
-
-prereleases are good beta versions of the app but are somewhat more tested
+They are not guaranteed to work, but you get the latest features. Feel free to open an issue if you found a bug that isn't listed in the todo below.
 
 https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/debug/app-debug.apk
+
+Prereleases are relatively more tested development versions of the app if you prefer a more stable app.
 
 ### todo
 
