@@ -47,7 +47,7 @@ You can delete an item by long pressing its box, or long press the clipboard but
 
 #### Numpad
 
-You can access the numpad by long pressing symbols, or through the text editor.
+You can access the numpad by long pressing symbols, or through the emoji keyboard.
 
 #### Text Editor
 
