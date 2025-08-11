@@ -34,7 +34,7 @@ You can long press the text editor button to change languages.
 | Key | Long Press function |
 |-----|---------------------|
 | comma `,` | select all |
-| symbols `!?#`  | numpad |
+| symbols `!?#` | numpad |
 | enter `↵` | skip replacement |
 
 #### Clipboard
@@ -86,13 +86,14 @@ Want a custom theme? Customisable themes may be implemented in the future, but u
 ## Features
 
 - FQ-HLL autocorrect algorithm
-- emoji/symbol support
-- coyote-time-like handling of simutaneous key presses
-- autocorrect/autocapitalization toggle
-- lots of themes and theme customisability (key colour, key text colour, key pressed colour, key border colour, keyboard background colour, suggestion bar (text) colour)
-- height customisation (short, medium, tall)
-- text editor mode customisation (maximize, grid)
-- multiple keyboard layouts with layout specific autocorrection (qwerty, azerty, qwertz, dvorak, colemak)
+- Clipboard, text editor, symbols, and emojis
+- Coyote-time-like handling of simutaneous key presses
+- Autocorrect/autocapitalization toggle
+- Lots of themes and theme customisability (key colour, key text colour, key pressed colour, key border colour, keyboard background colour, suggestion bar (text) colour)
+- Height customisation (short, medium, tall)
+- Text editor mode customisation (maximize, grid)
+- Multiple keyboard layouts with layout specific autocorrection (qwerty, azerty, qwertz, dvorak, colemak)
+- (upcoming) zhuyin support
 
 ## Development usage
 
