@@ -8,9 +8,9 @@
         <Key android:codes="12549" android:keyLabel="ㄅ" android:keyEdgeFlags="left"/>
         <Key android:codes="12553" android:keyLabel="ㄉ"/>
         <Key android:codes="711" android:keyLabel="ˇ"/>
-        <Key android:codes="714" android:keyLabel="ˋ"/>
+        <Key android:codes="715" android:keyLabel="ˋ"/>
         <Key android:codes="12563" android:keyLabel="ㄓ"/>
-        <Key android:codes="715" android:keyLabel="ˊ"/>
+        <Key android:codes="714" android:keyLabel="ˊ"/>
         <Key android:codes="729" android:keyLabel="˙"/>
         <Key android:codes="12570" android:keyLabel="ㄚ"/>
         <Key android:codes="12574" android:keyLabel="ㄞ"/>
