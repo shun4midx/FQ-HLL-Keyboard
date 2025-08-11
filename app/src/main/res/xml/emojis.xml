@@ -45,7 +45,7 @@
     </Row>
 
     <Row>
-        <Key android:keyLabel="1/2" android:keyWidth="15%p" android:keyEdgeFlags="left" android:codes="-10"/>
+        <Key android:keyLabel="123" android:keyWidth="15%p" android:keyEdgeFlags="left" android:codes="-13"/>
         <Key android:codes="-130"/>
         <Key android:codes="-131"/>
         <Key android:codes="-132"/>
