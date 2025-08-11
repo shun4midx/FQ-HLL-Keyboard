@@ -13,6 +13,8 @@ Thus, here we present the FQ-HLL keyboard which uses the fast and low memory FQ-
 
 Download the latest release of the app [here](https://github.com/shun4midx/FQ-HLL-Keyboard/releases/latest), install the apk and head to your phone's keyboard settings. Enable `FQ-HLL Keyboard` and switch to the keyboard.
 
+You can also launch system keyboard settings and switch keyboards from the installed app.
+
 Keyboard settings can be found by launching the FQ-HLL Keyboard app installed with the apk, or by pressing the `⎋` button on the keyboard/holding down enter key in zhuyin keyboard.
 
 Keyboard settings are saved across updates of the app.
