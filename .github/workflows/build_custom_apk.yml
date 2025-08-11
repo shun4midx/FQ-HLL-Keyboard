@@ -21,8 +21,8 @@ jobs:
         run: |
           keyboard_height=${{ inputs.keyboard-height }}
           maximize_height=$((keyboard_height * 3 + 6))
-          keyboard_height=$keyboard_height + "dp"
-          maximize_height=$maximize_height + "dp"
+          keyboard_height="${keyboard_height}dp"
+          maximize_height="${maximize_height}dp"
           rm app/src/main/res/values/dimens.xml
           touch app/src/main/res/values/dimens.xml
           echo "<resources>" >> app/src/main/res/values/dimens.xml
