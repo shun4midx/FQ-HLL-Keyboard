@@ -9,4 +9,4 @@ jobs:
     uses: shun4midx/FQ-HLL-Keyboard/.github/workflows/build_custom_apk.yml@main
     with:
       # in dp; default main keyboard heights are short: 45, medium: 50, tall: 60
-      keyboard-height: 45
+      keyboard-height: 50
