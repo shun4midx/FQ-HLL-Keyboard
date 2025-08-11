@@ -209,6 +209,7 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [x] check if word is null before adding/removing
 - [ ] add key sound
 - [ ] hold down . to delete word
+- [ ] text editor select button
 
 ## Contact
 
