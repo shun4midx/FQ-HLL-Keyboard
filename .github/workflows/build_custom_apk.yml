@@ -1,0 +1,61 @@
+name: build custom apk
+
+on:
+  workflow_call:
+    inputs:
+      keyboard-height: # for non main-keyboard views only for now
+        required: true
+        type: number
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: shun4midx/FQ-HLL-Keyboard
+
+      - name: change keyboard height
+        run: |
+          keyboard_height=${{ inputs.keyboard-height }}
+          maximize_height=$((keyboard_height * 3 + 6))
+          rm app/src/main/res/values/dimens.xml
+          touch app/src/main/res/values/dimens.xml
+          echo "<resources>" >> app/src/main/res/values/dimens.xml
+          echo "<dimen name="key_height">$(keyboard_height)dp</dimen>" >> app/src/main/res/values/dimens.xml
+          echo "<dimen name="maximize_key_height">$(maximize_height)dp</dimen>" >> app/src/main/res/values/dimens.xml
+          echo "</resources>" >> app/src/main/res/values/dimens.xml
+
+      - name: Set Up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu' # See 'Supported distributions' for available options
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
+
+      - name: make properties
+        run: |
+          touch keystore.properties
+          touch placeholder
+          echo "keyAlias=placeholder" >> keystore.properties
+          echo "keyPassword=placeholder" >> keystore.properties
+          echo "storeFile=placeholder" >> keystore.properties
+          echo "storePassword=placeholder" >> keystore.properties
+          
+
+      - name: build gradle project
+        run: ./gradlew build
+
+      - name: build apk 
+        run: ./gradlew assembleDebug
+
+      - name: upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: app/build/outputs/apk/debug/app-debug.apk
