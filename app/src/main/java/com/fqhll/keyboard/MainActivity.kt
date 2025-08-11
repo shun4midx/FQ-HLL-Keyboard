@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val editDictField: EditText = findViewById(R.id.edit_dict_input)
         val addDictButton: Button = findViewById(R.id.add_dict_btn)
         val removeDictButton: Button = findViewById(R.id.remove_dict_btn)
-        val getDictButton: Button = findViewById(R.id.get_dict_btn)
+//        val getDictButton: Button = findViewById(R.id.get_dict_btn)
 
         addDictButton.setOnClickListener {
             val inputWord = editDictField.text.toString()
@@ -156,9 +156,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             }
         }
 
-        getDictButton.setOnClickListener {
-            saveFile()
-        }
+//        getDictButton.setOnClickListener {
+//            saveFile()
+//        }
 
     }
 
