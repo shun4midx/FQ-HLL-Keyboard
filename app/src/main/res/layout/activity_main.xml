@@ -106,17 +106,31 @@
 <!--            android:layout_height="wrap_content"-->
 <!--            android:text="Export dictionary to file" />-->
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set Keyboard to FQ-HLL Keyboard"
+            app:layout_constraintBottom_toTopOf="@id/open_settings_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
         <Button
             android:id="@+id/open_settings_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Open keyboard settings" />
+            android:text="Open keyboard settings"ß
+            app:layout_constraintBottom_toTopOf="@id/set_keyboard_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
             android:id="@+id/set_keyboard_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Change keyboard" />
+            android:text="Set keyboard"
+            app:layout_constraintBottom_toTopOf="@id/repoLink"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </LinearLayout>
 
     <TextView
