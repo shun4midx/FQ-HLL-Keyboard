@@ -1,4 +1,4 @@
-name: trigger custom apk build
+name: Build custom FQ-HLL Keyboard apk
 
 on:
   workflow_dispatch:
@@ -8,4 +8,5 @@ jobs:
 
     uses: shun4midx/FQ-HLL-Keyboard/.github/workflows/build_custom_apk.yml@main
     with:
-      keyboard-height: 70
+      # in dp; default main keyboard heights are short: 45, medium: 50, tall: 60
+      keyboard-height: 45
