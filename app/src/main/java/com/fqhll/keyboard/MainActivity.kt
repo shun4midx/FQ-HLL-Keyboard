@@ -160,6 +160,19 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 //            saveFile()
 //        }
 
+
+        // launch keyboard stuff
+
+        val openSettingsButton: Button = findViewById(R.id.open_settings_btn)
+        val setKeyboardButton: Button = findViewById(R.id.set_keyboard_btn)
+
+        openSettingsButton.setOnClickListener {
+            openKeyboardSettings()
+        }
+
+        setKeyboardButton.setOnClickListener {
+            switchKeyboard()
+        }
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -260,6 +273,17 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private fun alterDocument(file: File) {
         FileOutputStream(file).use { fos -> fos.write("This is my custom file content.".toByteArray()) }
+    }
+
+    private fun openKeyboardSettings() {
+        val intent = Intent(Settings.ACTION_INPUT_METHOD_SETTINGS)
+        startActivity(intent)
+    }
+
+    private fun switchKeyboard() {
+        val inputMethodManager =
+            applicationContext.getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        inputMethodManager.showInputMethodPicker()
     }
 
     companion object {
