@@ -1083,9 +1083,12 @@ public class CustomKeyboardApp extends InputMethodService
                 keyboard = new Keyboard(wrap, R.xml.custom_keypad_short);
             } else if (keyboardHeight.equals("Medium")) {
                 keyboard = new Keyboard(wrap, R.xml.custom_keypad_medium);
-            } else {
+            } else if (keyboardHeight.equals("Tall")) {
                 keyboard = new Keyboard(wrap, R.xml.custom_keypad_tall);
+            } else {
+                keyboard = new Keyboard(wrap, R.xml.custom_keypad_qwerty);
             }
+            
             engKeyboard = keyboard;
         }
 
