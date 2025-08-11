@@ -35,7 +35,7 @@ You can long press the text editor button to change languages.
 |-----|---------------------|
 | comma `,` | select all |
 | symbols `!?#`  | numpad |
-| enter | skip replacement |
+| enter `↵` | skip replacement |
 
 #### Clipboard
 
