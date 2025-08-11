@@ -26,8 +26,8 @@ jobs:
           rm app/src/main/res/values/dimens.xml
           touch app/src/main/res/values/dimens.xml
           echo "<resources>" >> app/src/main/res/values/dimens.xml
-          echo "<dimen name="key_height">$keyboard_height</dimen>" >> app/src/main/res/values/dimens.xml
-          echo "<dimen name="maximize_key_height">$maximize_height</dimen>" >> app/src/main/res/values/dimens.xml
+          echo "<dimen name='key_height'>$keyboard_height</dimen>" >> app/src/main/res/values/dimens.xml
+          echo "<dimen name='maximize_key_height'>$maximize_height</dimen>" >> app/src/main/res/values/dimens.xml
           echo "</resources>" >> app/src/main/res/values/dimens.xml
           cat app/src/main/res/values/dimens.xml
 
