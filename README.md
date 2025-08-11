@@ -19,16 +19,23 @@ Keyboard settings are saved across updates of the app.
 
 ### Usage
 
-#### main keyboard/autocorrection bar
+#### Suggestion Bar
 
-- bold word: autoreplace
-- first suggestion to the left when there is a bolded suggestion is your input
-- hold down user inputted suggestion to add word to dictionary
-- hold down autocorrected suggestion to remove word from dictionary
-- hold down text editor button to change languages
-- hold down enter skip autoreplace
-- hold down comma to select all
-- hold down symbols button to access numpad
+The bolded word will autoreplace your typed word (user-word) if you hit space.
+
+When there is a bolded suggestion, the first suggestion to the left is the user-word. You can long press the user-word to add it to dictionary, or long press a suggestion to remove the suggestion from dictionary.
+
+If the suggestion is wrong, you can long press enter to skip the replacement.
+
+You can long press the text editor button to change languages.
+
+#### Main Keyboard
+
+| Key | Long Press function |
+|-----|---------------------|
+| comma `,` | select all |
+| symbols `!?#`  | numpad |
+| enter | skip replacement |
 
 #### clipboard
 
