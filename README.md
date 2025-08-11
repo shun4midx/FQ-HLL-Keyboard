@@ -27,6 +27,7 @@ Keyboard settings are saved across updates of the app.
 - hold down autocorrected suggestion to remove word from dictionary
 - hold down text editor button to change languages
 - hold down enter skip autoreplace
+- hold down comma to select all
 - hold down symbols button to access numpad
 
 #### clipboard
@@ -177,6 +178,7 @@ https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/deb
 - [ ] export/import custom dictionary
 - [x] check if word is null before adding/removing
 - [ ] add key sound
+- [ ] hold down . to delete word
 
 ## Contact
 
