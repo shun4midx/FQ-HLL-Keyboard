@@ -47,7 +47,31 @@ Keyboard settings are saved across updates of the app.
 
 <img src="grid.png" width="150"> <img src="maximize.png" width="150">
 
-## Themes
+## Customisation
+
+### Keyboard height
+
+You can build a custom apk using github actions with the keyboard height of your choice. The built apk will be exported as the workflow run artifact.
+
+Choose the "Custom" keyboard height in settings to use it.
+
+[example workflow](https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/.github/workflows/trigger_custom_apk.yml):
+```yml
+name: Build custom FQ-HLL Keyboard apk
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    uses: shun4midx/FQ-HLL-Keyboard/.github/workflows/build_custom_apk.yml@main
+    with:
+      # in dp; default main keyboard heights are short: 45, medium: 50, tall: 60
+      keyboard-height: 50
+```
+
+### Themes
 
 You can view the themes in the [themes folder](https://github.com/shun4midx/FQ-HLL-Keyboard/tree/main/themes#readme).
 
