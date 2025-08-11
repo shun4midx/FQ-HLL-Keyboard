@@ -51,9 +51,9 @@ Keyboard settings are saved across updates of the app.
 
 ### Keyboard height
 
-You can build a custom apk using github actions with the keyboard height of your choice. The built apk will be exported as the workflow run artifact.
+You can build a custom apk using github actions with the keyboard height of your choice. The built apk will be exported as the workflow run artifact. Use the example workflow below or [fork this repository](https://github.com/shun4midx/FQ-HLL-Keyboard/fork) and run [trigger_custom_apk.yml](https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/.github/workflows/trigger_custom_apk.yml).
 
-Choose the "Custom" keyboard height in settings to use it.
+Choose the "Custom" keyboard height in settings to use it. Note that the built apk is a debug apk and is not signed unlike the official releases.
 
 [example workflow](https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/.github/workflows/trigger_custom_apk.yml):
 ```yml
