@@ -98,7 +98,7 @@
             android:id="@+id/remove_dict_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="20dp"
             android:text="@string/remove_from_dictionary" />
 
 <!--        <Button-->
