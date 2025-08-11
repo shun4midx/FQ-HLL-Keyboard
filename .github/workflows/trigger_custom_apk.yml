@@ -1,0 +1,14 @@
+name: trigger custom apk build
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: shun4midx/FQ-HLL-Keyboard/.github/workflows/build_custom_apk.yml@main
+        with:
+          keyboard_height: 45
