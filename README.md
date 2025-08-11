@@ -75,7 +75,7 @@ jobs:
 
 You can view the themes in the [themes folder](https://github.com/shun4midx/FQ-HLL-Keyboard/tree/main/themes#readme).
 
-Want a custom theme? Customisable themes may be implemented in the future, but until then you can open an issue to request one. Please include hex codes of key colour, key text colour, key pressed colour, key border colour, and keyboard background colour. Alternatively, fork the repository, edit themes.xml, and either build your own apk or open a pull request.
+Want a custom theme? Customisable themes may be implemented in the future, but until then you can open an issue to request one. Please include hex codes of key colour, key text colour, key pressed colour, key border colour, keyboard background colour, suggestion bar colour, and suggestion bar text colour. Alternatively, fork the repository, edit themes.xml, and either build your own apk or open a pull request.
 
 ## Features
 
@@ -83,7 +83,7 @@ Want a custom theme? Customisable themes may be implemented in the future, but u
 - emoji/symbol support
 - coyote-time-like handling of simutaneous key presses
 - autocorrect/autocapitalization toggle
-- lots of themes and theme customisability (key colour, key text colour, key pressed colour, key border colour, keyboard background colour)
+- lots of themes and theme customisability (key colour, key text colour, key pressed colour, key border colour, keyboard background colour, suggestion bar (text) colour)
 - height customisation (short, medium, tall)
 - text editor mode customisation (maximize, grid)
 - multiple keyboard layouts with layout specific autocorrection (qwerty, azerty, qwertz, dvorak, colemak)
