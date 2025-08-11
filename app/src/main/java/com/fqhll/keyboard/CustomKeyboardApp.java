@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.ExtractedText;
 import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputConnection;
 import android.widget.LinearLayout;
@@ -456,10 +457,37 @@ public class CustomKeyboardApp extends InputMethodService
             case -65: // leftest
                 ic.setSelection(0, 0);
                 break;
+//            case -66: // select all
+//                CharSequence selectAllText = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0)
+//                        .toString() + ic.getTextAfterCursor(Integer.MAX_VALUE, 0).toString();
+//                ic.setSelection(0, selectAllText.length());
+//                break;
             case -66: // select all
-                CharSequence selectAllText = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0)
-                        .toString() + ic.getTextAfterCursor(Integer.MAX_VALUE, 0).toString();
-                ic.setSelection(0, selectAllText.length());
+                ic = getCurrentInputConnection();
+                if (ic == null) break;
+
+                // 1) Ask the target editor to do Select All (works in most places, old and new)
+                boolean handled = ic.performContextMenuAction(android.R.id.selectAll);
+                if (handled) break;
+
+                // 2) Fallback: try ExtractedText (requests the whole buffer)
+                ExtractedTextRequest req = new ExtractedTextRequest();
+                req.hintMaxChars = 0; // no limit
+                req.hintMaxLines = 0; // no limit
+                ExtractedText et = ic.getExtractedText(req, 0);
+                if (et != null && et.text != null) {
+                    int len = et.text.length();
+                    ic.setSelection(0, len);
+                    break;
+                }
+
+                // 3) Last resort: stitch before/after with big but finite bounds + null-safety
+                final int BIG = 100000; // safer than Integer.MAX_VALUE on older devices
+                before = ic.getTextBeforeCursor(BIG, 0);
+                after  = ic.getTextAfterCursor(BIG, 0);
+                int beforeLen = (before == null) ? 0 : before.length();
+                int afterLen  = (after  == null) ? 0 : after.length();
+                ic.setSelection(0, beforeLen + afterLen);
                 break;
             case -67: // rightest
                 CharSequence rightestText = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0)
@@ -729,7 +757,7 @@ public class CustomKeyboardApp extends InputMethodService
                     String absPath = getFilesDir().getAbsolutePath() + "/test_files/20k_texting.txt";
 
                     // if long press on user typed word (0 if has suggestions, 1 if no suggestions), add the word to dictionary
-                    if (finalI == 0 && words[0].length() != 0 && !words[0].equals(" ") && scores[1] >= AUTO_REPLACE_THRESHOLD) {
+                    if (finalI == 0 && words[0].length() != 0 && !words[0].equals(" ") && words[0].equals(prefix)) {
 
                         try {
                             if (!inDictionary(word)) {
