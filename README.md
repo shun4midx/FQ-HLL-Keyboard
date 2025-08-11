@@ -37,18 +37,17 @@ You can long press the text editor button to change languages.
 | symbols `!?#`  | numpad |
 | enter | skip replacement |
 
-#### clipboard
+#### Clipboard
 
-- copy from text editor
-- paste by clicking on a clipboard box
-- clear entire clipboard by holding down clipboard button
-- delete individual clipboard entries by holding their box
+The clipboard displays text copied from the text editor. You can paste an item by clicking on its box.
 
-#### numpad
+You can delete an item by long pressing its box, or long press the clipboard button to clear the entire clipboard.
 
-- open by holding down symbols button
+#### Numpad
 
-#### text editor
+You can access the numpad by long pressing symbols, or through the text editor.
+
+#### Text Editor
 
 - grid mode (left), maximize mode (right)
 
