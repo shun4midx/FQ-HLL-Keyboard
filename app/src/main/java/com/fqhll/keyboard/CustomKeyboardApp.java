@@ -729,7 +729,7 @@ public class CustomKeyboardApp extends InputMethodService
                     String absPath = getFilesDir().getAbsolutePath() + "/test_files/20k_texting.txt";
 
                     // if long press on user typed word (0 if has suggestions, 1 if no suggestions), add the word to dictionary
-                    if (finalI == 0 && words[0].length() != 0 && !words[0].equals(" ")) {
+                    if (finalI == 0 && words[0].length() != 0 && !words[0].equals(" ") && scores[1] >= AUTO_REPLACE_THRESHOLD) {
 
                         try {
                             if (!inDictionary(word)) {
