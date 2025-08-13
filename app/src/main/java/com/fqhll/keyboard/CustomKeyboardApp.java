@@ -188,9 +188,30 @@ public class CustomKeyboardApp extends InputMethodService
                 kv.invalidateAllKeys();
                 break;
             case 44: // comma -> select all
-                CharSequence selectAllText = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0)
-                        .toString() + ic.getTextAfterCursor(Integer.MAX_VALUE, 0).toString();
-                ic.setSelection(0, selectAllText.length());
+                if (ic == null) break;
+
+                // 1) Ask the target editor to do Select All (works in most places, old and new)
+                boolean handled = ic.performContextMenuAction(android.R.id.selectAll);
+                if (handled) break;
+
+                // 2) Fallback: try ExtractedText (requests the whole buffer)
+                ExtractedTextRequest req = new ExtractedTextRequest();
+                req.hintMaxChars = 0; // no limit
+                req.hintMaxLines = 0; // no limit
+                ExtractedText et = ic.getExtractedText(req, 0);
+                if (et != null && et.text != null) {
+                    int len = et.text.length();
+                    ic.setSelection(0, len);
+                    break;
+                }
+
+                // 3) Last resort: stitch before/after with big but finite bounds + null-safety
+                final int BIG = 100000; // safer than Integer.MAX_VALUE on older devices
+                CharSequence before = ic.getTextBeforeCursor(BIG, 0);
+                CharSequence after  = ic.getTextAfterCursor(BIG, 0);
+                int beforeLen = (before == null) ? 0 : before.length();
+                int afterLen  = (after  == null) ? 0 : after.length();
+                ic.setSelection(0, beforeLen + afterLen);
                 break;
             case 47: // slash -> backslash
                 ic.commitText("\\", 1);
