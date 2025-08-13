@@ -190,9 +190,6 @@ public class CustomKeyboardApp extends InputMethodService
                 kv.setKeyboard(numpadKeyboard);
                 kv.invalidateAllKeys();
                 break;
-            case 32: // space -> clear suggestions
-                showSuggestions("");
-                break;
             case 44: // comma -> select all
                 CharSequence selectAllText = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0)
                         .toString() + ic.getTextAfterCursor(Integer.MAX_VALUE, 0).toString();
@@ -215,7 +212,6 @@ public class CustomKeyboardApp extends InputMethodService
                 }
                 else {
                     if (ic != null) {
-                        ic.commitText(" ", 1);
                         showSuggestions("");
                     }
                 }
