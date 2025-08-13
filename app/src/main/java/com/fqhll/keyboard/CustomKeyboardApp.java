@@ -100,6 +100,8 @@ public class CustomKeyboardApp extends InputMethodService
     private static final int LOOKBACK = 64;
     private final BreakIterator graphemeIter = BreakIterator.getCharacterInstance();
 
+    private boolean isSelectToggled = false;
+
     private void ensureNative() {
         if (!nativeLoaded) {
             try {
@@ -418,18 +420,53 @@ public class CustomKeyboardApp extends InputMethodService
                 // Look at the char immediately before the cursor
                 CharSequence before = ic.getTextBeforeCursor(1, 0);
                 if (before != null && before.length() > 0) {
-                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT));
-                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_LEFT));
-                    showSuggestions("");
+
+                    if (isSelectToggled) {
+                        int cursorPosition = ic.getExtractedText(new ExtractedTextRequest(), 0).selectionStart;
+                        int selectedTextLength = 0;
+                        CharSequence selectedText = ic.getSelectedText(0);
+                        if (selectedText != null) {
+                            selectedTextLength = selectedText.length();
+                        }
+
+                        if (cursorPosition > 0) {
+                            int newSelectionStart = cursorPosition - 1;
+                            int newSelectionEnd = cursorPosition + selectedTextLength;
+                            ic.setSelection(newSelectionStart, newSelectionEnd);
+                        }
+                    }
+
+                    else {
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT));
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_LEFT));
+                        showSuggestions("");
+                    }
                 }
                 return;
             case -52: // Right arrow
                 // look at the char immediately after the cursor
                 CharSequence after = ic.getTextAfterCursor(1, 0);
                 if (after != null && after.length() > 0) {
-                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT));
-                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT));
-                    showSuggestions("");
+
+                    if (isSelectToggled) {
+                        int cursorPosition = ic.getExtractedText(new ExtractedTextRequest(), 0).selectionStart;
+                        int selectedTextLength = 0;
+                        CharSequence selectedText = ic.getSelectedText(0);
+                        if (selectedText != null) {
+                            selectedTextLength = selectedText.length();
+                        }
+
+                        int newSelectionStart = cursorPosition + 1;
+                        int newSelectionEnd = cursorPosition - selectedTextLength;
+                        ic.setSelection(newSelectionStart, newSelectionEnd);
+
+                    }
+
+                    else {
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT));
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT));
+                        showSuggestions("");
+                    }
                 }
                 return;
             case -62: // up arrow
@@ -440,6 +477,9 @@ public class CustomKeyboardApp extends InputMethodService
                     showSuggestions("");
                 }
                 return;
+            case -63: // select button
+                isSelectToggled = !isSelectToggled;
+                break;
             case -64: // down arrow
                 CharSequence after2 = ic.getTextAfterCursor(1, 0);
                 if (after2 != null && after2.length() > 0) {
