@@ -1257,7 +1257,7 @@ public class CustomKeyboardApp extends InputMethodService
         for (int j = i-1; j > 0; j--) {
             String prev_pref = "clipboard_text_" + j;
             String curr_pref = "clipboard_text_" + (j+1);
-            String prev_text = prefs.getString(prev_pref, "none");
+            String prev_text = prefs.getString(prev_pref, "");
             prefs.edit().putString(curr_pref, prev_text).apply();
         }
     }
