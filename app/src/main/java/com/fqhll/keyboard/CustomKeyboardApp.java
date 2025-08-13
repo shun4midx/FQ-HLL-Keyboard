@@ -13,7 +13,6 @@ import android.os.Looper;
 import android.os.Handler;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
-import android.view.KeyboardShortcutGroup;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -28,21 +27,17 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.security.Key;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.List;
 import java.util.ArrayList;
@@ -595,7 +590,7 @@ public class CustomKeyboardApp extends InputMethodService
                             caps_state = 1;
                             applyCapsState();
                         }
-                        break;k
+                        break;
                     }
                 }
             }
