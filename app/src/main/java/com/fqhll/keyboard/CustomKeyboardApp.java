@@ -215,6 +215,10 @@ public class CustomKeyboardApp extends InputMethodService
                 int afterLen  = (after  == null) ? 0 : after.length();
                 ic.setSelection(0, beforeLen + afterLen);
                 break;
+            case 46: // full stop -> delete last word
+                deleteLastWord();
+                showSuggestions("");
+                break;
             case 47: // slash -> backslash
                 ic.commitText("\\", 1);
                 break;
@@ -860,6 +864,16 @@ public class CustomKeyboardApp extends InputMethodService
         InputConnection ic = getCurrentInputConnection();
         if (ic == null || suggestion.equals(" ") || suggestion.equals("")) return;
 
+        deleteLastWord();
+
+        // Commit the suggestion in its place
+        ic.commitText(suggestion + " ", 1);
+
+        showSuggestions("");
+    }
+
+    private void deleteLastWord() {
+        InputConnection ic = getCurrentInputConnection();
         // Grab up to 50 chars before cursor
         CharSequence beforeCs = ic.getTextBeforeCursor(50, 0);
         String before = beforeCs == null ? "" : beforeCs.toString();
@@ -874,11 +888,6 @@ public class CustomKeyboardApp extends InputMethodService
         if (wordLength > 0) {
             ic.deleteSurroundingText(wordLength, 0);
         }
-
-        // Commit the suggestion in its place
-        ic.commitText(suggestion + " ", 1);
-
-        showSuggestions("");
     }
 
 
