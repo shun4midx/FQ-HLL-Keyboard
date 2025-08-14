@@ -102,6 +102,8 @@ public class CustomKeyboardApp extends InputMethodService
 
     private boolean isSelectToggled = false;
 
+    private boolean isSkippedAutoreplace = false;
+
     private void ensureNative() {
         if (!nativeLoaded) {
             try {
@@ -230,6 +232,7 @@ public class CustomKeyboardApp extends InputMethodService
                 }
                 else {
                     if (ic != null) {
+                        isSkippedAutoreplace = true;
                         showSuggestions("");
                     }
                 }
@@ -615,7 +618,7 @@ public class CustomKeyboardApp extends InputMethodService
                 String[] partsStr = trimmedStr.split("\\s+");
                 String lastWordStr = partsStr.length > 0 ? partsStr[partsStr.length - 1] : "";
 
-                if (defaultAutocor && score >= AUTO_REPLACE_THRESHOLD && !top.isEmpty() && !top.equals(lastWordStr) && prevChar != ' ') {
+                if (defaultAutocor && score >= AUTO_REPLACE_THRESHOLD && !top.isEmpty() && !top.equals(lastWordStr) && prevChar != ' ' && !isSkippedAutoreplace) {
                     int toDelete = lastWord.length();
                     String newText = top + (primaryCode == Keyboard.KEYCODE_DONE ? "\n" : (char)(primaryCode));
 
@@ -627,6 +630,11 @@ public class CustomKeyboardApp extends InputMethodService
                     showSuggestions(""); // Clear UI
                     break;
                 } else {
+
+                    if (isSkippedAutoreplace) {
+                        isSkippedAutoreplace = false;
+                    }
+
                     if (primaryCode == Keyboard.KEYCODE_DONE) {
                         EditorInfo editorInfo = getCurrentInputEditorInfo();
                         if (editorInfo != null && (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) != 0) {
