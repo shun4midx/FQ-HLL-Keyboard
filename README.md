@@ -193,7 +193,7 @@ Prereleases are relatively more tested development versions of the app if you pr
 - [ ] export/import custom dictionary
 - [x] check if word is null before adding/removing
 - [ ] add key sound
-- [ ] hold down . to delete word
+- [x] hold down . to delete word
 - [ ] text editor select button
 
 ## Contact
