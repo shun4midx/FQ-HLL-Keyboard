@@ -42,6 +42,13 @@
             android:checked="false"
             android:text="@string/enable_editor_grid" />
 
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/etenToggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:checked="false"
+            android:text="Use Eten layout for Zhuyin" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
