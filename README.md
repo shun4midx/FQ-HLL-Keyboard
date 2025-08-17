@@ -36,8 +36,11 @@ You can long press the text editor button to change languages.
 | Key | Long Press function |
 |-----|---------------------|
 | comma `,` | select all |
+| full stop `.` | delete last word |
 | symbols `!?#` | numpad |
 | enter `↵` | skip replacement |
+| clipboard `⎘` | clear clipboard |
+| text editor `𝙸` | change languages |
 
 #### Clipboard
 
