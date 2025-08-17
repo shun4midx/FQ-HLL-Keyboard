@@ -82,9 +82,8 @@ public class CustomKeyboardApp extends InputMethodService
 
     private void init_emoji_variations() {
 
-        for (int i=0; i<emoji_variation_list.length; i++) {
-            String[] emojis = emoji_variation_list[i];
-            for (int j=0; j<3; j++) {
+        for (String[] emojis : emoji_variation_list) {
+            for (int j = 0; j < 3; j++) {
 
                 emoji_variations.put(emojis[j], emojis);
 
@@ -842,7 +841,7 @@ public class CustomKeyboardApp extends InputMethodService
                     String absPath = getFilesDir().getAbsolutePath() + "/test_files/20k_texting.txt";
 
                     // if long press on user typed word (0 if has suggestions, 1 if no suggestions), add the word to dictionary
-                    if (finalI == 0 && words[0].length() != 0 && !words[0].equals(" ") && words[0].equals(prefix)) {
+                    if (finalI == 0 && !words[0].isEmpty() && !words[0].equals(" ") && words[0].equals(prefix)) {
 
                         try {
                             if (!inDictionary(word)) {
@@ -880,7 +879,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     private void replaceCurrentWord(String suggestion) {
         InputConnection ic = getCurrentInputConnection();
-        if (ic == null || suggestion.equals(" ") || suggestion.equals("")) return;
+        if (ic == null || suggestion.equals(" ") || suggestion.isEmpty()) return;
 
         deleteLastWord();
 
@@ -1222,14 +1221,19 @@ public class CustomKeyboardApp extends InputMethodService
         String keyboardLayout = prefs.getString("keyboard_layout", "qwerty").toLowerCase();
 
         if (keyboardLayout.equals("qwerty")) {
-            if (keyboardHeight.equals("Short")) {
-                keyboard = new Keyboard(wrap, R.xml.custom_keypad_short);
-            } else if (keyboardHeight.equals("Medium")) {
-                keyboard = new Keyboard(wrap, R.xml.custom_keypad_medium);
-            } else if (keyboardHeight.equals("Tall")) {
-                keyboard = new Keyboard(wrap, R.xml.custom_keypad_tall);
-            } else {
-                keyboard = new Keyboard(wrap, R.xml.custom_keypad_qwerty);
+            switch (keyboardHeight) {
+                case "Short":
+                    keyboard = new Keyboard(wrap, R.xml.custom_keypad_short);
+                    break;
+                case "Medium":
+                    keyboard = new Keyboard(wrap, R.xml.custom_keypad_medium);
+                    break;
+                case "Tall":
+                    keyboard = new Keyboard(wrap, R.xml.custom_keypad_tall);
+                    break;
+                default:
+                    keyboard = new Keyboard(wrap, R.xml.custom_keypad_qwerty);
+                    break;
             }
             
             engKeyboard = keyboard;
