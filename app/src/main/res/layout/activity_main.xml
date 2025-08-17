@@ -35,6 +35,14 @@
             app:layout_constraintVertical_bias="0.0"
             tools:context=".MainActivity">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Text correction"
+                android:textColor="@color/custom_fqhll_banner_pink"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/capsToggle"
                 android:layout_width="match_parent"
@@ -48,6 +56,14 @@
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="@string/enable_autocor" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Preferences"
+                android:textColor="@color/custom_fqhll_banner_pink"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/gridToggle"
@@ -99,7 +115,22 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/edit_dictionary" />
+                android:text="@string/emoji_switcher" />
+
+            <Spinner
+                android:id="@+id/emoji_options"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_dictionary"
+                android:textColor="@color/custom_fqhll_banner_pink"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/edit_dict_input"
@@ -131,7 +162,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/set_keyboard_to_fqhll" />
+                android:text="@string/set_keyboard_to_fqhll"
+                android:textSize="14sp" />
 
             <Button
                 android:id="@+id/open_settings_btn"

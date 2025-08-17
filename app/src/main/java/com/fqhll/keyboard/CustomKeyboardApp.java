@@ -77,7 +77,21 @@ public class CustomKeyboardApp extends InputMethodService
 
     // (jperm voice) hope you can turn on word wrap
     public static final String[] emoji_list = new String[]{"😭", "😂", "💀", "😔", "🫠", "💁‍♂️", "🧍‍♂️", "💩", "💅", "🫂", "🔥", "🍀", "👾", "👽", "🛸", "👀", "✨️", "🐟", "✅️", "❌️", "🐸", "🌸", "🎀", "🤡", "😡", "🙏", "👻", "🥺", "😐", "👍", "😤", "🤓", "😀", "🦆", "🥬", "🐒", "🧠"};
-    public static final Map<String, String[]> emoji_variations = Map.of("💁‍♂️", new String[]{"️💁‍♂️", "💁", "💁‍♀️"}, "🧍‍♂️", new String[]{"🧍‍♂️", "🧍", "🧍‍♀️"});
+    public static final String[][] emoji_variation_list = new String[][]{new String[]{"🧍‍♂️", "🧍‍♀️", "🧍"}, new String[]{"💁‍♂️", "💁‍♀️", "💁"}};
+    public static final Map<String, String[]> emoji_variations = new HashMap<>();
+
+    private void init_emoji_variations() {
+
+        for (int i=0; i<emoji_variation_list.length; i++) {
+            String[] emojis = emoji_variation_list[i];
+            for (int j=0; j<3; j++) {
+
+                emoji_variations.put(emojis[j], emojis);
+
+            }
+        }
+
+    }
 
     public static final String[] math_symbol_list = new String[]{"¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹", "⁰", "∀", "∃", "⇔", "⇒", "Δ", "θ", "π", "ƒ", "α", "β", "±", "≠", "≈", "≡", "Σ", "√", "∩", "∪", "∈", "∋", "⊂", "⊃", "⊆", "⊇", "□", "ø", "∞"};
     private LinearLayout suggestionBar;
@@ -139,6 +153,8 @@ public class CustomKeyboardApp extends InputMethodService
         defaultCaps = prefs.getBoolean("capsToggle", true);
         defaultAutocor = prefs.getBoolean("autocorToggle", true);
         caps_state = defaultCaps ? 1 : 0;
+        init_emoji_variations();
+        editEmojiArray();
 
         root = buildKeyboardView();
         applyCapsState();
@@ -1121,6 +1137,27 @@ public class CustomKeyboardApp extends InputMethodService
         return getResources().getIdentifier("Theme.FQHLLKeyboard." + keyColor, "style", getPackageName());
     }
 
+    private void editEmojiArray() {
+        SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+        String emoji_variation = prefs.getString("emoji_variation", "neutral").toLowerCase();
+
+        for (int i=0; i < emoji_list.length; i++) {
+            String emoji = emoji_list[i];
+
+            if (emoji_variations.containsKey(emoji)) {
+
+                if (emoji_variation.equals("masculine")) {
+                    emoji_list[i] = emoji_variations.get(emoji)[0];
+                } else if (emoji_variation.equals("feminine")) {
+                    emoji_list[i] = emoji_variations.get(emoji)[1];
+                } else {
+                    emoji_list[i] = emoji_variations.get(emoji)[2];
+                }
+
+            }
+        }
+    }
+
 
     @Override
     public void onStartInputView(EditorInfo info, boolean restarting) {
@@ -1136,8 +1173,12 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        if (!"key_color".equals(key) && !"gridToggle".equals(key) && !"keyboard_height".equals(key) && !key.startsWith("clipboard") && !"keyboard_layout".equals(key)) {
+        if (!"key_color".equals(key) && !"gridToggle".equals(key) && !"keyboard_height".equals(key) && !key.startsWith("clipboard") && !"keyboard_layout".equals(key) && !"emoji_variation".equals(key)) {
             return;
+        }
+
+        if ("emoji_variation".equals(key)) {
+            editEmojiArray();
         }
         View newRoot = buildKeyboardView();
         setInputView(newRoot);

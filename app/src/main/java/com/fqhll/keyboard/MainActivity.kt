@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private var themes = arrayOf("Unselected", "Shun", "Ducky", "Cabbage", "Sage", "ThisIsFine", "AntiThisIsFine", "Black", "DarkBlue", "Hammerhead", "Stargaze", "CottonCandy", "Yellow", "Teal", "Purple", "Green", "Cyan")
     private var keyboardHeights = arrayOf("Unselected", "Short", "Medium", "Tall", "Custom")
     private var keyboardLayouts = arrayOf("Unselected", "QWERTY", "QWERTZ", "AZERTY", "Dvorak", "Colemak", "Zhuyin")
+    private var emojiVariations = arrayOf("Unselected", "Masculine", "Feminine", "Neutral")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +40,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         val repoLink: TextView = findViewById(R.id.repoLink)
         repoLink.movementMethod = LinkMovementMethod.getInstance()
+
+        // Toggles
 
         val capsToggle: SwitchCompat = findViewById(R.id.capsToggle)
         val autocorToggle: SwitchCompat = findViewById(R.id.autocorToggle)
@@ -79,6 +82,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             prefs.edit(commit = true) { putBoolean("etenToggle", isChecked) }
         }
 
+        // Dropdowns
+
         val keyBackgroundColor: Spinner = findViewById(R.id.color_options)
         val savedColor = prefs.getString("key_color", "Shun")
         prefs.edit { putString("key_color", savedColor) }
@@ -91,6 +96,11 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val savedLayout = prefs.getString("keyboard_layout", "qwerty")?.lowercase()
         prefs.edit { putString("keyboard_layout", savedLayout) }
 
+        val emojiVariation: Spinner = findViewById(R.id.emoji_options)
+        val savedEmoji = prefs.getString("emoji_variation", "neutral")?.lowercase()
+        prefs.edit { putString("emoji_variation", savedEmoji) }
+
+
         val aa_color = ArrayAdapter(this, R.layout.spinner, themes)
         aa_color.setDropDownViewResource(R.layout.spinner)
 
@@ -98,7 +108,10 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         aa_height.setDropDownViewResource(R.layout.spinner)
 
         val aa_layout = ArrayAdapter(this, R.layout.spinner, keyboardLayouts)
-        aa_height.setDropDownViewResource(R.layout.spinner)
+        aa_layout.setDropDownViewResource(R.layout.spinner)
+
+        val aa_emoji = ArrayAdapter(this, R.layout.spinner, emojiVariations)
+        aa_emoji.setDropDownViewResource(R.layout.spinner)
 
         // the color dropdown
         with(keyBackgroundColor) {
@@ -119,6 +132,14 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         // the layout dropdown
         with(keyboardLayout) {
             adapter = aa_layout
+            setSelection(0, false)
+            onItemSelectedListener = this@MainActivity
+            setPopupBackgroundResource(R.color.shun_blue)
+        }
+
+        // the emoji dropdown
+        with(emojiVariation) {
+            adapter = aa_emoji
             setSelection(0, false)
             onItemSelectedListener = this@MainActivity
             setPopupBackgroundResource(R.color.shun_blue)
@@ -211,6 +232,14 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     if (!selectedLayout.equals("Unselected")) {
                         prefs.edit { putString("keyboard_layout", selectedLayout) }
                         showToast(message = "Selected layout: $selectedLayout")
+                    }
+                }
+
+                R.id.emoji_options -> {
+                    val selectedEmoji = emojiVariations[position]
+                    if (!selectedEmoji.equals("Unselected")) {
+                        prefs.edit { putString("emoji_variation", selectedEmoji) }
+                        showToast(message = "Selected: $selectedEmoji")
                     }
                 }
 
