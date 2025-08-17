@@ -140,18 +140,27 @@
                 android:hint="@string/edit_dict_word"
                 android:inputType="text" />
 
-            <Button
-                android:id="@+id/add_dict_btn"
+            <LinearLayout
+                style="?android:attr/buttonBarStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/add_to_dictionary" />
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/remove_dict_btn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:text="@string/remove_from_dictionary" />
+                <Button
+                    android:id="@+id/add_dict_btn"
+                    android:layout_width="185dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="3sp"
+                    android:text="@string/add_to_dictionary" />
+
+                <Button
+                    android:id="@+id/remove_dict_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp"
+                    android:text="@string/remove_from_dictionary" />
+
+            </LinearLayout>
 
             <!--        <Button-->
             <!--            android:id="@+id/get_dict_btn"-->
