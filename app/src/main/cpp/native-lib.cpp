@@ -65,6 +65,10 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeAddWord(JNIEnv* env, jobject /* 
     std::string word(c_word);
     env->ReleaseStringUTFChars(jword, c_word);
 
+    // convert to lowercase
+    std::transform(word.begin(), word.end(), word.begin(),
+                   [](unsigned char c){ return std::tolower(c); });
+
     g_ac->add_dictionary(word);
     g_ac->save_dictionary();
 
