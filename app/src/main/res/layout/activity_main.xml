@@ -7,130 +7,146 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:id="@+id/linear_layout_root"
+    <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
-        android:padding="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/repoLink"
         app:layout_constraintVertical_bias="0.0"
+        android:layout_marginBottom="10dp"
         tools:context=".MainActivity">
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/capsToggle"
+        <LinearLayout
+            android:id="@+id/linear_layout_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/enable_auto_caps" />
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:context=".MainActivity">
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/autocorToggle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="@string/enable_autocor" />
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/capsToggle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/enable_auto_caps" />
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/gridToggle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:text="@string/enable_editor_grid" />
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/autocorToggle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/enable_autocor" />
 
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/etenToggle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:checked="false"
-            android:text="Use Eten layout for Zhuyin" />
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/gridToggle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/enable_editor_grid" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/theme_switcher" />
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/etenToggle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/use_eten_layout" />
 
-        <Spinner
-            android:id="@+id/color_options"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dialog" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/theme_switcher" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/height_switcher" />
+            <Spinner
+                android:id="@+id/color_options"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dialog" />
 
-        <Spinner
-            android:id="@+id/height_options"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dropdown" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/height_switcher" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/layout_switcher" />
+            <Spinner
+                android:id="@+id/height_options"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown" />
 
-        <Spinner
-            android:id="@+id/layout_options"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dropdown" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/layout_switcher" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/edit_dictionary" />
+            <Spinner
+                android:id="@+id/layout_options"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown" />
 
-        <EditText
-            android:id="@+id/edit_dict_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/edit_dict_word"
-            android:ems="10"
-            android:inputType="text"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/edit_dictionary" />
 
-        <Button
-            android:id="@+id/add_dict_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/add_to_dictionary" />
+            <EditText
+                android:id="@+id/edit_dict_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:hint="@string/edit_dict_word"
+                android:inputType="text" />
 
-        <Button
-            android:id="@+id/remove_dict_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:text="@string/remove_from_dictionary" />
+            <Button
+                android:id="@+id/add_dict_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/add_to_dictionary" />
 
-<!--        <Button-->
-<!--            android:id="@+id/get_dict_btn"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:text="Export dictionary to file" />-->
+            <Button
+                android:id="@+id/remove_dict_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:text="@string/remove_from_dictionary" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Set Keyboard to FQ-HLL Keyboard" />
+            <!--        <Button-->
+            <!--            android:id="@+id/get_dict_btn"-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:text="Export dictionary to file" />-->
 
-        <Button
-            android:id="@+id/open_settings_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Open keyboard settings" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/set_keyboard_to_fqhll" />
 
-        <Button
-            android:id="@+id/set_keyboard_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Set system keyboard" />
-    </LinearLayout>
+            <Button
+                android:id="@+id/open_settings_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/open_keyboard_settings" />
+
+            <Button
+                android:id="@+id/set_keyboard_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/set_system_keyboard" />
+
+        </LinearLayout>
+    </ScrollView>
 
     <TextView
         android:id="@+id/repoLink"
@@ -147,7 +163,7 @@
         android:id="@+id/copyrightNotice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="20dp"
         android:gravity="bottom|center"
         android:text="@string/copyright_notice"
         android:textSize="10.5sp"

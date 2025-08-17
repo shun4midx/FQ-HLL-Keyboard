@@ -13,4 +13,8 @@
     <string name="edit_dict_word">word to add/remove</string>
     <string name="add_to_dictionary">Add to dictionary</string>
     <string name="remove_from_dictionary">Remove from dictionary</string>
+    <string name="set_system_keyboard">Set system keyboard</string>
+    <string name="open_keyboard_settings">Open keyboard settings</string>
+    <string name="set_keyboard_to_fqhll">Set Keyboard to FQ-HLL Keyboard</string>
+    <string name="use_eten_layout">Use Eten layout for Zhuyin</string>
 </resources>
