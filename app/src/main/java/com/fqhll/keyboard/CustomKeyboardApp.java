@@ -1219,6 +1219,11 @@ public class CustomKeyboardApp extends InputMethodService
 
         String keyboardHeight = prefs.getString("keyboard_height", "Short");
         String keyboardLayout = prefs.getString("keyboard_layout", "qwerty").toLowerCase();
+        boolean useEtenLayout = prefs.getBoolean("etenToggle", false);
+
+        if (useEtenLayout) {
+            zhuyinKeyboard = new Keyboard(wrap, R.xml.custom_keypad_zhuyin_eten);
+        }
 
         if (keyboardLayout.equals("qwerty")) {
             switch (keyboardHeight) {
