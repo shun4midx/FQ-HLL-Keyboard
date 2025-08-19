@@ -56,7 +56,7 @@
         <Key android:codes="-2" android:keyLabel="!?#" android:keyEdgeFlags="left"/>
         <Key android:codes="65292" android:keyLabel="，。"/>
         <Key android:codes="-11" android:keyLabel="☻" android:isRepeatable="true"/>
-        <Key android:codes="32" android:keyLabel="空格 test" android:keyWidth="40%p" android:isRepeatable="true"/>
+        <Key android:codes="32" android:keyLabel="空格" android:keyWidth="40%p" android:isRepeatable="true"/>
         <Key android:codes="12582" android:keyLabel="ㄦ"/>
         <Key android:codes="-5" android:keyLabel="⌫" android:isRepeatable="true"/>
         <Key android:codes="-4" android:keyLabel="↵" android:keyEdgeFlags="right"/>

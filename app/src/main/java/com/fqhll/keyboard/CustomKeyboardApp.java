@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import android.media.SoundPool;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -119,6 +120,9 @@ public class CustomKeyboardApp extends InputMethodService
 
     private boolean isSkippedAutoreplace = false;
 
+    private SoundPool soundPool;
+    private int clickSoundId;
+
     private void ensureNative() {
         if (!nativeLoaded) {
             try {
@@ -153,6 +157,7 @@ public class CustomKeyboardApp extends InputMethodService
         defaultAutocor = prefs.getBoolean("autocorToggle", true);
         caps_state = defaultCaps ? 1 : 0;
         init_emoji_variations();
+        initSoundPool();
         editEmojiArray();
 
         root = buildKeyboardView();
@@ -265,6 +270,9 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onPress(int primaryCode) {
+
+        playClick();
+
         isLongPress = false;
 
         longPressRunnable = () -> {
@@ -347,27 +355,19 @@ public class CustomKeyboardApp extends InputMethodService
         }
     }
 
-    private void playClick(int keyCode){
-        AudioManager am = (AudioManager)getSystemService(AUDIO_SERVICE);
-        switch(keyCode){
-            case 32:
-                am.playSoundEffect(AudioManager.FX_KEYPRESS_SPACEBAR);
-                break;
-            case Keyboard.KEYCODE_DONE:
-            case 10:
-                am.playSoundEffect(AudioManager.FX_KEYPRESS_RETURN);
-                break;
-            case Keyboard.KEYCODE_DELETE:
-                am.playSoundEffect(AudioManager.FX_KEYPRESS_DELETE);
-                break;
-            default: am.playSoundEffect(AudioManager.FX_KEYPRESS_STANDARD);
+    private void initSoundPool() {
+        soundPool = new SoundPool(20, AudioManager.STREAM_MUSIC, 0);
+        clickSoundId = soundPool.load(this, R.raw.click, 1);
+    }
+
+    private void playClick() {
+        if (soundPool != null && clickSoundId != 0) {
+            soundPool.play(clickSoundId, 1.0f, 1.0f, 1, 0, 1.0f);
         }
     }
 
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
-
-        playClick(primaryCode);
 
         if (isLongPress) {
             return;
@@ -1172,13 +1172,15 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        if (!"key_color".equals(key) && !"gridToggle".equals(key) && !"keyboard_height".equals(key) && !key.startsWith("clipboard") && !"keyboard_layout".equals(key) && !"emoji_variation".equals(key) && !"etenToggle".equals(key)) {
+        Set<String> rebuild_prefs = new HashSet<>(Arrays.asList("key_color", "gridToggle", "keyboard_height", "keyboard_layout", "emoji_variation", "etenToggle"));
+        if (!rebuild_prefs.contains(key) && !key.startsWith("clipboard")) {
             return;
         }
 
         if ("emoji_variation".equals(key)) {
             editEmojiArray();
         }
+
         View newRoot = buildKeyboardView();
         setInputView(newRoot);
         root = newRoot;
