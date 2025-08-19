@@ -360,7 +360,11 @@ public class CustomKeyboardApp extends InputMethodService
 
     private void initSoundPool() {
         soundPool = new SoundPool(20, AudioManager.STREAM_MUSIC, 0);
-        clickSoundId = soundPool.load(this, R.raw.click, 1);
+
+        SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+        String soundEffect = prefs.getString("key_sound_effect", "click");
+        int soundEffectId = getResources().getIdentifier(soundEffect, "raw", getPackageName());
+        clickSoundId = soundPool.load(this, soundEffectId, 1);
     }
 
     private void playClick() {
@@ -1378,6 +1382,7 @@ public class CustomKeyboardApp extends InputMethodService
         updateMathLabel();
         updateClipboardLabel();
         ensureNative();
+        initSoundPool();
         suggestionBar = root.findViewById(R.id.suggestion_bar_container);
 
         return root;
