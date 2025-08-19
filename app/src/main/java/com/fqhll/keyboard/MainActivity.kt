@@ -48,6 +48,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val autocorToggle: SwitchCompat = findViewById(R.id.autocorToggle)
         val gridToggle: SwitchCompat = findViewById(R.id.gridToggle)
         val etenToggle: SwitchCompat = findViewById(R.id.etenToggle)
+        val keySoundToggle: SwitchCompat = findViewById(R.id.keySoundToggle)
+
         val prefs = getSharedPreferences("keyboard_settings", Context.MODE_PRIVATE)
 
         if (!prefs.contains("capsToggle")) {
@@ -62,12 +64,16 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         if (!prefs.contains("etenToggle")) {
             prefs.edit().putBoolean("etenToggle", false).commit()
         }
+        if (!prefs.contains("keySoundToggle")) {
+            prefs.edit().putBoolean("keySoundToggle", false).commit()
+        }
 
         // Load saved toggle state
         capsToggle.isChecked = prefs.getBoolean("capsToggle", true)
         autocorToggle.isChecked = prefs.getBoolean("autocorToggle", true)
         gridToggle.isChecked = prefs.getBoolean("gridToggle", false)
         etenToggle.isChecked = prefs.getBoolean("etenToggle", false)
+        keySoundToggle.isChecked = prefs.getBoolean("keySoundToggle", true)
 
         // Save toggle changes
         capsToggle.setOnCheckedChangeListener { _, isChecked ->
@@ -82,24 +88,33 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         etenToggle.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit(commit = true) { putBoolean("etenToggle", isChecked) }
         }
+        keySoundToggle.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit(commit = true) { putBoolean("keySoundToggle", isChecked) }
+        }
 
         // Dropdowns
 
         val keyBackgroundColor: Spinner = findViewById(R.id.color_options)
         val savedColor = prefs.getString("key_color", "Shun")
-        prefs.edit { putString("key_color", savedColor) }
 
         val keyboardHeight: Spinner = findViewById(R.id.height_options)
         val savedHeight = prefs.getString("keyboard_height", "Short")
-        prefs.edit { putString("keyboard_height", savedHeight) }
 
         val keyboardLayout: Spinner = findViewById(R.id.layout_options)
         val savedLayout = prefs.getString("keyboard_layout", "qwerty")?.lowercase()
-        prefs.edit { putString("keyboard_layout", savedLayout) }
 
         val emojiVariation: Spinner = findViewById(R.id.emoji_options)
         val savedEmoji = prefs.getString("emoji_variation", "neutral")?.lowercase()
+
+        val keySoundEffect: Spinner = findViewById(R.id.key_sound_options)
+        val savedSoundEffect = prefs.getString("key_sound_effect", "click")
+
+
+        prefs.edit { putString("key_color", savedColor) }
+        prefs.edit { putString("keyboard_height", savedHeight) }
+        prefs.edit { putString("keyboard_layout", savedLayout) }
         prefs.edit { putString("emoji_variation", savedEmoji) }
+        prefs.edit { putString("key_sound_effect", savedSoundEffect) }
 
 
         val aa_color = ArrayAdapter(this, R.layout.spinner, themes)
@@ -113,6 +128,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         val aa_emoji = ArrayAdapter(this, R.layout.spinner, emojiVariations)
         aa_emoji.setDropDownViewResource(R.layout.spinner)
+
+        val aa_keySound = ArrayAdapter(this, R.layout.spinner, keySound)
+        aa_keySound.setDropDownViewResource(R.layout.spinner)
 
         // the color dropdown
         with(keyBackgroundColor) {
@@ -141,6 +159,14 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         // the emoji dropdown
         with(emojiVariation) {
             adapter = aa_emoji
+            setSelection(0, false)
+            onItemSelectedListener = this@MainActivity
+            setPopupBackgroundResource(R.color.shun_blue)
+        }
+
+        // the key sound dropdown
+        with(keySoundEffect) {
+            adapter = aa_keySound
             setSelection(0, false)
             onItemSelectedListener = this@MainActivity
             setPopupBackgroundResource(R.color.shun_blue)
@@ -244,6 +270,13 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     }
                 }
 
+                R.id.key_sound_options -> {
+                    val selectedSound = keySound[position]
+                    if (!selectedSound.equals("Unselected")) {
+                        prefs.edit { putString("key_sound_effect", selectedSound) }
+                        showToast(message = "Selected key sound: $selectedSound")
+                    }
+                }
             }
         }
     }

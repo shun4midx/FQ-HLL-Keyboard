@@ -122,6 +122,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     private SoundPool soundPool;
     private int clickSoundId;
+    private boolean isKeySoundEnabled = true;
 
     private void ensureNative() {
         if (!nativeLoaded) {
@@ -271,7 +272,9 @@ public class CustomKeyboardApp extends InputMethodService
     @Override
     public void onPress(int primaryCode) {
 
-        playClick();
+        if (isKeySoundEnabled) {
+            playClick();
+        }
 
         isLongPress = false;
 
@@ -1172,7 +1175,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        Set<String> rebuild_prefs = new HashSet<>(Arrays.asList("key_color", "gridToggle", "keyboard_height", "keyboard_layout", "emoji_variation", "etenToggle"));
+        Set<String> rebuild_prefs = new HashSet<>(Arrays.asList("key_color", "gridToggle", "keyboard_height", "keyboard_layout", "emoji_variation", "etenToggle", "keySoundToggle", "key_sound_effect"));
         if (!rebuild_prefs.contains(key) && !key.startsWith("clipboard")) {
             return;
         }
@@ -1222,6 +1225,7 @@ public class CustomKeyboardApp extends InputMethodService
         String keyboardHeight = prefs.getString("keyboard_height", "Short");
         String keyboardLayout = prefs.getString("keyboard_layout", "qwerty").toLowerCase();
         boolean useEtenLayout = prefs.getBoolean("etenToggle", false);
+        isKeySoundEnabled = prefs.getBoolean("keySoundToggle", true);
 
         if (useEtenLayout) {
             zhuyinKeyboard = new Keyboard(wrap, R.xml.custom_keypad_zhuyin_eten);

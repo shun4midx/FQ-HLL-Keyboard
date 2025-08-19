@@ -148,7 +148,6 @@
                 android:id="@+id/key_sound_options"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:spinnerMode="dialog"
                 android:layout_marginBottom="10dp"/>
 
             <TextView
