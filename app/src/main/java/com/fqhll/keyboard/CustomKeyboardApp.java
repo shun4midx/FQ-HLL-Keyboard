@@ -1172,7 +1172,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        if (!"key_color".equals(key) && !"gridToggle".equals(key) && !"keyboard_height".equals(key) && !key.startsWith("clipboard") && !"keyboard_layout".equals(key) && !"emoji_variation".equals(key)) {
+        if (!"key_color".equals(key) && !"gridToggle".equals(key) && !"keyboard_height".equals(key) && !key.startsWith("clipboard") && !"keyboard_layout".equals(key) && !"emoji_variation".equals(key) && !"etenToggle".equals(key)) {
             return;
         }
 
