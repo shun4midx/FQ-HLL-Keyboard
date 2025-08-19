@@ -362,7 +362,7 @@ public class CustomKeyboardApp extends InputMethodService
         soundPool = new SoundPool(20, AudioManager.STREAM_MUSIC, 0);
 
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-        String soundEffect = prefs.getString("key_sound_effect", "click");
+        String soundEffect = prefs.getString("key_sound_effect", "click").toLowerCase();
         int soundEffectId = getResources().getIdentifier(soundEffect, "raw", getPackageName());
         clickSoundId = soundPool.load(this, soundEffectId, 1);
     }
