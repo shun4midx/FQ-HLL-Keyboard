@@ -251,7 +251,7 @@ public class CustomKeyboardApp extends InputMethodService
             case -4: // zhuyin enter -> open settings, eng enter -> skip word
                 SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
                 String keyboardLayout = prefs.getString("keyboard_layout", "qwerty").toLowerCase();
-                if (keyboardLayout.equals("zhuyin")) {
+                if (kv.getKeyboard() == zhuyinKeyboard) {
                     PackageManager manager = getPackageManager();
                     Intent launchIntent = manager.getLaunchIntentForPackage("com.fqhll.keyboard");
                     launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
