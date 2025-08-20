@@ -55,7 +55,7 @@
         <Key android:keyLabel="&quot;" android:codes="34"/>
         <Key android:keyLabel=":" android:codes="58"/>
         <Key android:keyLabel=";" android:codes="59"/>
-        <Key android:keyLabel="," android:codes="44"/>
+        <Key android:keyLabel="~" android:codes="126"/>
         <Key android:keyLabel="?" android:codes="63"/>
         <Key android:codes="-5" android:keyLabel="⌫" android:keyWidth="15%p" android:isRepeatable="true" android:keyEdgeFlags="right"/>
     </Row>

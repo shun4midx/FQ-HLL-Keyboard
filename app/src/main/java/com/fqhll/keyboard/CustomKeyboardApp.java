@@ -93,7 +93,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     }
 
-    public static final String[] math_symbol_list = new String[]{"¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹", "⁰", "∀", "∃", "⇔", "⇒", "Δ", "θ", "π", "ƒ", "α", "β", "±", "≠", "≈", "≡", "Σ", "√", "∩", "∪", "∈", "∋", "⊂", "⊃", "⊆", "⊇", "□", "ø", "∞"};
+    public static final String[] math_symbol_list = new String[]{"¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹", "⁰", "∀", "∃", "⇔", "⇒", "Δ", "θ", "π", "ƒ", "α", "β", "±", "≠", "≈", "≡", "Σ", "√", "∩", "∪", "∈", "∋", "⊂", "⊃", "⊆", "⊇", "□", "∅", "∞"};
     private LinearLayout suggestionBar;
     private View root;
 
@@ -1130,6 +1130,19 @@ public class CustomKeyboardApp extends InputMethodService
     }
 
     private void applyCapsState() {
+        Keyboard k = (kv != null) ? kv.getKeyboard() : null;
+        if (k == null) {
+            return;
+        }
+
+        if (k == mathKeyboard) {
+            caps_state = 0;
+            k.setShifted(false);
+            updateCapsLabel();
+            kv.invalidateAllKeys();
+            return;
+        }
+
         kv.getKeyboard().setShifted(caps_state > 0);
         updateCapsLabel();
         kv.invalidateAllKeys();
