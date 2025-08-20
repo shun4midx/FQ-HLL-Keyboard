@@ -264,6 +264,12 @@ public class CustomKeyboardApp extends InputMethodService
                     }
                 }
                 break;
+            case '[':
+                ic.commitText("{", 1);
+                break;
+            case ']':
+                ic.commitText("}", 1);
+                break;
             default:
                 break;
         }
