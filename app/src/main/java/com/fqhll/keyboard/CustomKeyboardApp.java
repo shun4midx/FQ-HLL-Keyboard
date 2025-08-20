@@ -646,7 +646,32 @@ public class CustomKeyboardApp extends InputMethodService
                 String[] partsStr = trimmedStr.split("\\s+");
                 String lastWordStr = partsStr.length > 0 ? partsStr[partsStr.length - 1] : "";
 
-                if (defaultAutocor && score >= AUTO_REPLACE_THRESHOLD && !top.isEmpty() && !top.equals(lastWordStr) && prevChar != ' ' && !isSkippedAutoreplace) {
+                if (primaryCode == Keyboard.KEYCODE_DONE) {
+                    // Use EXACTLY what's currently shown in the bar
+                    String currentWord = getLastWordOnCurrentLine(ic);
+
+                    if (defaultAutocor && score >= AUTO_REPLACE_THRESHOLD && !top.isEmpty() && !top.equals(lastWordStr) && prevChar != ' ' && !isSkippedAutoreplace) {
+                        // Accept the visible center suggestion
+                        safeReplaceLastWord(ic, currentWord, top);
+                    }
+
+                    // Now send the Enter/new line per IME options
+                    EditorInfo editorInfo = getCurrentInputEditorInfo();
+                    if (editorInfo != null && (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) != 0) {
+                        ic.commitText("\n", 1);
+                    } else {
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER));
+                    }
+
+                    if (caps_state != 2) {
+                        resetCaps();
+                    }
+
+                    // Clear UI and mark bar inactive
+                    showSuggestions("");
+                    break;
+                } else if (defaultAutocor && score >= AUTO_REPLACE_THRESHOLD && !top.isEmpty() && !top.equals(lastWordStr) && prevChar != ' ' && !isSkippedAutoreplace) {
                     int toDelete = lastWord.length();
                     String newText = top + (primaryCode == Keyboard.KEYCODE_DONE ? "\n" : (char)(primaryCode));
 
@@ -663,32 +688,14 @@ public class CustomKeyboardApp extends InputMethodService
                         isSkippedAutoreplace = false;
                     }
 
-                    if (primaryCode == Keyboard.KEYCODE_DONE) {
-                        EditorInfo editorInfo = getCurrentInputEditorInfo();
-                        if (editorInfo != null && (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) != 0) {
-                            ic.commitText("\n", 1);
-                        } else {
-                            ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
-                            ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER));
-                        }
+                    ic.commitText(Character.toString((char) (primaryCode)), 1);
 
-                        if (caps_state != 2) {
-                            resetCaps();
-                        }
-
-                        showSuggestions(""); // Clear bar
+                    // Auto-cap if punctuation (e.g., after ". ") ans space
+                    if (primaryCode == 32 && shouldAutoCap() && defaultCaps) {
+                        caps_state = 1;
+                        applyCapsState();
                     }
-
-                    else {
-                        ic.commitText(Character.toString((char) (primaryCode)), 1);
-
-                        // Auto-cap if punctuation (e.g., after ". ") ans space
-                        if (primaryCode == 32 && shouldAutoCap() && defaultCaps) {
-                            caps_state = 1;
-                            applyCapsState();
-                        }
-                        break;
-                    }
+                    break;
                 }
             }
         }
