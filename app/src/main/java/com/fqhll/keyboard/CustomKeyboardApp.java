@@ -76,6 +76,8 @@ public class CustomKeyboardApp extends InputMethodService
     private float scaleX, scaleY;
     private int lastTouchX, lastTouchY;
 
+    private Keyboard.Key tapped;
+
     // (jperm voice) hope you can turn on word wrap
     public static final String[] emoji_list = new String[]{"😭", "😂", "💀", "😔", "🫠", "💁‍♂️", "🧍‍♂️", "💩", "💅", "🫂", "🔥", "🍀", "👾", "👽", "🛸", "👀", "✨️", "🐟", "✅️", "❌️", "🐸", "🌸", "🎀", "🤡", "😡", "🙏", "👻", "🥺", "😐", "👍", "😤", "🤓", "😀", "🦆", "🥬", "🐒", "🧠"};
     public static final String[][] emoji_variation_list = new String[][]{new String[]{"🧍‍♂️", "🧍‍♀️", "🧍"}, new String[]{"💁‍♂️", "💁‍♀️", "💁"}};
@@ -244,9 +246,11 @@ public class CustomKeyboardApp extends InputMethodService
                 break;
             case 47: // slash -> backslash
                 ic.commitText("\\", 1);
+                setPreviewLabel("\\");
                 break;
             case 65292: // chi comma -> chi full stop
                 ic.commitText("。", 1);
+                setPreviewLabel("。");
                 break;
             case -4: // zhuyin enter -> open settings, eng enter -> skip word
                 SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
@@ -266,9 +270,11 @@ public class CustomKeyboardApp extends InputMethodService
                 break;
             case '[':
                 ic.commitText("{", 1);
+                setPreviewLabel("{");
                 break;
             case ']':
                 ic.commitText("}", 1);
+                setPreviewLabel("}");
                 break;
             default:
                 break;
@@ -314,7 +320,7 @@ public class CustomKeyboardApp extends InputMethodService
         }
 
         // 3) Pick the one whose center is closest to (kx,ky)
-        Keyboard.Key tapped = null;
+        tapped = null;
         if (!matches.isEmpty()) {
             double bestDist = Double.MAX_VALUE;
             for (Keyboard.Key key : matches) {
@@ -334,6 +340,14 @@ public class CustomKeyboardApp extends InputMethodService
             showKeyPreview(tapped, primaryCode);
         }
     }
+
+    private void setPreviewLabel(CharSequence label) {
+        if (keyPreviewPopup != null && keyPreviewPopup.isShowing()) {
+            previewText.setText(label);
+            previewText.invalidate();
+        }
+    }
+
 
     public void showKeyPreview(Keyboard.Key key, int code) {
         // Set text
