@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private var keyboardHeights = arrayOf("Unselected", "Short", "Medium", "Tall", "Custom")
     private var keyboardLayouts = arrayOf("Unselected", "QWERTY", "QWERTZ", "AZERTY", "Dvorak", "Colemak", "Zhuyin")
     private var emojiVariations = arrayOf("Unselected", "Masculine", "Feminine", "Neutral")
-    private var keySound = arrayOf("Unselected", "click", "meow", "quack")
+    private var keySound = arrayOf("Unselected", "click", "meow", "quack", "oiiai")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
