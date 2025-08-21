@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             prefs.edit().putBoolean("etenToggle", false).commit()
         }
         if (!prefs.contains("keySoundToggle")) {
-            prefs.edit().putBoolean("keySoundToggle", false).commit()
+            prefs.edit().putBoolean("keySoundToggle", true).commit()
         }
 
         // Load saved toggle state
