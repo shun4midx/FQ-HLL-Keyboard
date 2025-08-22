@@ -143,6 +143,7 @@ app/src/main
         |-- custom_keypad_short.xml
         |-- custom_keypad_tall.xml
         |-- custom_keypad_zhuyin.xml
+        |-- custom_keypad_zhuyin_eten.xml
         |-- custom_method.xml
         |-- editor_grid.xml
         |-- editor_maximize.xml
@@ -195,9 +196,9 @@ Prereleases are relatively more tested development versions of the app if you pr
 - [x] custom keyboard layout autocorrection
 - [ ] export/import custom dictionary
 - [x] check if word is null before adding/removing
-- [ ] add key sound
+- [x] add key sound
 - [x] hold down . to delete word
-- [ ] text editor select button
+- [x] text editor select button
 
 ## Contact
 
