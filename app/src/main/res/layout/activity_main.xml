@@ -38,7 +38,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Text correction"
+                android:text="@string/text_correction"
                 android:textColor="@color/custom_fqhll_banner_pink"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -60,7 +60,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Preferences"
+                android:text="@string/preferences"
                 android:textColor="@color/custom_fqhll_banner_pink"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -127,7 +127,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Audio"
+                android:text="@string/audio"
                 android:textColor="@color/custom_fqhll_banner_pink"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -137,12 +137,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="Sound on key press" />
+                android:text="@string/enable_sound" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Sound effect on key press" />
+                android:text="@string/sound_switcher" />
 
             <Spinner
                 android:id="@+id/key_sound_options"

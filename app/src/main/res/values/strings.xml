@@ -18,4 +18,9 @@
     <string name="set_keyboard_to_fqhll">Set Keyboard to FQ-HLL Keyboard</string>
     <string name="use_eten_layout">Use Eten layout for Zhuyin</string>
     <string name="emoji_switcher">Emoji variation</string>
+    <string name="enable_sound">Sound on key press</string>
+    <string name="sound_switcher">Sound effect on key press</string>
+    <string name="audio">Audio</string>
+    <string name="preferences">Preferences</string>
+    <string name="text_correction">Text correction</string>
 </resources>
