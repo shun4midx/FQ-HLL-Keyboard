@@ -167,7 +167,8 @@ Prereleases are relatively more tested development versions of the app if you pr
 - [x] emoji support (emoji page like symbols?)
 - [x] clipboard
 - [x] settings app layout
-- [ ] hold keys for symbols
+- [x] hold keys for symbols
+- [ ] add documentation on long press symbol modified samsung keyboard layout
 - [ ] multiple languages support?
 - [ ] customise keyboard height
 - [ ] custom background image
