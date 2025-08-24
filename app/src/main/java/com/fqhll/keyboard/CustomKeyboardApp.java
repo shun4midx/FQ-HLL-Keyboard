@@ -72,7 +72,8 @@ public class CustomKeyboardApp extends InputMethodService
     private static final Set<String> CAPITALIZE_ENDS = new HashSet<>(Arrays.asList(". ", "! ", "? "));
 
     private static final Set<Character> LETTERS = new HashSet<>(Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'));
-
+    private static final String[] letterArray = new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+    private static final String[] longPressSymbols = new String[]{"\"", "}", "\\", "(", "/", ")", "*", "#", "&", "%", "+", "-", ">", "<", "^", "~", "?", "$", "'", "@", ";", "{", "!", "=", ":", "_"};
     private float scaleX, scaleY;
     private int lastTouchX, lastTouchY;
 
@@ -277,6 +278,19 @@ public class CustomKeyboardApp extends InputMethodService
                 setPreviewLabel("}");
                 break;
             default:
+                // hold down eng letters for symbols
+                String symbol = "qwe";
+
+                for (int i=0; i<letterArray.length; i++) {
+                    if (String.valueOf((char) primaryCode).equals(letterArray[i])) {
+
+                        if (i < longPressSymbols.length) { // just in case i make it too short
+                            symbol = longPressSymbols[i];
+                        }
+                        setPreviewLabel(symbol);
+                        ic.commitText(symbol, 1);
+                    }
+                }
                 break;
         }
     }
