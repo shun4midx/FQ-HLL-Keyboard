@@ -277,6 +277,10 @@ public class CustomKeyboardApp extends InputMethodService
                 ic.commitText("}", 1);
                 setPreviewLabel("}");
                 break;
+            case '_':
+                ic.commitText("|", 1);
+                setPreviewLabel("|");
+                break;
             default:
                 // hold down eng letters for symbols
                 String symbol = "qwe";
