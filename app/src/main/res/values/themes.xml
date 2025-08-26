@@ -89,7 +89,7 @@
         <item name="keyPressedColor">@color/custom_light_blue_transparent</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
-        <item name="suggestionBarTextColor">?attr/keyColor</item>
+        <item name="suggestionBarTextColor">@color/teal_gradient_7</item>
 
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
