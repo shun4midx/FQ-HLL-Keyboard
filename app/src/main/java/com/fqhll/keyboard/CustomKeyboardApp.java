@@ -256,8 +256,6 @@ public class CustomKeyboardApp extends InputMethodService
                 setPreviewLabel("。");
                 break;
             case -4: // zhuyin enter -> open settings, eng enter -> skip word
-                SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-                String keyboardLayout = prefs.getString("keyboard_layout", "qwerty").toLowerCase();
                 if (kv.getKeyboard() == zhuyinKeyboard) {
                     PackageManager manager = getPackageManager();
                     Intent launchIntent = manager.getLaunchIntentForPackage("com.fqhll.keyboard");
@@ -285,7 +283,7 @@ public class CustomKeyboardApp extends InputMethodService
                 break;
             default:
                 // hold down eng letters for symbols
-                String symbol = "qwe";
+                String symbol = "";
 
                 for (int i=0; i<letterArray.length; i++) {
                     if (String.valueOf((char) primaryCode).equals(letterArray[i])) {
