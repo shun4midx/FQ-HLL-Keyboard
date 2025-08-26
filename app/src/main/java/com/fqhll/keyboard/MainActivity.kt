@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
 
-    private var themes = arrayOf("Unselected", "Shun", "ShunV2", "Ducky", "DuckyV2", "Cabbage", "Sage", "ThisIsFine", "AntiThisIsFine", "Black", "DarkBlue", "Hammerhead", "Stargaze", "CottonCandy", "Yellow", "Teal", "Purple", "Green", "Cyan")
+    private var themes = arrayOf("Unselected", "Shun", "ShunV2", "Ducky", "DuckyV2", "Cabbage", "Sage", "ThisIsFine", "ThisIsFinePremium", "ThisIsFinePremium2", "AntiThisIsFine", "Black", "DarkBlue", "Hammerhead", "Stargaze", "CottonCandy", "Yellow", "Teal", "Purple", "Green", "Cyan")
     private var keyboardHeights = arrayOf("Unselected", "Short", "Medium", "Tall", "Custom")
     private var keyboardLayouts = arrayOf("Unselected", "QWERTY", "QWERTZ", "AZERTY", "Dvorak", "Colemak", "Zhuyin")
     private var emojiVariations = arrayOf("Unselected", "Masculine", "Feminine", "Neutral")

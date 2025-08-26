@@ -55,9 +55,13 @@
     <color name="sage_border">#bdf3ff</color>
 
     <color name="this_is_fine_orange">#fb8a06</color>
+    <color name="this_is_fine_orange_transparent">#7CFB8A06</color>
     <color name="this_is_fine_yellow">#fcdc6c</color>
+    <color name="this_is_fine_yellow_transparent">#73FCDC6C</color>
     <color name="this_is_fine_brown">#53320d</color>
+    <color name="this_is_fine_brown_transparent">#9D53320D</color>
     <color name="this_is_fine_green">#968f0d</color>
+    <color name="this_is_fine_green_transparent">#AD968F0D</color>
 
     <color name="anti_this_is_fine_light_blue">#45b5f5</color>
     <color name="anti_this_is_fine_light_blue_2">#2794D9</color>
