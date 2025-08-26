@@ -54,7 +54,7 @@ You can long press the text editor button to change languages.
 | clipboard `⎘` | clear clipboard |
 | text editor `𝙸` | change languages |
 
-#### Symbol layouts
+#### Symbol Layouts
 
 Default symbol layout (similar to Samsung keyboard layout, left), Alternative symbol layout (similar to Gboard layout, right)
 
