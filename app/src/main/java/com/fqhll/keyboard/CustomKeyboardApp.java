@@ -244,7 +244,7 @@ public class CustomKeyboardApp extends InputMethodService
                 ic.setSelection(0, beforeLen + afterLen);
                 break;
             case 46: // full stop -> delete last word
-                deleteLastWord();
+                deleteLastWordWithSpace();
                 showSuggestions("");
                 break;
             case 47: // slash -> backslash
@@ -958,6 +958,27 @@ public class CustomKeyboardApp extends InputMethodService
         // Delete that many chars before the cursor
         if (wordLength > 0) {
             ic.deleteSurroundingText(wordLength, 0);
+        }
+    }
+
+    // same as deleteLastWord, but deletes a space if cannot find last word
+    private void deleteLastWordWithSpace() {
+        InputConnection ic = getCurrentInputConnection();
+        CharSequence beforeCs = ic.getTextBeforeCursor(50, 0);
+        String before = beforeCs == null ? "" : beforeCs.toString();
+
+        int lastNewline = Math.max(before.lastIndexOf('\n'), before.lastIndexOf('\r'));
+        int lastSpace = before.lastIndexOf(' ');
+        int wordStart = Math.max(lastNewline, lastSpace) + 1;
+        int wordLength = before.length() - wordStart;
+
+        if (wordLength > 0) {
+            ic.deleteSurroundingText(wordLength, 0);
+        }
+
+        else if (wordLength == 0) {
+            ic.deleteSurroundingText(1, 0); // hardcoded limit is better than finding number of spaces or newlines
+            deleteLastWord(); // avoid recursion
         }
     }
 
