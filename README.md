@@ -31,7 +31,7 @@ Keyboard settings are saved across updates of the app.
 - Multiple keyboard layouts with layout specific autocorrection (qwerty, azerty, qwertz, dvorak, colemak)
 - (upcoming) zhuyin support
 
-### Usage
+## Usage
 
 #### Suggestion Bar
 
