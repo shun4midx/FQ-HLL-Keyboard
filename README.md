@@ -42,6 +42,12 @@ You can long press the text editor button to change languages.
 | clipboard `⎘` | clear clipboard |
 | text editor `𝙸` | change languages |
 
+- Default symbol layout (similar to Samsung keyboard layout, left), alternative symbol layout (similar to Gboard layout, right)
+
+<img width="400" alt="symbol_layout_main" src="https://github.com/user-attachments/assets/830c337e-e5c6-454f-a6ea-49d872eea823" /> <img width="400" alt="symbol_layout_alternative" src="https://github.com/user-attachments/assets/0d127b07-3300-468b-9f52-1b8f0525cb5e" />
+
+These images are representations of long press symbol layouts of the keyboard recreated using Keys Cafe, and are not screenshots of the FQ-HLL Keyboard.
+
 #### Clipboard
 
 The clipboard displays text copied from the text editor. You can paste an item by clicking on its box.
@@ -56,7 +62,7 @@ You can access the numpad by long pressing symbols, or through the emoji keyboar
 
 - grid mode (left), maximize mode (right)
 
-<img src="grid.png" width="150"> <img src="maximize.png" width="150">
+<img src="grid.png" width="300"> <img src="maximize.png" width="300">
 
 ## Customisation
 
