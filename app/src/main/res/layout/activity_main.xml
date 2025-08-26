@@ -79,6 +79,13 @@
                 android:checked="false"
                 android:text="@string/use_eten_layout" />
 
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/altSymbolToggle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="@string/use_alt_symbol_layout" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

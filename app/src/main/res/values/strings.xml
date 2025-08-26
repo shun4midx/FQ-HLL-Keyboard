@@ -23,4 +23,5 @@
     <string name="audio">Audio</string>
     <string name="preferences">Preferences</string>
     <string name="text_correction">Text correction</string>
+    <string name="use_alt_symbol_layout">Use Alternative long press Symbol layout</string>
 </resources>

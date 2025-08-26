@@ -73,7 +73,9 @@ public class CustomKeyboardApp extends InputMethodService
 
     private static final Set<Character> LETTERS = new HashSet<>(Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'));
     private static final String[] letterArray = new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
-    private static final String[] longPressSymbols = new String[]{"\"", "}", "\\", "(", "/", ")", "*", "#", "&", "%", "+", "-", ">", "<", "^", "~", "?", "$", "'", "@", ";", "{", "!", "=", ":", "_"};
+    private static String[] longPressSymbols = new String[]{};
+    private static final String[] longPressSymbolsMain = new String[]{"\"", "}", "\\", "(", "/", ")", "*", "#", "&", "%", "+", "-", ">", "<", "^", "~", "?", "$", "'", "@", ";", "{", "!", "=", ":", "_"};
+    private static final String[] longPressSymbolsAlt = new String[]{"alt", "}", "\\", "(", "/", ")", "*", "#", "&", "%", "+", "-", ">", "<", "^", "~", "?", "$", "'", "@", ";", "{", "!", "=", ":", "_"};
     private float scaleX, scaleY;
     private int lastTouchX, lastTouchY;
 
@@ -1237,7 +1239,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        Set<String> rebuild_prefs = new HashSet<>(Arrays.asList("key_color", "gridToggle", "keyboard_height", "keyboard_layout", "emoji_variation", "etenToggle", "keySoundToggle", "key_sound_effect"));
+        Set<String> rebuild_prefs = new HashSet<>(Arrays.asList("key_color", "gridToggle", "keyboard_height", "keyboard_layout", "emoji_variation", "etenToggle", "keySoundToggle", "key_sound_effect", "altSymbolToggle"));
         if (!rebuild_prefs.contains(key) && !key.startsWith("clipboard")) {
             return;
         }
@@ -1287,10 +1289,16 @@ public class CustomKeyboardApp extends InputMethodService
         String keyboardHeight = prefs.getString("keyboard_height", "Short");
         String keyboardLayout = prefs.getString("keyboard_layout", "qwerty").toLowerCase();
         boolean useEtenLayout = prefs.getBoolean("etenToggle", false);
+        boolean useAltSymbolLayout = prefs.getBoolean("altSymbolToggle", false);
         isKeySoundEnabled = prefs.getBoolean("keySoundToggle", true);
 
         if (useEtenLayout) {
             zhuyinKeyboard = new Keyboard(wrap, R.xml.custom_keypad_zhuyin_eten);
+        }
+
+        longPressSymbols = longPressSymbolsMain;
+        if (useAltSymbolLayout) {
+            longPressSymbols = longPressSymbolsAlt;
         }
 
         if (keyboardLayout.equals("qwerty")) {
