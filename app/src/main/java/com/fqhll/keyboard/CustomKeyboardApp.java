@@ -75,7 +75,7 @@ public class CustomKeyboardApp extends InputMethodService
     private static final String[] letterArray = new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
     private static String[] longPressSymbols = new String[]{};
     private static final String[] longPressSymbolsMain = new String[]{"\"", "}", "\\", "(", "/", ")", "*", "#", "&", "%", "+", "-", ">", "<", "^", "~", "?", "$", "'", "@", ";", "{", "!", "=", ":", "_"};
-    private static final String[] longPressSymbolsAlt = new String[]{"alt", "}", "\\", "(", "/", ")", "*", "#", "&", "%", "+", "-", ">", "<", "^", "~", "?", "$", "'", "@", ";", "{", "!", "=", ":", "_"};
+    private static final String[] longPressSymbolsAlt = new String[]{"@", ";", "'", "£", "|", "_", "&", "-", ">", "+", "(", ")", "?", "!", "{", "}", "%", "=", "#", "[", "<", ":", "\\", "\"", "]", "*"};
     private float scaleX, scaleY;
     private int lastTouchX, lastTouchY;
 
