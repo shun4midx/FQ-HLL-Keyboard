@@ -50,6 +50,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val etenToggle: SwitchCompat = findViewById(R.id.etenToggle)
         val keySoundToggle: SwitchCompat = findViewById(R.id.keySoundToggle)
         val altSymbolToggle: SwitchCompat = findViewById(R.id.altSymbolToggle)
+        val fullStopCommentToggle: SwitchCompat = findViewById(R.id.fullStopCommentToggle)
 
         val prefs = getSharedPreferences("keyboard_settings", Context.MODE_PRIVATE)
 
@@ -71,6 +72,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         if (!prefs.contains("altSymbolToggle")) {
             prefs.edit().putBoolean("altSymbolToggle", false).commit()
         }
+        if (!prefs.contains("fullStopCommentToggle")) {
+            prefs.edit().putBoolean("fullStopCommentToggle", false).commit()
+        }
 
         // Load saved toggle state
         capsToggle.isChecked = prefs.getBoolean("capsToggle", true)
@@ -79,6 +83,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         etenToggle.isChecked = prefs.getBoolean("etenToggle", false)
         keySoundToggle.isChecked = prefs.getBoolean("keySoundToggle", true)
         altSymbolToggle.isChecked = prefs.getBoolean("altSymbolToggle", false)
+        fullStopCommentToggle.isChecked = prefs.getBoolean("fullStopCommentToggle", false)
 
         // Save toggle changes
         capsToggle.setOnCheckedChangeListener { _, isChecked ->
@@ -98,6 +103,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
         altSymbolToggle.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit(commit = true) { putBoolean("altSymbolToggle", isChecked) }
+        }
+        fullStopCommentToggle.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit(commit = true) { putBoolean("fullStopCommentToggle", isChecked) }
         }
 
         // Dropdowns

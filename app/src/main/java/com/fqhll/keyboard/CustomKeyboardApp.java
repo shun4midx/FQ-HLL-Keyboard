@@ -72,6 +72,7 @@ public class CustomKeyboardApp extends InputMethodService
     private int caps_state = 1; // 0 = off, 1 = single shift, 2 = double shift
     private long last_caps_time = 0;
     private boolean defaultCaps = true;
+    private boolean useFullStopComment = false;
     private static final int DOUBLE_TAP_TIMEOUT = 300; // Smth like Gboard capping
 
     // Don't show pop-up for SPACE, CAPS (-1), DELETE (-5), Symbols (-10 from symbols page and -2 from main page), or ENTER (-4)
@@ -79,7 +80,8 @@ public class CustomKeyboardApp extends InputMethodService
     private static final Set<String> CAPITALIZE_ENDS = new HashSet<>(Arrays.asList(". ", "! ", "? "));
 
     private static final Set<Character> LETTERS = new HashSet<>(Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'));
-    private static final String[] letterArray = new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+    private static final String[] engLetterArray = new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+    private static final String[] zhuyinLetterArray = new String[]{"ㄅ", "ㄆ", "ㄇ", "ㄈ", "ㄉ", "ㄊ", "ㄋ", "ㄌ", "ㄍ", "ㄎ", "ㄏ", "ㄐ", "ㄑ", "ㄒ", "ㄓ", "ㄔ", "ㄕ", "ㄖ", "ㄗ", "ㄘ", "ㄙ", "ㄚ", "ㄛ", "ㄜ", "ㄝ", "ㄞ", "ㄟ", "ㄠ", "ㄡ", "ㄢ", "ㄣ", "ㄤ", "ㄥ", "ㄦ", "ㄧ", "ㄨ", "ㄩ", "ˉ", "ˊ", "ˇ", "ˋ", "˙"};
     private static String[] longPressSymbols = new String[]{};
     private static final String[] longPressSymbolsMain = new String[]{"\"", "}", "\\", "(", "/", ")", "*", "#", "&", "%", "+", "-", ">", "<", "^", "~", "?", "$", "'", "@", ";", "{", "!", "=", ":", "_"};
     private static final String[] longPressSymbolsAlt = new String[]{"@", ";", "'", "£", "|", "_", "&", "-", ">", "+", "(", ")", "?", "!", "{", "}", "%", "=", "#", "[", "<", ":", "\\", "\"", "]", "*"};
@@ -219,6 +221,12 @@ public class CustomKeyboardApp extends InputMethodService
         }
     }
 
+    private void commitTextAndShowLabel(String commitText) {
+        InputConnection ic = getCurrentInputConnection();
+        ic.commitText(commitText, 1);
+        setPreviewLabel(commitText);
+    }
+
     private void handleLongPress(int primaryCode) {
         if (-99 <= primaryCode && primaryCode <= -90) { // long press to delete clipboard item
             int clipboardCode = primaryCode + 90;
@@ -264,17 +272,20 @@ public class CustomKeyboardApp extends InputMethodService
                 int afterLen  = (after  == null) ? 0 : after.length();
                 ic.setSelection(0, beforeLen + afterLen);
                 break;
-            case 46: // full stop -> delete last word
-                deleteLastWordWithSpace();
-                showSuggestions("");
+            case 46: // full stop -> delete last word or enter '//'
+                if (useFullStopComment) {
+                    commitTextAndShowLabel("//");
+                }
+                else {
+                    deleteLastWordWithSpace();
+                    showSuggestions("");
+                }
                 break;
             case 47: // slash -> backslash
-                ic.commitText("\\", 1);
-                setPreviewLabel("\\");
+                commitTextAndShowLabel("\\");
                 break;
             case 65292: // chi comma -> chi full stop
-                ic.commitText("。", 1);
-                setPreviewLabel("。");
+                commitTextAndShowLabel("。");
                 break;
             case -4: // zhuyin enter -> open settings, eng enter -> skip word
                 if (kv.getKeyboard() == zhuyinKeyboard) {
@@ -291,29 +302,32 @@ public class CustomKeyboardApp extends InputMethodService
                 }
                 break;
             case '[':
-                ic.commitText("{", 1);
-                setPreviewLabel("{");
+                commitTextAndShowLabel("{");
                 break;
             case ']':
-                ic.commitText("}", 1);
-                setPreviewLabel("}");
+                commitTextAndShowLabel("}");
                 break;
             case '_':
-                ic.commitText("|", 1);
-                setPreviewLabel("|");
+                commitTextAndShowLabel("|");
                 break;
             default:
                 // hold down eng letters for symbols
                 String symbol = "";
+                String[] longPressText = longPressSymbols;
+                String[] letterArray = engLetterArray;
+
+                if (kv.getKeyboard() == zhuyinKeyboard) {
+                    longPressText = zhuyinLetterArray;
+                    letterArray = zhuyinLetterArray;
+                }
 
                 for (int i=0; i<letterArray.length; i++) {
                     if (String.valueOf((char) primaryCode).equals(letterArray[i])) {
 
-                        if (i < longPressSymbols.length) { // just in case i make it too short
-                            symbol = longPressSymbols[i];
+                        if (i < longPressText.length) { // just in case i make it too short
+                            symbol = longPressText[i];
                         }
-                        setPreviewLabel(symbol);
-                        ic.commitText(symbol, 1);
+                        commitTextAndShowLabel(symbol);
                     }
                 }
                 break;
@@ -1540,7 +1554,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-        Set<String> rebuild_prefs = new HashSet<>(Arrays.asList("key_color", "gridToggle", "keyboard_height", "keyboard_layout", "emoji_variation", "etenToggle", "keySoundToggle", "key_sound_effect", "altSymbolToggle"));
+        Set<String> rebuild_prefs = new HashSet<>(Arrays.asList("key_color", "gridToggle", "keyboard_height", "keyboard_layout", "emoji_variation", "etenToggle", "keySoundToggle", "key_sound_effect", "altSymbolToggle", "fullStopCommentToggle"));
         if (!rebuild_prefs.contains(key) && !key.startsWith("clipboard")) {
             return;
         }
@@ -1594,6 +1608,7 @@ public class CustomKeyboardApp extends InputMethodService
         String keyboardLayout = prefs.getString("keyboard_layout", "qwerty").toLowerCase();
         boolean useEtenLayout = prefs.getBoolean("etenToggle", false);
         boolean useAltSymbolLayout = prefs.getBoolean("altSymbolToggle", false);
+        useFullStopComment = prefs.getBoolean("fullStopCommentToggle", false);
         isKeySoundEnabled = prefs.getBoolean("keySoundToggle", true);
 
         if (useEtenLayout) {
