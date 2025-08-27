@@ -179,8 +179,8 @@ Prereleases are relatively more tested development versions of the app if you pr
 - [x] add documentation on long press symbol modified samsung keyboard/gboard layouts
 - [ ] multiple languages support?
 - [ ] customise keyboard height
-- [ ] custom background image
-- [ ] key opacity
+- [x] custom background image
+- [x] key opacity
 - [ ] custom key preview colour
 - [x] figure out a way to build gradle project using github actions
 - [x] fix unsigned release apk not working
