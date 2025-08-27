@@ -310,8 +310,65 @@ public class CustomKeyboardApp extends InputMethodService
             case '_':
                 commitTextAndShowLabel("|");
                 break;
+            case '!':
+                commitTextAndShowLabel("！");
+                break;
+            case '?':
+                commitTextAndShowLabel("？");
+                break;
+            case '~':
+                commitTextAndShowLabel("～");
+                break;
+            case ':':
+                commitTextAndShowLabel("：");
+                break;
+            case '(':
+                commitTextAndShowLabel("（");
+                break;
+            case ')':
+                commitTextAndShowLabel("）");
+                break;
+            case '\'':
+                commitTextAndShowLabel("、");
+                break;
+            case '<':
+                commitTextAndShowLabel("「");
+                break;
+            case '>':
+                commitTextAndShowLabel("」");
+                break;
+            case '1':
+                commitTextAndShowLabel("¹");
+                break;
+            case '2':
+                commitTextAndShowLabel("²");
+                break;
+            case '3':
+                commitTextAndShowLabel("³");
+                break;
+            case '4':
+                commitTextAndShowLabel("⁴");
+                break;
+            case '5':
+                commitTextAndShowLabel("⁵");
+                break;
+            case '6':
+                commitTextAndShowLabel("⁶");
+                break;
+            case '7':
+                commitTextAndShowLabel("⁷");
+                break;
+            case '8':
+                commitTextAndShowLabel("⁸");
+                break;
+            case '9':
+                commitTextAndShowLabel("⁹");
+                break;
+            case '0':
+                commitTextAndShowLabel("⁰");
+                break;
             default:
-                // hold down eng letters for symbols
+                // hold down eng letters for symbols, zhuyin letters to commit the letter
                 String symbol = "";
                 String[] longPressText = longPressSymbols;
                 String[] letterArray = engLetterArray;
