@@ -20,11 +20,11 @@
 
 ## ThisIsFinePremium
 
-<img height="320px" src="ThisIsFinePremium.png"/> <img height="320px" src="ThisIsFine_Reference.png"/>
+<img height="320px" src="ThisIsFinePremium.png"/>
 
 ## ThisIsFinePremium2
 
-<img height="320px" src="ThisIsFinePremium2.png"/> <img height="320px" src="ThisIsFine_Reference.png"/>
+<img height="320px" src="ThisIsFinePremium2.png"/>
 
 ## AntiThisIsFine
 
@@ -32,7 +32,7 @@
 
 ## AntiThisIsFinePremium
 
-<img height="320px" src="AntiThisIsFinePremium.png"/> <img height="320px" src="AntiThisIsFine_Reference.png"/>
+<img height="320px" src="AntiThisIsFinePremium.png"/>
 
 ## Stargaze
 
