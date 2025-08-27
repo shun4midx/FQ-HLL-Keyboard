@@ -11,6 +11,7 @@ import android.inputmethodservice.KeyboardView;
 import android.media.AudioManager;
 import android.os.Looper;
 import android.os.Handler;
+import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -27,6 +28,12 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import android.media.SoundPool;
+
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexWrap;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -127,6 +134,18 @@ public class CustomKeyboardApp extends InputMethodService
     private int clickSoundId;
     private boolean isKeySoundEnabled = true;
 
+    private android.widget.PopupWindow candidatesPopup;
+    private boolean zhuyinExpanded = false;
+
+    List<String> zhuyinSuggestions = new ArrayList<>();
+    private static final Set<Character> ZHUYIN_DELIMITERS = new HashSet<>(Arrays.asList('˙', 'ˊ', 'ˇ', 'ˋ', ' '));
+    private StringBuilder zhuyinBuffer = new StringBuilder();
+    private LinearLayout zhuyinCompositionBar;
+    private TextView zhuyinCompositionText;
+
+    private ZhuyinTyper zhuyinTyper;
+
+
     private void ensureNative() {
         if (!nativeLoaded) {
             try {
@@ -167,6 +186,8 @@ public class CustomKeyboardApp extends InputMethodService
         root = buildKeyboardView();
         applyCapsState();
         copyAssetToInternal(getApplicationContext(), "test_files/20k_texting.txt");
+        copyAssetToInternal(getApplicationContext(), "tsi_custom.json");
+        zhuyinTyper = new ZhuyinTyper(getApplicationContext());
 
         String absPath = getFilesDir().getAbsolutePath() + "/test_files/20k_texting.txt";
         ensureNative();
@@ -296,6 +317,75 @@ public class CustomKeyboardApp extends InputMethodService
                     }
                 }
                 break;
+        }
+    }
+
+    private void showCandidatePopup(List<String> items) {
+        // Container for the list
+        Context ctx = this;
+        RecyclerView rv = new RecyclerView(ctx);
+
+        // LayoutManager: Flexbox if available, else 6-col Grid
+        RecyclerView.LayoutManager lm;
+        try {
+            Class.forName("com.google.android.flexbox.FlexboxLayoutManager");
+            com.google.android.flexbox.FlexboxLayoutManager flm =
+                    new com.google.android.flexbox.FlexboxLayoutManager(ctx);
+            flm.setFlexDirection(com.google.android.flexbox.FlexDirection.ROW);
+            flm.setFlexWrap(com.google.android.flexbox.FlexWrap.WRAP);
+            flm.setJustifyContent(com.google.android.flexbox.JustifyContent.FLEX_START);
+            flm.setAlignItems(com.google.android.flexbox.AlignItems.CENTER);
+            lm = flm;
+        } catch (Throwable noFlex) {
+            lm = new androidx.recyclerview.widget.GridLayoutManager(ctx, 6);
+        }
+        rv.setLayoutManager(lm);
+
+        // Simple adapter for chips
+        rv.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+            @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup p, int vt) {
+                View v = LayoutInflater.from(p.getContext())
+                        .inflate(R.layout.item_candidate_chip, p, false);
+                return new RecyclerView.ViewHolder(v) {};
+            }
+            @Override public void onBindViewHolder(RecyclerView.ViewHolder h, int i) {
+                TextView tv = h.itemView.findViewById(R.id.txt);
+                String s = items.get(i);
+                tv.setText(s);
+                tv.setOnClickListener(v -> {
+                    InputConnection ic = getCurrentInputConnection();
+                    if (ic != null) {
+                        replaceCurrentWord(s);
+                    }
+                    if (candidatesPopup != null && candidatesPopup.isShowing()) {
+                        candidatesPopup.dismiss();
+                    }
+                });
+            }
+            @Override public int getItemCount() { return items.size(); }
+        });
+
+        int pad = (int)(12 * getResources().getDisplayMetrics().density);
+        rv.setPadding(pad, pad, pad, pad);
+
+        // Build the popup
+        if (candidatesPopup != null && candidatesPopup.isShowing()) {
+            candidatesPopup.dismiss();
+        }
+        candidatesPopup = new android.widget.PopupWindow(
+                rv,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                (int)(getResources().getDisplayMetrics().heightPixels * 0.45f), // ~45% screen height
+                true /* focusable so back dismisses */
+        );
+        candidatesPopup.setOutsideTouchable(true);
+        candidatesPopup.setClippingEnabled(true);
+        // Optional: give it a tiny elevation/background
+        candidatesPopup.setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(0xFFFFFFFF));
+
+        // Anchor at bottom of your IME root
+        if (root != null) {
+            candidatesPopup.showAtLocation(root, Gravity.BOTTOM, 0, 0);
         }
     }
 
@@ -726,7 +816,12 @@ public class CustomKeyboardApp extends InputMethodService
                         isSkippedAutoreplace = false;
                     }
 
-                    ic.commitText(Character.toString((char) (primaryCode)), 1);
+                    if (kv.getKeyboard() == zhuyinKeyboard) {
+                        commitChar(ic, primaryCode);
+                        updateSuggestion(ic);
+                    } else {
+                        ic.commitText(Character.toString((char) (primaryCode)), 1);
+                    }
 
                     // Auto-cap if punctuation (e.g., after ". ") ans space
                     if (primaryCode == 32 && shouldAutoCap() && defaultCaps) {
@@ -777,6 +872,15 @@ public class CustomKeyboardApp extends InputMethodService
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
 
+        if (kv != null && kv.getKeyboard() == zhuyinKeyboard && zhuyinBuffer.length() > 0) {
+            zhuyinBuffer.setLength(zhuyinBuffer.length() - 1);
+            zhuyinCompositionText.setText(zhuyinBuffer.toString());
+            if (zhuyinBuffer.length() == 0) {
+                zhuyinCompositionBar.setVisibility(View.GONE);
+            }
+            return;
+        }
+
         // Grab up to LOOKBACK code units before the cursor
         CharSequence beforeCs = ic.getTextBeforeCursor(LOOKBACK, 0);
         if (beforeCs == null || beforeCs.length() == 0) return;
@@ -823,6 +927,23 @@ public class CustomKeyboardApp extends InputMethodService
         }
     }
     private void commitChar(InputConnection ic, int code) {
+        char c = (char) code;
+
+        // Zhuyin mode: keep in buffer instead of committing
+        if (kv != null && kv.getKeyboard() == zhuyinKeyboard) {
+            if (c == ' ' && zhuyinBuffer.length() == 0) {
+                ic.commitText(" ", 1);
+                return;
+            }
+
+            zhuyinBuffer.append(c);
+
+            zhuyinCompositionBar.setVisibility(View.VISIBLE);
+            zhuyinCompositionText.setText(zhuyinBuffer.toString());
+            return;
+        }
+
+        // Normal mode
         Map<Integer,String> emojis = getEmojiCodes();
         Map<Integer,String> math_symbols = getMathCodes();
         if (emojis.containsKey(code)) {
@@ -830,7 +951,6 @@ public class CustomKeyboardApp extends InputMethodService
         } else if (math_symbols.containsKey(code)) {
             ic.commitText(math_symbols.get(code), 1);
         } else {
-            char c = (char)code;
             if (Character.isLetter(c) && caps_state > 0) {
                 c = Character.toUpperCase(c);
             }
@@ -841,6 +961,12 @@ public class CustomKeyboardApp extends InputMethodService
     }
 
     private void updateSuggestion(InputConnection ic) {
+        if (kv != null && kv.getKeyboard() == zhuyinKeyboard) {
+            String prefix = zhuyinBuffer.toString();
+            showSuggestions(prefix);
+            return;
+        }
+
         CharSequence beforeCs = ic.getTextBeforeCursor(50, 0);
         String before = (beforeCs == null ? "" : beforeCs.toString());
         before = before.trim();
@@ -867,61 +993,166 @@ public class CustomKeyboardApp extends InputMethodService
         String[] words  = s.suggestions;
         double[] scores = s.scores;
 
-        for (int i = 0; i < 3; i++) {
-            final String word  = words[i];
-            final double score = (i < scores.length ? scores[i] : 0);
+        View scrollView = root.findViewById(R.id.suggestion_scroll);
+        LinearLayout strip = root.findViewById(R.id.suggestion_strip);
+        TextView s1 = root.findViewById(R.id.suggestion_1);
+        TextView s2 = root.findViewById(R.id.suggestion_2);
+        TextView s3 = root.findViewById(R.id.suggestion_3);
 
-            TextView tv = (TextView) suggestionBar.getChildAt(i + 1);
-            tv.setText(word);
+        if (kv.getKeyboard() != zhuyinKeyboard) {
+            s1.setVisibility(View.VISIBLE);
+            s2.setVisibility(View.VISIBLE);
+            s3.setVisibility(View.VISIBLE);
+            scrollView.setVisibility(View.GONE);
 
-            // bold if score >= threshold and middle and also not equal to current word
-            tv.setTypeface(null, score >= AUTO_REPLACE_THRESHOLD && defaultAutocor && i == 1 && !prefix.equals(word) ? Typeface.BOLD : Typeface.NORMAL);
+            for (int i = 0; i < 3; i++) {
+                final String word = words[i];
+                final double score = (i < scores.length ? scores[i] : 0);
 
-            tv.setOnClickListener(v -> {
-                replaceCurrentWord(word);
-                showSuggestions("");
-            });
+                TextView tv = (TextView) suggestionBar.getChildAt(i + 1);
+                tv.setText(word);
 
-            int finalI = i; // idk android studio told me to
+                // bold if score >= threshold and middle and also not equal to current word
+                tv.setTypeface(null, score >= AUTO_REPLACE_THRESHOLD && defaultAutocor && i == 1 && !prefix.equals(word) ? Typeface.BOLD : Typeface.NORMAL);
 
-            tv.setOnLongClickListener(v -> {
-                InputConnection ic = getCurrentInputConnection();
-                if (ic != null && !words[1].isEmpty()) {
-
-                    CharSequence committedText = "";
-
-                    String absPath = getFilesDir().getAbsolutePath() + "/test_files/20k_texting.txt";
-
-                    // if long press on user typed word (0 if has suggestions, 1 if no suggestions), add the word to dictionary
-                    if (finalI == 0 && !words[0].isEmpty() && !words[0].equals(" ") && words[0].equals(prefix)) {
-
-                        try {
-                            if (!inDictionary(word)) {
-                                CustomKeyboardApp.nativeAddWord(word, absPath);
-                                committedText = "\n\n" + word + " is added to dictionary!";
-                            }
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
-
-                    // if long press on suggestions, remove the suggestion from dictionary
-                    else {
-                        CustomKeyboardApp.nativeRemoveWord(word, absPath);
-                        committedText = "\n\n" + word + " is removed from dictionary!";
-                    }
-
+                tv.setOnClickListener(v -> {
+                    replaceCurrentWord(word);
                     showSuggestions("");
+                });
 
-                    // TODO: fix show toast
-                    showToast(committedText); // works but needs notification permission to show toast in background
-                    return true;
-                }
-                return false;
+                int finalI = i; // idk android studio told me to
+
+                tv.setOnLongClickListener(v -> {
+                    InputConnection ic = getCurrentInputConnection();
+                    if (ic != null && !words[1].isEmpty()) {
+
+                        CharSequence committedText = "";
+
+                        String absPath = getFilesDir().getAbsolutePath() + "/test_files/20k_texting.txt";
+
+                        // if long press on user typed word (0 if has suggestions, 1 if no suggestions), add the word to dictionary
+                        if (finalI == 0 && !words[0].isEmpty() && !words[0].equals(" ") && words[0].equals(prefix)) {
+
+                            try {
+                                if (!inDictionary(word)) {
+                                    CustomKeyboardApp.nativeAddWord(word, absPath);
+                                }
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+
+                        // if long press on suggestions, remove the suggestion from dictionary
+                        else {
+                            CustomKeyboardApp.nativeRemoveWord(word, absPath);
+                        }
+
+                        showSuggestions("");
+
+                        // TODO: fix show toast
+                        showToast(committedText); // works but needs notification permission to show toast in background
+                        return true;
+                    }
+                    return false;
+                });
+            }
+        } else {
+            s1.setVisibility(View.GONE);
+            s2.setVisibility(View.GONE);
+            s3.setVisibility(View.GONE);
+            scrollView.setVisibility(View.VISIBLE);
+
+            strip.removeAllViews();
+
+            regenerateZhuyinSuggestions(prefix);
+
+            for (String cand : zhuyinSuggestions) {
+                TextView tv = makeSuggestionChip(cand);
+                tv.setPadding(30, 4, 30, 4);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                );
+                lp.setMargins(20, 0, 20, 0);
+                strip.addView(tv, lp);
+            }
+
+            scrollView.setVisibility(View.VISIBLE);
+            scrollView.post(() -> {
+                scrollView.scrollTo(0, 0);
+                strip.requestLayout();
+                strip.invalidate();
             });
         }
     }
 
+    private void regenerateZhuyinSuggestions(String prefix) {
+        zhuyinSuggestions.clear();
+        if (prefix.isEmpty() || prefix.equals(" ")) {
+            return;
+        }
+
+        String[] suggs = zhuyinSuggest(prefix);
+        zhuyinSuggestions.addAll(Arrays.asList(suggs));
+    }
+
+    private String[] zhuyinSuggest(String prefix) {
+
+        String[] split = splitPrefix(prefix);
+
+        return zhuyinTyper.suggest(split);
+    }
+
+    private String[] splitPrefix(String prefix) {
+        List<String> result = new ArrayList<>();
+        int start = 0;
+
+        for (int i = 0; i < prefix.length(); i++) {
+            char c = prefix.charAt(i);
+            if (ZHUYIN_DELIMITERS.contains(c)) {
+                result.add(prefix.substring(start, i + 1));
+                start = i + 1;
+            }
+        }
+
+        if (start < prefix.length()) {
+            String tail = prefix.substring(start);
+            if (!tail.trim().isEmpty()) {  // ignore plain space
+                result.add(tail);
+            }
+        }
+
+        return result.toArray(new String[0]);
+    }
+
+
+    private TextView makeSuggestionChip(String text) {
+        Context ctx = root.getContext(); // has your selected theme
+        TextView tv = new TextView(ctx);
+
+        tv.setText(text);
+        tv.setTextSize(20f);
+        tv.setPadding(12, 4, 12, 4);
+        tv.setGravity(Gravity.CENTER);
+
+        tv.setTextColor(getThemeColor(ctx, R.attr.suggestionBarTextColor));
+        tv.setClickable(true);
+        tv.setOnClickListener(v -> {
+            replaceCurrentWord(text);
+            updateSuggestion(getCurrentInputConnection());
+        });
+        return tv;
+    }
+
+    private int getThemeColor(Context ctx, int attr) {
+        TypedValue typedValue = new TypedValue();
+        ctx.getTheme().resolveAttribute(attr, typedValue, true);
+        if (typedValue.resourceId != 0) {
+            return ContextCompat.getColor(ctx, typedValue.resourceId);
+        } else {
+            return typedValue.data;
+        }
+    }
     public void showToast(CharSequence text) {
         int duration = Toast.LENGTH_LONG;
 
@@ -929,9 +1160,60 @@ public class CustomKeyboardApp extends InputMethodService
         toast.show();
     }
 
+    private String[] splitZhuyinBuffer() {
+        String buf = zhuyinBuffer.toString();
+        if (buf.isEmpty()) return new String[]{"", ""};
+
+        int i = 0;
+        while (i < buf.length()) {
+            char c = buf.charAt(i);
+            if (ZHUYIN_DELIMITERS.contains(c)) {
+                // include delimiter in the syllable
+                return new String[]{ buf.substring(0, i + 1), buf.substring(i + 1).trim() };
+            }
+            i++;
+        }
+        // no delimiter → whole buffer is one syllable
+        return new String[]{ buf, "" };
+    }
+
     private void replaceCurrentWord(String suggestion) {
         InputConnection ic = getCurrentInputConnection();
         if (ic == null || suggestion.equals(" ") || suggestion.isEmpty()) return;
+
+        if (kv != null && kv.getKeyboard() == zhuyinKeyboard) {
+            // Split buffer
+            String[] parts = splitZhuyinBuffer();
+            String first = parts[0];
+            String rest  = parts[1];
+
+            ic.beginBatchEdit();
+            ic.commitText(suggestion, 1);
+            ic.endBatchEdit();
+
+            zhuyinBuffer.setLength(0);
+            zhuyinBuffer.append(rest);
+
+            if (zhuyinBuffer.length() == 0) {
+                zhuyinCompositionBar.setVisibility(View.GONE);
+                zhuyinCompositionText.setText("");
+            } else {
+                zhuyinCompositionBar.setVisibility(View.VISIBLE);
+                zhuyinCompositionText.setText(zhuyinBuffer.toString());
+            }
+
+            ic = getCurrentInputConnection();
+            EditorInfo ei = getCurrentInputEditorInfo();
+            if (ic != null && ei != null) {
+                try {
+                    updateSuggestion(ic);
+                } catch (Exception e) {
+                    // swallow it, don't let IME crash
+                }
+            }
+
+            return;
+        }
 
         deleteLastWord();
 
@@ -1284,6 +1566,9 @@ public class CustomKeyboardApp extends InputMethodService
         numpadKeyboard= new Keyboard(wrap, R.xml.numpad);
         zhuyinKeyboard= new Keyboard(wrap, R.xml.custom_keypad_zhuyin);
 
+        zhuyinCompositionBar = root.findViewById(R.id.zhuyin_composition_bar);
+        zhuyinCompositionText = root.findViewById(R.id.zhuyin_composition_text);
+
         String keyboardHeight = prefs.getString("keyboard_height", "Short");
         String keyboardLayout = prefs.getString("keyboard_layout", "qwerty").toLowerCase();
         boolean useEtenLayout = prefs.getBoolean("etenToggle", false);
@@ -1336,29 +1621,100 @@ public class CustomKeyboardApp extends InputMethodService
             editorKeyboard = new Keyboard(wrap, R.xml.editor_grid);
         }
 
+        RecyclerView expanded = root.findViewById(R.id.expanded_candidates);
+        View keyboardView = root.findViewById(R.id.keyboard_view);
+
         // toggle clipboard and normal keyboard
         clipboard.setOnClickListener(v -> {
             if (kv.getKeyboard() == clipKeyboard) {
                 kv.setKeyboard(keyboard);
+                kv.invalidateAllKeys();
             }
-            else {
+            else if (!zhuyinExpanded) {
                 kv.setKeyboard(clipKeyboard);
+                kv.invalidateAllKeys();
+            } else {
+                // Minimize
+                expanded.setVisibility(View.GONE);
+                keyboardView.setVisibility(View.VISIBLE);
+                zhuyinExpanded = false;
             }
-            kv.invalidateAllKeys();
         });
 
         // long click to clear clipboard
         clipboard.setOnLongClickListener(v -> {
-            if (kv.getKeyboard() == clipKeyboard) {
+            if (kv.getKeyboard() == clipKeyboard && !zhuyinExpanded) {
                 for (int i = 1; i < 11; i++) {
                     String clipboardPrefs = "clipboard_text_" + i;
                     prefs.edit().putString(clipboardPrefs, "").apply();
                 }
                 return true;
+            } else if (kv.getKeyboard() == zhuyinKeyboard || zhuyinExpanded) {
+                if (zhuyinExpanded) {
+                    // Minimize
+                    expanded.setVisibility(View.GONE);
+                    keyboardView.setVisibility(View.VISIBLE);
+                    zhuyinExpanded = false;
+                } else {
+                    // expand panel
+                    expanded.setVisibility(View.VISIBLE);
+                    keyboardView.setVisibility(View.GONE);
+
+                    expanded.getLayoutParams().height = keyboardView.getHeight();
+                    expanded.requestLayout();
+                    zhuyinExpanded = true;
+
+                    FlexboxLayoutManager lm = new FlexboxLayoutManager(this);
+                    lm.setFlexDirection(FlexDirection.ROW);
+                    lm.setFlexWrap(FlexWrap.WRAP);
+                    expanded.setLayoutManager(lm);
+
+                    // In buildKeyboardView(), when expanding:
+                    zhuyinSuggestions.clear();
+
+                    // reuse the same prefix logic as updateSuggestion/showSuggestions
+                    InputConnection ic = getCurrentInputConnection();
+                    String prefix = zhuyinBuffer.toString();
+
+                    // generate Zhuyin candidates the same way as the top bar
+                    regenerateZhuyinSuggestions(prefix);
+
+                    expanded.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                        @Override
+                        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                            View v = LayoutInflater.from(parent.getContext())
+                                    .inflate(R.layout.item_candidate_chip, parent, false);
+                            return new RecyclerView.ViewHolder(v) {
+                            };
+                        }
+
+                        @Override
+                        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+                            TextView tv = holder.itemView.findViewById(R.id.txt);
+                            String s = zhuyinSuggestions.get(position);
+                            tv.setText(s);
+                            tv.setOnClickListener(v -> {
+                                InputConnection ic = getCurrentInputConnection();
+                                if (ic != null) {
+                                    replaceCurrentWord(s);
+                                }
+                                expanded.setVisibility(View.GONE);
+                                regenerateZhuyinSuggestions(zhuyinBuffer.toString()); // go back to normal bar
+                                keyboardView.setVisibility(View.VISIBLE);
+                            });
+                        }
+
+                        @Override
+                        public int getItemCount() {
+                            return zhuyinSuggestions.size();
+                        }
+                    });
+                }
+
+                return true;
             }
-            else {
-                return false;
-            }
+
+            return false;
         });
 
         // toggle text editor and normal keyboard
@@ -1367,7 +1723,7 @@ public class CustomKeyboardApp extends InputMethodService
                 kv.setKeyboard(keyboard);
                 kv.invalidateAllKeys();
             }
-            else if (kv.getKeyboard() != numpadKeyboard) { // prevent long press for numpad on release go back to editor
+            else if (kv.getKeyboard() != numpadKeyboard && !zhuyinExpanded) { // prevent long press for numpad on release go back to editor
                 kv.setKeyboard(editorKeyboard);
                 kv.invalidateAllKeys();
             }
