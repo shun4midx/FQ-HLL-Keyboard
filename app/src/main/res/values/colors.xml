@@ -8,6 +8,7 @@
     <color name="teal_700">#061916</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="transparent">#00FFFFFF</color>
 
     <color name="teal_gradient_1">#E7003050</color>
     <color name="teal_gradient_2">#8426CEAA</color>
@@ -15,6 +16,8 @@
     <color name="teal_gradient_5">#C8496683</color>
     <color name="teal_gradient_6">#A55049CC</color>
     <color name="teal_gradient_7">#B8161540</color>
+    <color name="teal_gradient_7_transparent">#9E161540</color>
+    <color name="teal_gradient_7_transparent_2">#5F161540</color>
 
     <color name="cotton_candy_light_blue">#5BCEFA</color>
     <color name="cotton_candy_light_pink">#FF95D7</color>
@@ -36,6 +39,7 @@
     <color name="custom_light_green">#98FF91</color>
     <color name="custom_hammerhead_blue">#001549</color>
     <color name="custom_light_blue">#91FAFF</color>
+    <color name="custom_light_blue_transparent">#5591FFFA</color>
 
     <color name="custom_fqhll_logo_pink">#ff1fa9</color>
     <color name="custom_fqhll_logo_purple">#bc3fde</color>
@@ -51,9 +55,13 @@
     <color name="sage_border">#bdf3ff</color>
 
     <color name="this_is_fine_orange">#fb8a06</color>
+    <color name="this_is_fine_orange_transparent">#7CFB8A06</color>
     <color name="this_is_fine_yellow">#fcdc6c</color>
+    <color name="this_is_fine_yellow_transparent">#73FCDC6C</color>
     <color name="this_is_fine_brown">#53320d</color>
+    <color name="this_is_fine_brown_transparent">#9D53320D</color>
     <color name="this_is_fine_green">#968f0d</color>
+    <color name="this_is_fine_green_transparent">#AD968F0D</color>
 
     <color name="anti_this_is_fine_light_blue">#45b5f5</color>
     <color name="anti_this_is_fine_light_blue_2">#2794D9</color>

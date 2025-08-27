@@ -19,7 +19,19 @@ Keyboard settings can be found by launching the FQ-HLL Keyboard app installed wi
 
 Keyboard settings are saved across updates of the app.
 
-### Usage
+## Features
+
+- FQ-HLL autocorrect algorithm
+- Clipboard, text editor, symbols, and emojis
+- Coyote-time-like handling of simutaneous key presses
+- Autocorrect/autocapitalization toggle
+- Lots of themes and theme customisability (key colour, key text colour, key pressed colour, key border colour, keyboard background colour, suggestion bar (text) colour)
+- Height customisation (short, medium, tall)
+- Text editor mode customisation (maximize, grid)
+- Multiple keyboard layouts with layout specific autocorrection (qwerty, azerty, qwertz, dvorak, colemak)
+- (upcoming) zhuyin support
+
+## Usage
 
 #### Suggestion Bar
 
@@ -42,6 +54,14 @@ You can long press the text editor button to change languages.
 | clipboard `⎘` | clear clipboard |
 | text editor `𝙸` | change languages |
 
+#### Symbol Layouts
+
+Default symbol layout (similar to Samsung keyboard layout, left), Alternative symbol layout (similar to Gboard layout, right)
+
+<img width="400" alt="symbol_layout_main" src="https://github.com/user-attachments/assets/830c337e-e5c6-454f-a6ea-49d872eea823" /> <img width="400" alt="symbol_layout_alternative" src="https://github.com/user-attachments/assets/0d127b07-3300-468b-9f52-1b8f0525cb5e" />
+
+These images are representations of long press symbol layouts of the keyboard recreated using Keys Cafe, and are not screenshots of the FQ-HLL Keyboard.
+
 #### Clipboard
 
 The clipboard displays text copied from the text editor. You can paste an item by clicking on its box.
@@ -56,7 +76,7 @@ You can access the numpad by long pressing symbols, or through the emoji keyboar
 
 - grid mode (left), maximize mode (right)
 
-<img src="grid.png" width="150"> <img src="maximize.png" width="150">
+<img src="grid.png" width="300"> <img src="maximize.png" width="300">
 
 ## Customisation
 
@@ -87,18 +107,6 @@ jobs:
 You can view the themes in the [themes folder](https://github.com/shun4midx/FQ-HLL-Keyboard/tree/main/themes#readme).
 
 Want a custom theme? Customisable themes may be implemented in the future, but until then you can open an issue to request one. Please include hex codes of key colour, key text colour, key pressed colour, key border colour, keyboard background colour, suggestion bar colour, and suggestion bar text colour. Alternatively, fork the repository, edit themes.xml, and either build your own apk or open a pull request.
-
-## Features
-
-- FQ-HLL autocorrect algorithm
-- Clipboard, text editor, symbols, and emojis
-- Coyote-time-like handling of simutaneous key presses
-- Autocorrect/autocapitalization toggle
-- Lots of themes and theme customisability (key colour, key text colour, key pressed colour, key border colour, keyboard background colour, suggestion bar (text) colour)
-- Height customisation (short, medium, tall)
-- Text editor mode customisation (maximize, grid)
-- Multiple keyboard layouts with layout specific autocorrection (qwerty, azerty, qwertz, dvorak, colemak)
-- (upcoming) zhuyin support
 
 ## Development usage
 
@@ -168,7 +176,7 @@ Prereleases are relatively more tested development versions of the app if you pr
 - [x] clipboard
 - [x] settings app layout
 - [x] hold keys for symbols
-- [ ] add documentation on long press symbol modified samsung keyboard layout
+- [x] add documentation on long press symbol modified samsung keyboard/gboard layouts
 - [ ] multiple languages support?
 - [ ] customise keyboard height
 - [ ] custom background image

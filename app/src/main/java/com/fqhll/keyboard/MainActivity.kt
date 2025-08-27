@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
 
-    private var themes = arrayOf("Unselected", "Shun", "Ducky", "Cabbage", "Sage", "ThisIsFine", "AntiThisIsFine", "Black", "DarkBlue", "Hammerhead", "Stargaze", "CottonCandy", "Yellow", "Teal", "Purple", "Green", "Cyan")
+    private var themes = arrayOf("Unselected", "Shun", "ShunV2", "Ducky", "DuckyV2", "Cabbage", "Sage", "ThisIsFine", "ThisIsFinePremium", "ThisIsFinePremium2", "AntiThisIsFine", "Black", "DarkBlue", "Hammerhead", "Stargaze", "CottonCandy", "Yellow", "Teal", "Purple", "Green", "Cyan")
     private var keyboardHeights = arrayOf("Unselected", "Short", "Medium", "Tall", "Custom")
     private var keyboardLayouts = arrayOf("Unselected", "QWERTY", "QWERTZ", "AZERTY", "Dvorak", "Colemak", "Zhuyin")
     private var emojiVariations = arrayOf("Unselected", "Masculine", "Feminine", "Neutral")
@@ -49,6 +49,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val gridToggle: SwitchCompat = findViewById(R.id.gridToggle)
         val etenToggle: SwitchCompat = findViewById(R.id.etenToggle)
         val keySoundToggle: SwitchCompat = findViewById(R.id.keySoundToggle)
+        val altSymbolToggle: SwitchCompat = findViewById(R.id.altSymbolToggle)
 
         val prefs = getSharedPreferences("keyboard_settings", Context.MODE_PRIVATE)
 
@@ -67,6 +68,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         if (!prefs.contains("keySoundToggle")) {
             prefs.edit().putBoolean("keySoundToggle", true).commit()
         }
+        if (!prefs.contains("altSymbolToggle")) {
+            prefs.edit().putBoolean("altSymbolToggle", false).commit()
+        }
 
         // Load saved toggle state
         capsToggle.isChecked = prefs.getBoolean("capsToggle", true)
@@ -74,6 +78,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         gridToggle.isChecked = prefs.getBoolean("gridToggle", false)
         etenToggle.isChecked = prefs.getBoolean("etenToggle", false)
         keySoundToggle.isChecked = prefs.getBoolean("keySoundToggle", true)
+        altSymbolToggle.isChecked = prefs.getBoolean("altSymbolToggle", false)
 
         // Save toggle changes
         capsToggle.setOnCheckedChangeListener { _, isChecked ->
@@ -90,6 +95,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
         keySoundToggle.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit(commit = true) { putBoolean("keySoundToggle", isChecked) }
+        }
+        altSymbolToggle.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit(commit = true) { putBoolean("altSymbolToggle", isChecked) }
         }
 
         // Dropdowns

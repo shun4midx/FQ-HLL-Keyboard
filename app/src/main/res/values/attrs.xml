@@ -2,7 +2,7 @@
 <resources>
     <attr name="keyColor"/>
     <attr name="keyTextColor"/>
-    <attr name="keyboardBackgroundColor"/>
+    <attr name="keyboardBackground"/>
     <attr name="keyPopupTextColor"/>
     <attr name="keyPopupBackgroundColor"/>
     <attr name="keyBorderColor"/>

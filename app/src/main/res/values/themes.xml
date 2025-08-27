@@ -28,7 +28,7 @@
     <style name="Theme.FQHLLKeyboard.Black" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/custom_dark_grey</item>
         <item name="keyTextColor">@color/white</item>
-        <item name="keyboardBackgroundColor">@color/black</item>
+        <item name="keyboardBackground">@color/black</item>
         <item name="keyBorderColor">@color/custom_dark_grey</item>
         <item name="keyPressedColor">@color/black</item>
 
@@ -42,7 +42,7 @@
     <style name="Theme.FQHLLKeyboard.DarkBlue" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/custom_dark_blue</item>
         <item name="keyTextColor">@color/custom_cyan</item>
-        <item name="keyboardBackgroundColor">@color/black</item>
+        <item name="keyboardBackground">@color/black</item>
         <item name="keyBorderColor">@color/custom_fqhll_logo_wire_light_blue</item>
         <item name="keyPressedColor">@color/black</item>
 
@@ -53,10 +53,24 @@
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
 
+    <style name="Theme.FQHLLKeyboard.ShunV2" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/transparent</item>
+        <item name="keyTextColor">@color/teal_200</item>
+        <item name="keyboardBackground">@drawable/shunv2</item>
+        <item name="keyBorderColor">@color/transparent</item>
+        <item name="keyPressedColor">@color/teal_gradient_2</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">@color/black</item>
+
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+    </style>
+
     <style name="Theme.FQHLLKeyboard.Shun" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/shun_blue</item>
         <item name="keyTextColor">@color/custom_fqhll_logo_pink</item>
-        <item name="keyboardBackgroundColor">@color/purple_900</item>
+        <item name="keyboardBackground">@color/purple_900</item>
         <item name="keyBorderColor">@color/custom_blue</item>
         <item name="keyPressedColor">@color/black</item>
 
@@ -67,10 +81,24 @@
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
 
+    <style name="Theme.FQHLLKeyboard.DuckyV2" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/teal_gradient_7_transparent_2</item>
+        <item name="keyTextColor">@color/custom_cyan</item>
+        <item name="keyboardBackground">@drawable/duckyv2</item>
+        <item name="keyBorderColor">@color/teal_gradient_5</item>
+        <item name="keyPressedColor">@color/custom_light_blue_transparent</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">@color/teal_gradient_7</item>
+
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+    </style>
+
     <style name="Theme.FQHLLKeyboard.Ducky" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/teal_gradient_7</item>
         <item name="keyTextColor">@color/custom_cyan</item>
-        <item name="keyboardBackgroundColor">@color/custom_hammerhead_blue</item>
+        <item name="keyboardBackground">@color/custom_hammerhead_blue</item>
         <item name="keyBorderColor">@color/teal_gradient_5</item>
         <item name="keyPressedColor">@color/black</item>
 
@@ -84,7 +112,7 @@
     <style name="Theme.FQHLLKeyboard.CottonCandy" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/cotton_candy_light_pink</item>
         <item name="keyTextColor">@color/white</item>
-        <item name="keyboardBackgroundColor">@color/cotton_candy_light_blue</item>
+        <item name="keyboardBackground">@color/cotton_candy_light_blue</item>
         <item name="keyBorderColor">@color/custom_blue</item>
         <item name="keyPressedColor">@color/custom_fqhll_banner_pink</item>
 
@@ -98,7 +126,7 @@
     <style name="Theme.FQHLLKeyboard.Cabbage" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/black</item>
         <item name="keyTextColor">@color/cabbage_green</item>
-        <item name="keyboardBackgroundColor">@color/cabbage_blue</item>
+        <item name="keyboardBackground">@color/cabbage_blue</item>
         <item name="keyBorderColor">@color/cabbage_green</item>
         <item name="keyPressedColor">@color/black</item>
 
@@ -112,7 +140,7 @@
     <style name="Theme.FQHLLKeyboard.Yellow" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/black</item>
         <item name="keyTextColor">@color/custom_yellow</item>
-        <item name="keyboardBackgroundColor">@color/black</item>
+        <item name="keyboardBackground">@color/black</item>
         <item name="keyBorderColor">@color/black</item>
         <item name="keyPressedColor">@color/custom_light_yellow</item>
 
@@ -126,7 +154,7 @@
     <style name="Theme.FQHLLKeyboard.Teal" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/black</item>
         <item name="keyTextColor">@color/teal_200</item>
-        <item name="keyboardBackgroundColor">@color/black</item>
+        <item name="keyboardBackground">@color/black</item>
         <item name="keyBorderColor">@color/black</item>
         <item name="keyPressedColor">@color/teal_gradient_2</item>
 
@@ -140,7 +168,7 @@
     <style name="Theme.FQHLLKeyboard.Purple" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/black</item>
         <item name="keyTextColor">@color/custom_light_purple</item>
-        <item name="keyboardBackgroundColor">@color/custom_purple</item>
+        <item name="keyboardBackground">@color/custom_purple</item>
         <item name="keyBorderColor">@color/custom_purple</item>
         <item name="keyPressedColor">@color/purple_200</item>
 
@@ -154,7 +182,7 @@
     <style name="Theme.FQHLLKeyboard.Green" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/black</item>
         <item name="keyTextColor">@color/custom_light_green</item>
-        <item name="keyboardBackgroundColor">@color/custom_green</item>
+        <item name="keyboardBackground">@color/custom_green</item>
         <item name="keyBorderColor">@color/custom_green</item>
         <item name="keyPressedColor">@color/cabbage_green</item>
 
@@ -168,7 +196,7 @@
     <style name="Theme.FQHLLKeyboard.Hammerhead" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/black</item>
         <item name="keyTextColor">@color/custom_light_blue</item>
-        <item name="keyboardBackgroundColor">@color/custom_hammerhead_blue</item>
+        <item name="keyboardBackground">@color/custom_hammerhead_blue</item>
         <item name="keyBorderColor">@color/custom_hammerhead_blue</item>
         <item name="keyPressedColor">@color/shun_blue</item>
 
@@ -182,7 +210,7 @@
     <style name="Theme.FQHLLKeyboard.Cyan" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/teal_gradient_7</item>
         <item name="keyTextColor">@color/custom_cyan</item>
-        <item name="keyboardBackgroundColor">@color/teal_gradient_1</item>
+        <item name="keyboardBackground">@color/teal_gradient_1</item>
         <item name="keyBorderColor">@color/teal_gradient_5</item>
         <item name="keyPressedColor">@color/black</item>
 
@@ -196,7 +224,7 @@
     <style name="Theme.FQHLLKeyboard.Stargaze" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/custom_hammerhead_blue</item>
         <item name="keyTextColor">@color/custom_light_yellow</item>
-        <item name="keyboardBackgroundColor">@color/custom_dark_blue</item>
+        <item name="keyboardBackground">@color/custom_dark_blue</item>
         <item name="keyBorderColor">@color/custom_hammerhead_blue</item>
         <item name="keyPressedColor">@color/black</item>
 
@@ -210,7 +238,7 @@
     <style name="Theme.FQHLLKeyboard.Sage" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/sage_keys</item>
         <item name="keyTextColor">@color/sage_letter</item>
-        <item name="keyboardBackgroundColor">@color/sage_bg</item>
+        <item name="keyboardBackground">@color/sage_bg</item>
         <item name="keyBorderColor">@color/sage_border</item>
         <item name="keyPressedColor">@color/black</item>
 
@@ -224,7 +252,7 @@
     <style name="Theme.FQHLLKeyboard.ThisIsFine" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/this_is_fine_brown</item>
         <item name="keyTextColor">@color/this_is_fine_yellow</item>
-        <item name="keyboardBackgroundColor">@color/this_is_fine_orange</item>
+        <item name="keyboardBackground">@color/this_is_fine_orange</item>
         <item name="keyBorderColor">@color/black</item>
         <item name="keyPressedColor">@color/this_is_fine_green</item>
 
@@ -235,10 +263,38 @@
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
 
+    <style name="Theme.FQHLLKeyboard.ThisIsFinePremium" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/this_is_fine_brown_transparent</item>
+        <item name="keyTextColor">@color/custom_yellow</item>
+        <item name="keyboardBackground">@drawable/thisisfine</item>
+        <item name="keyBorderColor">@color/black</item>
+        <item name="keyPressedColor">@color/this_is_fine_green_transparent</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">@color/this_is_fine_brown</item>
+
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+    </style>
+
+    <style name="Theme.FQHLLKeyboard.ThisIsFinePremium2" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/this_is_fine_orange_transparent</item>
+        <item name="keyTextColor">@color/this_is_fine_yellow</item>
+        <item name="keyboardBackground">@drawable/thisisfine</item>
+        <item name="keyBorderColor">@color/this_is_fine_orange_transparent</item>
+        <item name="keyPressedColor">@color/this_is_fine_green_transparent</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">@color/this_is_fine_brown</item>
+
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+    </style>
+
     <style name="Theme.FQHLLKeyboard.AntiThisIsFine" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/anti_this_is_fine_light_blue_2</item>
         <item name="keyTextColor">@color/this_is_fine_yellow</item>
-        <item name="keyboardBackgroundColor">@color/anti_this_is_fine_blue</item>
+        <item name="keyboardBackground">@color/anti_this_is_fine_blue</item>
         <item name="keyBorderColor">@color/black</item>
         <item name="keyPressedColor">@color/custom_blue</item>
 
