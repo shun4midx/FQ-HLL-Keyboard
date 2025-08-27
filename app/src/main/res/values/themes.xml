@@ -235,6 +235,20 @@
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
 
+    <style name="Theme.FQHLLKeyboard.StargazePremium" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/custom_hammerhead_blue_transparent</item>
+        <item name="keyTextColor">@color/custom_light_yellow</item>
+        <item name="keyboardBackground">@drawable/antithisisfine</item>
+        <item name="keyBorderColor">@color/custom_light_blue_transparent_2</item>
+        <item name="keyPressedColor">@color/custom_light_blue_transparent_2</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">@color/custom_hammerhead_blue</item>
+
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+    </style>
+
     <style name="Theme.FQHLLKeyboard.Sage" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/sage_keys</item>
         <item name="keyTextColor">@color/sage_letter</item>
@@ -295,6 +309,20 @@
         <item name="keyColor">@color/anti_this_is_fine_light_blue_2</item>
         <item name="keyTextColor">@color/this_is_fine_yellow</item>
         <item name="keyboardBackground">@color/anti_this_is_fine_blue</item>
+        <item name="keyBorderColor">@color/black</item>
+        <item name="keyPressedColor">@color/custom_blue</item>
+
+        <item name="suggestionBarColor">@color/this_is_fine_orange</item>
+        <item name="suggestionBarTextColor">@color/custom_light_yellow</item>
+
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+    </style>
+
+    <style name="Theme.FQHLLKeyboard.AntiThisIsFinePremium" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/anti_this_is_fine_light_blue_transparent</item>
+        <item name="keyTextColor">@color/this_is_fine_yellow</item>
+        <item name="keyboardBackground">@drawable/antithisisfine</item>
         <item name="keyBorderColor">@color/black</item>
         <item name="keyPressedColor">@color/custom_blue</item>
 
