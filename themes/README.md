@@ -2,17 +2,45 @@
 
 <img height="320px" src="Shun.png"/>
 
+## ShunV2
+
+<img height="320px" src="ShunV2.png"/>
+
 ## Ducky
 
 <img height="320px" src="Ducky.png"/>
+
+## DuckyV2
+
+<img height="320px" src="DuckyV2.png"/>
 
 ## ThisIsFine
 
 <img height="320px" src="ThisIsFine.png"/> <img height="320px" src="ThisIsFine_Reference.png"/>
 
+## ThisIsFinePremium
+
+<img height="320px" src="ThisIsFinePremium.png"/> <img height="320px" src="ThisIsFine_Reference.png"/>
+
+## ThisIsFinePremium2
+
+<img height="320px" src="ThisIsFinePremium2.png"/> <img height="320px" src="ThisIsFine_Reference.png"/>
+
 ## AntiThisIsFine
 
 <img height="320px" src="AntiThisIsFine.png"/> <img height="320px" src="AntiThisIsFine_Reference.png"/>
+
+## AntiThisIsFinePremium
+
+<img height="320px" src="AntiThisIsFinePremium.png"/> <img height="320px" src="AntiThisIsFine_Reference.png"/>
+
+## Stargaze
+
+<img height="320px" src="Stargaze.png"/>
+
+## StargazePremium
+
+<img height="320px" src="StargazePremium.png"/>
 
 ## Black
 
@@ -49,10 +77,6 @@
 ## Sage
 
 <img height="320px" src="Sage.png"/>
-
-## Stargaze
-
-<img height="320px" src="Stargaze.png"/>
 
 ## Teal
 
