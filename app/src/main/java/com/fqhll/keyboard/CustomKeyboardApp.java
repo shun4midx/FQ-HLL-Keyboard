@@ -1259,21 +1259,37 @@ public class CustomKeyboardApp extends InputMethodService
         toast.show();
     }
 
-    private String[] splitZhuyinBuffer() {
-        String buf = zhuyinBuffer.toString();
-        if (buf.isEmpty()) return new String[]{"", ""};
+//    private String[] splitZhuyinBuffer() {
+//        String buf = zhuyinBuffer.toString();
+//        if (buf.isEmpty()) return new String[]{"", ""};
+//
+//        int i = 0;
+//        while (i < buf.length()) {
+//            char c = buf.charAt(i);
+//            if (ZHUYIN_DELIMITERS.contains(c)) {
+//                // include delimiter in the syllable
+//                return new String[]{ buf.substring(0, i + 1), buf.substring(i + 1).trim() };
+//            }
+//            i++;
+//        }
+//        // no delimiter -> whole buffer is one syllable
+//        return new String[]{ buf, "" };
+//    }
 
-        int i = 0;
-        while (i < buf.length()) {
+    private String[] splitAllZhuyinSyllables(String buf) {
+        List<String> result = new ArrayList<>();
+        int start = 0;
+        for (int i = 0; i < buf.length(); i++) {
             char c = buf.charAt(i);
             if (ZHUYIN_DELIMITERS.contains(c)) {
-                // include delimiter in the syllable
-                return new String[]{ buf.substring(0, i + 1), buf.substring(i + 1).trim() };
+                result.add(buf.substring(start, i + 1));
+                start = i + 1;
             }
-            i++;
         }
-        // no delimiter → whole buffer is one syllable
-        return new String[]{ buf, "" };
+        if (start < buf.length()) {
+            result.add(buf.substring(start));
+        }
+        return result.toArray(new String[0]);
     }
 
     private void replaceCurrentWord(String suggestion) {
@@ -1281,10 +1297,25 @@ public class CustomKeyboardApp extends InputMethodService
         if (ic == null || suggestion.equals(" ") || suggestion.isEmpty()) return;
 
         if (kv != null && kv.getKeyboard() == zhuyinKeyboard) {
-            // Split buffer
-            String[] parts = splitZhuyinBuffer();
-            String first = parts[0];
-            String rest  = parts[1];
+            // Break buffer into syllables
+            String[] parts = splitAllZhuyinSyllables(zhuyinBuffer.toString());
+
+            // Decide how many syllables the candidate should consume
+            int consumeCount = suggestion.length();
+
+            // Build "first" = concatenation of the consumed syllables
+            StringBuilder firstBuilder = new StringBuilder();
+            for (String part : parts) {
+                firstBuilder.append(part);
+            }
+//            String first = firstBuilder.toString();
+
+            // "rest" = leftover syllables
+            StringBuilder restBuilder = new StringBuilder();
+            for (int i = consumeCount; i < parts.length; i++) {
+                restBuilder.append(parts[i]);
+            }
+            String rest = restBuilder.toString();
 
             ic.beginBatchEdit();
             ic.commitText(suggestion, 1);

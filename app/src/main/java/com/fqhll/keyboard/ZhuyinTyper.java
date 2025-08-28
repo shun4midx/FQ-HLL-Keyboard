@@ -43,15 +43,38 @@ public class ZhuyinTyper {
         }
     }
 
+//    public String[] suggest(String[] zhuyinInput) {
+//        String croppedZhuyinInput = zhuyinInput[0];
+//        if (zhuyinInput.length != 0 && !zhuyinInput[0].isEmpty() && zhuyinInput[0].charAt(zhuyinInput[0].length() - 1) == ' ') {
+//            croppedZhuyinInput = zhuyinInput[0].substring(0, zhuyinInput[0].length() - 1);
+//        }
+//        if (dict.containsKey(croppedZhuyinInput)) {
+//            List<String> words = dict.get(croppedZhuyinInput);
+//            return words.toArray(new String[0]);
+//        }
+//        return new String[0];
+//    }
+
     public String[] suggest(String[] zhuyinInput) {
-        String croppedZhuyinInput = zhuyinInput[0];
-        if (zhuyinInput.length != 0 && !zhuyinInput[0].isEmpty() && zhuyinInput[0].charAt(zhuyinInput[0].length() - 1) == ' ') {
-            croppedZhuyinInput = zhuyinInput[0].substring(0, zhuyinInput[0].length() - 1);
+        if (zhuyinInput == null || zhuyinInput.length == 0) {
+            return new String[0];
         }
-        if (dict.containsKey(croppedZhuyinInput)) {
-            List<String> words = dict.get(croppedZhuyinInput);
-            return words.toArray(new String[0]);
+
+        StringBuilder sb = new StringBuilder();
+        for (String part : zhuyinInput) {
+            if (part != null) sb.append(part.replace(" ", ""));
         }
-        return new String[0];
+        String joined = sb.toString();
+
+        List<String> results = new ArrayList<>();
+        for (int len = joined.length(); len > 0; len--) {
+            String candidate = joined.substring(0, len);
+            if (dict.containsKey(candidate)) {
+                results.addAll(dict.get(candidate));
+            }
+        }
+
+        return results.toArray(new String[0]);
     }
+
 }
