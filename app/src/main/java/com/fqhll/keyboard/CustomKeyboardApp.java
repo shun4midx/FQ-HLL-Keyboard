@@ -328,7 +328,7 @@ public class CustomKeyboardApp extends InputMethodService
             case ')':
                 commitTextAndShowLabel("）");
                 break;
-            case '\'':
+            case '-':
                 commitTextAndShowLabel("、");
                 break;
             case '<':
@@ -336,6 +336,15 @@ public class CustomKeyboardApp extends InputMethodService
                 break;
             case '>':
                 commitTextAndShowLabel("」");
+                break;
+            case '\'':
+                commitTextAndShowLabel("『");
+                break;
+            case '"':
+                commitTextAndShowLabel("』");
+                break;
+            case ';':
+                commitTextAndShowLabel("；");
                 break;
             case '1':
                 commitTextAndShowLabel("¹");
