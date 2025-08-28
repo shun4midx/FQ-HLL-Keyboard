@@ -29,7 +29,6 @@ Keyboard settings are saved across updates of the app.
 - Height customisation (short, medium, tall)
 - Text editor mode customisation (maximize, grid)
 - Multiple keyboard layouts with layout specific autocorrection (qwerty, azerty, qwertz, dvorak, colemak)
-- (upcoming) zhuyin support
 
 ## Usage
 
@@ -61,6 +60,9 @@ Default symbol layout (similar to Samsung keyboard layout, left), Alternative sy
 <img width="400" alt="symbol_layout_main" src="https://github.com/user-attachments/assets/830c337e-e5c6-454f-a6ea-49d872eea823" /> <img width="400" alt="symbol_layout_alternative" src="https://github.com/user-attachments/assets/0d127b07-3300-468b-9f52-1b8f0525cb5e" />
 
 These images are representations of long press symbol layouts of the keyboard recreated using Keys Cafe, and are not screenshots of the FQ-HLL Keyboard.
+
+#### Zhuyin
+We now support traditional Chinese typing via Zhuyin, with both the normal Zhuyin layout an and alternate Eten layout! Better word selection algorithms and autocorrection would come in the future, but as of right now, you would need to type the Zhuyin 100% correctly **with the tone of the word**. The first tone is parsed as a "whitespace". We referenced `tsi.json` from [tobopomo.js](https://github.com/dylandy/tobopomo.js/tree/master/data/tsi.json), with the addition of the words 啲 (ㄉㄧ) and 喺 (ㄒㄧˋ). The addition of these made us name it `tsi_custom.json`, which can be found [here](https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/src/main/assets/tsi_custom.json).
 
 #### Clipboard
 
