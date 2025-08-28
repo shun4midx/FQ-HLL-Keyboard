@@ -1189,8 +1189,9 @@ public class CustomKeyboardApp extends InputMethodService
     private String[] zhuyinSuggest(String prefix) {
 
         String[] split = splitPrefix(prefix);
+        SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
 
-        return zhuyinTyper.suggest(split);
+        return zhuyinTyper.suggest(split, prefs.getBoolean("etenToggle", false));
     }
 
     private String[] splitPrefix(String prefix) {
