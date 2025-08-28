@@ -1806,9 +1806,18 @@ public class CustomKeyboardApp extends InputMethodService
                                 if (ic != null) {
                                     replaceCurrentWord(s);
                                 }
-                                expanded.setVisibility(View.GONE);
-                                regenerateZhuyinSuggestions(zhuyinBuffer.toString()); // go back to normal bar
-                                keyboardView.setVisibility(View.VISIBLE);
+
+                                if (zhuyinBuffer.length() == 0) {
+                                    // nothing left -> fully minimize
+                                    expanded.setVisibility(View.GONE);
+                                    keyboardView.setVisibility(View.VISIBLE);
+                                    zhuyinExpanded = false;
+                                } else {
+                                    // still stuff left -> go back to normal bar
+                                    expanded.setVisibility(View.GONE);
+                                    regenerateZhuyinSuggestions(zhuyinBuffer.toString());
+                                    keyboardView.setVisibility(View.VISIBLE);
+                                }
                             });
                         }
 
