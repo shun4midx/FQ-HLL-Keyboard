@@ -1220,6 +1220,15 @@ public class CustomKeyboardApp extends InputMethodService
         tv.setOnClickListener(v -> {
             replaceCurrentWord(text);
             updateSuggestion(getCurrentInputConnection());
+
+            if (zhuyinExpanded) {
+                RecyclerView expanded = root.findViewById(R.id.expanded_candidates);
+                View kv = root.findViewById(R.id.keyboard_view);
+
+                expanded.setVisibility(View.GONE);
+                kv.setVisibility(View.VISIBLE);
+                zhuyinExpanded = false;
+            }
         });
         return tv;
     }

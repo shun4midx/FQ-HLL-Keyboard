@@ -134,26 +134,29 @@
             android:clickable="true"/>
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/expanded_candidates"
+    <FrameLayout
+        android:id="@+id/keyboard_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:visibility="gone"
-        android:background="?attr/suggestionBarColor"/>
+        android:layout_weight="1">
 
-    <com.fqhll.keyboard.CustomKeyboardView
-        android:id="@+id/keyboard_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:paddingTop="8dp"
-        android:paddingBottom="15dp"
-        android:keyPreviewLayout="@layout/custom_keyboard_preview"
-        android:keyBackground="@drawable/key_background"
-        android:keyTextColor="?attr/keyTextColor"
-        android:background="?attr/keyboardBackground">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/expanded_candidates"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:background="?attr/suggestionBarColor" />
 
-    </com.fqhll.keyboard.CustomKeyboardView>
+        <com.fqhll.keyboard.CustomKeyboardView
+            android:id="@+id/keyboard_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="8dp"
+            android:paddingBottom="15dp"
+            android:keyPreviewLayout="@layout/custom_keyboard_preview"
+            android:keyBackground="@drawable/key_background"
+            android:keyTextColor="?attr/keyTextColor"
+            android:background="?attr/keyboardBackground" />
+    </FrameLayout>
 
 </LinearLayout>
