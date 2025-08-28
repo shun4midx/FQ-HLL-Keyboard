@@ -177,6 +177,14 @@ public class CustomKeyboardApp extends InputMethodService
         return word_set.contains(word);
     }
 
+    private void updateCompositionBarVisibility() {
+        if (kv != null && kv.getKeyboard() == zhuyinKeyboard) {
+            zhuyinCompositionBar.setVisibility(View.VISIBLE);
+        } else {
+            zhuyinCompositionBar.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public View onCreateInputView() {
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
@@ -652,15 +660,18 @@ public class CustomKeyboardApp extends InputMethodService
             case -2: // symbols
                 kv.setKeyboard(symbolKeyboard);
                 kv.invalidateAllKeys();
+                updateCompositionBarVisibility();
                 break;
             case -10: // back to main
                 kv.setKeyboard(keyboard);
                 applyCapsState();
+                updateCompositionBarVisibility();
                 break;
             case -11: // emojis
                 kv.setKeyboard(emojiKeyboard);
                 kv.invalidateAllKeys();
                 showSuggestions("");
+                updateCompositionBarVisibility();
                 break;
             case -12: // settings
                 PackageManager manager = getPackageManager();
@@ -671,10 +682,12 @@ public class CustomKeyboardApp extends InputMethodService
             case -13: // numpad
                 kv.setKeyboard(numpadKeyboard);
                 kv.invalidateAllKeys();
+                updateCompositionBarVisibility();
                 break;
             case -14: // math symbols
                 kv.setKeyboard(mathKeyboard);
                 kv.invalidateAllKeys();
+                updateCompositionBarVisibility();
                 break;
             case -42: // Left arrow
                 // Look at the char immediately before the cursor
@@ -955,9 +968,6 @@ public class CustomKeyboardApp extends InputMethodService
         if (kv != null && kv.getKeyboard() == zhuyinKeyboard && zhuyinBuffer.length() > 0) {
             zhuyinBuffer.setLength(zhuyinBuffer.length() - 1);
             zhuyinCompositionText.setText(zhuyinBuffer.toString());
-            if (zhuyinBuffer.length() == 0) {
-                zhuyinCompositionBar.setVisibility(View.GONE);
-            }
             return;
         }
 
@@ -1018,7 +1028,7 @@ public class CustomKeyboardApp extends InputMethodService
 
             zhuyinBuffer.append(c);
 
-            zhuyinCompositionBar.setVisibility(View.VISIBLE);
+//            zhuyinCompositionBar.setVisibility(View.VISIBLE);
             zhuyinCompositionText.setText(zhuyinBuffer.toString());
             return;
         }
@@ -1284,10 +1294,8 @@ public class CustomKeyboardApp extends InputMethodService
             zhuyinBuffer.append(rest);
 
             if (zhuyinBuffer.length() == 0) {
-                zhuyinCompositionBar.setVisibility(View.GONE);
                 zhuyinCompositionText.setText("");
             } else {
-                zhuyinCompositionBar.setVisibility(View.VISIBLE);
                 zhuyinCompositionText.setText(zhuyinBuffer.toString());
             }
 
@@ -1621,10 +1629,25 @@ public class CustomKeyboardApp extends InputMethodService
         defaultCaps = prefs.getBoolean("capsToggle", true);
         defaultAutocor = prefs.getBoolean("autocorToggle", true);
 
+        // Reset Zhuyin buffer + bar text
+        zhuyinBuffer.setLength(0);
+        if (zhuyinCompositionText != null) {
+            zhuyinCompositionText.setText("");
+        }
+
+        // Always set keyboard first
         kv.setKeyboard(keyboard);
+
+        // Now update bar visibility correctly
+        if (zhuyinCompositionBar != null) {
+            zhuyinCompositionBar.setVisibility(
+                    kv.getKeyboard() == zhuyinKeyboard ? View.VISIBLE : View.GONE
+            );
+        }
+
         showSuggestions("");
         caps_state = (defaultCaps && shouldAutoCap()) ? 1 : 0;
-        applyCapsState();  // Just updates the shift key appearance
+        applyCapsState();
     }
 
     @Override
@@ -1746,10 +1769,12 @@ public class CustomKeyboardApp extends InputMethodService
             if (kv.getKeyboard() == clipKeyboard) {
                 kv.setKeyboard(keyboard);
                 kv.invalidateAllKeys();
+                updateCompositionBarVisibility();
             }
             else if (!zhuyinExpanded) {
                 kv.setKeyboard(clipKeyboard);
                 kv.invalidateAllKeys();
+                updateCompositionBarVisibility();
             } else {
                 // Minimize
                 expanded.setVisibility(View.GONE);
@@ -1848,10 +1873,12 @@ public class CustomKeyboardApp extends InputMethodService
             if (kv.getKeyboard() == editorKeyboard) {
                 kv.setKeyboard(keyboard);
                 kv.invalidateAllKeys();
+                updateCompositionBarVisibility();
             }
             else if (kv.getKeyboard() != numpadKeyboard && !zhuyinExpanded) { // prevent long press for numpad on release go back to editor
                 kv.setKeyboard(editorKeyboard);
                 kv.invalidateAllKeys();
+                updateCompositionBarVisibility();
             }
         });
 
@@ -1867,6 +1894,7 @@ public class CustomKeyboardApp extends InputMethodService
                 kv.setKeyboard(zhuyinKeyboard);
             }
             kv.invalidateAllKeys();
+            updateCompositionBarVisibility();
             return true;
         });
 
@@ -1887,6 +1915,7 @@ public class CustomKeyboardApp extends InputMethodService
 //        });
 
         kv.setKeyboard(keyboard);
+        updateCompositionBarVisibility();
         kv.setOnKeyboardActionListener(this);
         kv.setPreviewEnabled(false);
         kv.setOnTouchListener((v, ev) -> {
