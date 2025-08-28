@@ -64,7 +64,7 @@ public class ZhuyinTyper {
             return threshold + 1;
         }
 
-        int[][] dp = new int[n + 1][m + 1];
+        int[][] dp = new int[Math.min(16, n + 1)][Math.min(16, m + 1)];
         for (int i = 0; i <= n; ++i) {
             dp[i][0] = i;
         }
@@ -155,19 +155,21 @@ public class ZhuyinTyper {
             int THRESHOLD = 2;
             Map<String,Integer> fuzzyHits = new HashMap<>();
 
-            char firstInput = joined.charAt(0);
-            for (String key : dict.keySet()) {
-                if (key.isEmpty()) continue;
+            String firstSyllable = zhuyinInput[0];
 
-                // quick skip if first chars are far apart
-                char firstKey = key.charAt(0);
-                if (keyDistance(firstInput, firstKey, useEten) > 1) {
+            for (String key : dict.keySet()) {
+                if (key.isEmpty()) {
                     continue;
                 }
 
-                int dist = fuzzyDistance(joined, key, useEten, THRESHOLD);
+                // skip quickly if starting char too far
+                if (keyDistance(firstSyllable.charAt(0), key.charAt(0), useEten) > 1) {
+                    continue;
+                }
+
+                int dist = fuzzyDistance(firstSyllable, key, useEten, THRESHOLD);
                 if (dist <= THRESHOLD) {
-                    fuzzyHits.put(key, dist);
+                    fuzzyHits.putIfAbsent(key, dist);
                 }
             }
 
