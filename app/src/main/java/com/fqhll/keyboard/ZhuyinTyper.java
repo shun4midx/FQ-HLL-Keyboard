@@ -151,16 +151,26 @@ public class ZhuyinTyper {
         }
 
         // 2. Fuzzy match
-//        if (results.isEmpty()) {
+        if (results.size() < 15) {
             int THRESHOLD = 2;
             Map<String,Integer> fuzzyHits = new HashMap<>();
 
+            char firstInput = joined.charAt(0);
             for (String key : dict.keySet()) {
+                if (key.isEmpty()) continue;
+
+                // quick skip if first chars are far apart
+                char firstKey = key.charAt(0);
+                if (keyDistance(firstInput, firstKey, useEten) > 1) {
+                    continue;
+                }
+
                 int dist = fuzzyDistance(joined, key, useEten, THRESHOLD);
                 if (dist <= THRESHOLD) {
                     fuzzyHits.put(key, dist);
                 }
             }
+
 
             // Sort candidates by distance
             List<Map.Entry<String,Integer>> sorted = new ArrayList<>(fuzzyHits.entrySet());
@@ -168,13 +178,19 @@ public class ZhuyinTyper {
 
             int MAX_KEYS = 10;
             int count = 0;
+            Set<String> seenWords = new HashSet<>();
+
             for (Map.Entry<String,Integer> e : sorted) {
-                results.addAll(dict.get(e.getKey()));
+                for (String word : dict.get(e.getKey())) {
+                    if (seenWords.add(word)) {
+                        results.add(word);
+                    }
+                }
                 if (++count >= MAX_KEYS) {
                     break;
                 }
             }
-//        }
+        }
 
         return results.toArray(new String[0]);
     }
