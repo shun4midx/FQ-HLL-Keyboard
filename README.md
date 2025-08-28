@@ -62,7 +62,7 @@ Default symbol layout (similar to Samsung keyboard layout, left), Alternative sy
 These images are representations of long press symbol layouts of the keyboard recreated using Keys Cafe, and are not screenshots of the FQ-HLL Keyboard.
 
 #### Zhuyin
-We now support traditional Chinese typing via Zhuyin, with both the normal Zhuyin layout an and alternate Eten layout! Better word selection algorithms and autocorrection would come in the future, but as of right now, you would need to type the Zhuyin 100% correctly **with the tone of the word**. The first tone is parsed as a "whitespace". We referenced `tsi.json` from [tobopomo.js](https://github.com/dylandy/tobopomo.js/tree/master/data/tsi.json), with the addition of the words 啲 (ㄉㄧ) and 喺 (ㄒㄧˋ). The addition of these made us name it `tsi_custom.json`, which can be found [here](https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/src/main/assets/tsi_custom.json).
+We now support traditional Chinese typing via Zhuyin, with both the normal Zhuyin layout an and alternate Eten layout! Better word selection algorithms and autocorrection would come in the future, but as of right now, you would need to type the Zhuyin 100% correctly **with the tone of the word**. The first tone is parsed as a "whitespace". We referenced `tsi.json` from [tobopomo.js](https://github.com/dylandy/tobopomo.js/tree/master/data/tsi.json), with the addition of the words 啲 (ㄉㄧ), 喺 (ㄒㄧˋ, ㄒㄧˊ), 佢 (ㄑㄩˊ), 嚟 (ㄌㄧˊ), 哋 (ㄉㄧˋ), and 嘢 (ㄧㄝˇ), which are words common in Cantonese speech. The addition of these made us name it `tsi_custom.json`, which can be found [here](https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/src/main/assets/tsi_custom.json).
 
 #### Clipboard
 
