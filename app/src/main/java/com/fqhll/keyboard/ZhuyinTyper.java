@@ -55,48 +55,43 @@ public class ZhuyinTyper {
         return Math.abs(pa[0] - pb[0]) + Math.abs(pa[1] - pb[1]);
     }
 
-    private int fuzzyDistance(String a, String b, boolean useEten, int threshold) {
-        int n = a.length();
-        int m = b.length();
+    private int fuzzyKeyboardDistance(String a, String b, boolean useEten, int threshold) {
+        int n = a.length(), m = b.length();
 
-        // quick length check
-        if (Math.abs(n - m) > threshold) {
+        // Bail fast if lengths too different
+        if (Math.abs(n - m) > 1) {
             return threshold + 1;
         }
 
-        int[][] dp = new int[Math.min(16, n + 1)][Math.min(16, m + 1)];
-        for (int i = 0; i <= n; ++i) {
-            dp[i][0] = i;
-        }
-        for (int j = 0; j <= m; ++j) {
-            dp[0][j] = j;
-        }
-
-        for (int i = 1; i <= n; ++i) {
-            int minInRow = Integer.MAX_VALUE;
-            for (int j = 1; j <= m; ++j) {
-                char ca = a.charAt(i - 1), cb = b.charAt(j - 1);
-                int cost;
-                if (ca == cb) {
-                    cost = 0;
-                } else {
-                    int d = keyDistance(ca, cb, useEten);
-                    cost = (d <= 1 ? 1 : 2); // neighbor = cheaper
-                }
-
-                int val = Math.min(Math.min(dp[i - 1][j] + 1, dp[i][j - 1] + 1), dp[i - 1][j - 1] + cost);
-                dp[i][j] = val;
-                if (val < minInRow) {
-                    minInRow = val;
-                }
+        // Case 1: same length -> substitution check
+        if (n == m) {
+            int cost = 0;
+            for (int i = 0; i < n; i++) {
+                char ca = a.charAt(i), cb = b.charAt(i);
+                if (ca == cb) continue;
+                int d = keyDistance(ca, cb, useEten);
+                cost += (d <= 1 ? 1 : 2);
+                if (cost > threshold) return threshold + 1;
             }
-            // if even best in this row > threshold, bail out early
-            if (minInRow > threshold) {
-                return threshold + 1;
+            return cost;
+        }
+
+        // Case 2: length differs by 1 -> insertion/deletion
+        String longer = n > m ? a : b;
+        String shorter = n > m ? b : a;
+
+        int i = 0, j = 0, edits = 0;
+        while (i < longer.length() && j < shorter.length()) {
+            if (longer.charAt(i) == shorter.charAt(j)) {
+                i++; j++;
+            } else {
+                edits++;
+                i++;
+                if (edits > threshold) return threshold + 1;
             }
         }
-
-        return dp[n][m];
+        edits += (longer.length() - i); // leftovers
+        return edits;
     }
 
     public ZhuyinTyper(Context ctx) {
@@ -167,7 +162,7 @@ public class ZhuyinTyper {
                     continue;
                 }
 
-                int dist = fuzzyDistance(firstSyllable, key, useEten, THRESHOLD);
+                int dist = fuzzyKeyboardDistance(firstSyllable, key, useEten, THRESHOLD);
                 if (dist <= THRESHOLD) {
                     fuzzyHits.putIfAbsent(key, dist);
                 }
