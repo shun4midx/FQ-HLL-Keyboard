@@ -67,7 +67,7 @@ public class ZhuyinTyper {
         // Case 1: same length -> substitution check
         if (n == m) {
             int cost = 0;
-            for (int i = 0; i < n; i++) {
+            for (int i = 0; i < n; ++i) {
                 char ca = a.charAt(i), cb = b.charAt(i);
                 if (ca == cb) {
                     continue;
@@ -90,9 +90,11 @@ public class ZhuyinTyper {
             if (longer.charAt(i) == shorter.charAt(j)) {
                 i++; j++;
             } else {
-                edits++;
+                edits += 2;
                 i++;
-                if (edits > threshold) return threshold + 1;
+                if (edits > threshold) {
+                    return threshold + 1;
+                }
             }
         }
         edits += (longer.length() - i); // leftovers
@@ -139,73 +141,82 @@ public class ZhuyinTyper {
             return new String[0];
         }
 
+        // Flatten input into joined string
         StringBuilder sb = new StringBuilder();
         for (String part : zhuyinInput) {
             if (part != null) sb.append(part.replace(" ", ""));
         }
         String joined = sb.toString();
 
-        List<String> results = new ArrayList<>();
+//        List<String> results = new ArrayList<>();
+        Map<String,Integer> allHits = new HashMap<>();
 
-        // 1. Try exact matches (longest prefix first)
+        // 1. Exact matches (prefix-based, longest first)
         List<String> candidates = new ArrayList<>();
         StringBuilder candBuilder = new StringBuilder();
 
-        // Build all prefixes of the input
         for (int i = 0; i < zhuyinInput.length; ++i) {
-            candBuilder.append(zhuyinInput[i].replace(" ", "")); // strip spaces
+            candBuilder.append(zhuyinInput[i].replace(" ", ""));
             candidates.add(candBuilder.toString());
         }
 
-        // Iterate backwards: longest → shortest
         for (int i = candidates.size() - 1; i >= 0; --i) {
             String candidate = candidates.get(i);
             if (dict.containsKey(candidate)) {
-                results.addAll(dict.get(candidate));
+                allHits.putIfAbsent(candidate, 0);
             }
         }
 
-        // 2. Fuzzy match
-        if (results.size() < 15) {
+        // 2. Fuzzy matches
+        int fixed_size = allHits.size();
+//        if (fixed_size < 30) {
             int THRESHOLD = 2;
             Map<String,Integer> fuzzyHits = new HashMap<>();
 
-            String firstSyllable = zhuyinInput[0];
-
-            char firstInput = firstSyllable.charAt(0);
-
-            for (Map.Entry<Character, List<String>> entry : index.entrySet()) {
-                if (keyDistance(firstInput, entry.getKey(), useEten) > 1) {
+            // Multi-fuzzy: check 1–4 first syllables
+            for (int k = 1; k <= 4 && k <= zhuyinInput.length; ++k) {
+                StringBuilder target = new StringBuilder();
+                for (int i = 0; i < k; ++i) {
+                    target.append(zhuyinInput[i].replace(" ", ""));
+                }
+                String fuzzyTarget = target.toString();
+                if (fuzzyTarget.isEmpty()) {
                     continue;
                 }
 
-                for (String key : entry.getValue()) {
-                    int dist = fuzzyKeyboardDistance(firstSyllable, key, useEten, THRESHOLD);
-                    if (dist <= THRESHOLD) {
-                        fuzzyHits.putIfAbsent(key, dist);
+                char firstInput = fuzzyTarget.charAt(0);
+
+                for (Map.Entry<Character, List<String>> entry : index.entrySet()) {
+                    if (keyDistance(firstInput, entry.getKey(), useEten) > 1) {
+                        continue;
+                    }
+
+                    for (String key : entry.getValue()) {
+                        int dist = fuzzyKeyboardDistance(fuzzyTarget, key, useEten, THRESHOLD);
+                        if (dist > 0 && dist <= THRESHOLD) {
+                            allHits.merge(key, dist, Math::min);
+                        }
                     }
                 }
             }
+//        }
 
+        List<Map.Entry<String,Integer>> sorted = new ArrayList<>(allHits.entrySet());
+        sorted.sort(
+                Comparator.<Map.Entry<String,Integer>>comparingInt(Map.Entry::getValue)
+                        .thenComparingInt((Map.Entry<String,Integer> a) -> -a.getKey().length())
+        );
 
+        List<String> results = new ArrayList<>();
+        int MAX_KEYS = 8;
+        int count = 0;
 
-            // Sort candidates by distance
-            List<Map.Entry<String,Integer>> sorted = new ArrayList<>(fuzzyHits.entrySet());
-            sorted.sort(Comparator.comparingInt(Map.Entry::getValue));
+        for (Map.Entry<String,Integer> e : sorted) {
+            // Expand *all words* for this zhuyin key
+            results.addAll(dict.getOrDefault(e.getKey(), Collections.emptyList()));
 
-            int MAX_KEYS = 10;
-            int count = 0;
-            Set<String> seenWords = new HashSet<>();
-
-            for (Map.Entry<String,Integer> e : sorted) {
-                for (String word : dict.get(e.getKey())) {
-                    if (seenWords.add(word)) {
-                        results.add(word);
-                    }
-                }
-                if (++count >= MAX_KEYS) {
-                    break;
-                }
+            if (++count >= MAX_KEYS) {
+                break; // cap at max zhuyin variations, not words
             }
         }
 
