@@ -142,7 +142,7 @@ public class ZhuyinTyper {
         }
 
         // Special case for hahahahah
-        String inputStr = String.join("", zhuyinInput).replace(" ", "");
+        String inputStr = zhuyinInput[0];
         if (inputStr.length() >= 4 && inputStr.length() % 2 == 0) { // at least "ㄏㄚㄏㄚ"
             boolean allHa = true;
             for (int i = 0; i < inputStr.length(); i += 2) {
