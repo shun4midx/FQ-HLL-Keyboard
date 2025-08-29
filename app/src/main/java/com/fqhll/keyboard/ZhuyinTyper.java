@@ -141,6 +141,22 @@ public class ZhuyinTyper {
             return new String[0];
         }
 
+        // Special case for hahahahah
+        String inputStr = String.join("", zhuyinInput).replace(" ", "");
+        if (inputStr.length() >= 4 && inputStr.length() % 2 == 0) { // at least "ㄏㄚㄏㄚ"
+            boolean allHa = true;
+            for (int i = 0; i < inputStr.length(); i += 2) {
+                if (inputStr.charAt(i) != 'ㄏ' || inputStr.charAt(i + 1) != 'ㄚ') {
+                    allHa = false;
+                    break;
+                }
+            }
+            if (allHa) {
+                int count = inputStr.length() / 2;
+                return new String[]{ "哈".repeat(count) };
+            }
+        }
+
         // Flatten input into joined string
         StringBuilder sb = new StringBuilder();
         for (String part : zhuyinInput) {
