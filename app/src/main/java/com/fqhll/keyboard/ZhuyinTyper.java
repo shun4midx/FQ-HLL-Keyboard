@@ -12,6 +12,7 @@ import java.util.*;
 
 public class ZhuyinTyper {
     private final Map<String, List<String>> dict = new HashMap<>();
+    private final Map<Character, List<String>> index = new HashMap<>();
 
     // Row strings: one string per row of keys
     private static final String[] ETEN_LAYOUT = {
@@ -68,10 +69,14 @@ public class ZhuyinTyper {
             int cost = 0;
             for (int i = 0; i < n; i++) {
                 char ca = a.charAt(i), cb = b.charAt(i);
-                if (ca == cb) continue;
+                if (ca == cb) {
+                    continue;
+                }
                 int d = keyDistance(ca, cb, useEten);
                 cost += (d <= 1 ? 1 : 2);
-                if (cost > threshold) return threshold + 1;
+                if (cost > threshold) {
+                    return threshold + 1;
+                }
             }
             return cost;
         }
@@ -118,6 +123,11 @@ public class ZhuyinTyper {
                 }
 
                 dict.put(key, values);
+
+                if (!key.isEmpty()) {
+                    char first = key.charAt(0);
+                    index.computeIfAbsent(first, k -> new ArrayList<>()).add(key);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -138,8 +148,18 @@ public class ZhuyinTyper {
         List<String> results = new ArrayList<>();
 
         // 1. Try exact matches (longest prefix first)
-        for (int len = joined.length(); len > 0; --len) {
-            String candidate = joined.substring(0, len);
+        List<String> candidates = new ArrayList<>();
+        StringBuilder candBuilder = new StringBuilder();
+
+        // Build all prefixes of the input
+        for (int i = 0; i < zhuyinInput.length; ++i) {
+            candBuilder.append(zhuyinInput[i].replace(" ", "")); // strip spaces
+            candidates.add(candBuilder.toString());
+        }
+
+        // Iterate backwards: longest → shortest
+        for (int i = candidates.size() - 1; i >= 0; --i) {
+            String candidate = candidates.get(i);
             if (dict.containsKey(candidate)) {
                 results.addAll(dict.get(candidate));
             }
@@ -152,21 +172,21 @@ public class ZhuyinTyper {
 
             String firstSyllable = zhuyinInput[0];
 
-            for (String key : dict.keySet()) {
-                if (key.isEmpty()) {
+            char firstInput = firstSyllable.charAt(0);
+
+            for (Map.Entry<Character, List<String>> entry : index.entrySet()) {
+                if (keyDistance(firstInput, entry.getKey(), useEten) > 1) {
                     continue;
                 }
 
-                // skip quickly if starting char too far
-                if (keyDistance(firstSyllable.charAt(0), key.charAt(0), useEten) > 1) {
-                    continue;
-                }
-
-                int dist = fuzzyKeyboardDistance(firstSyllable, key, useEten, THRESHOLD);
-                if (dist <= THRESHOLD) {
-                    fuzzyHits.putIfAbsent(key, dist);
+                for (String key : entry.getValue()) {
+                    int dist = fuzzyKeyboardDistance(firstSyllable, key, useEten, THRESHOLD);
+                    if (dist <= THRESHOLD) {
+                        fuzzyHits.putIfAbsent(key, dist);
+                    }
                 }
             }
+
 
 
             // Sort candidates by distance
