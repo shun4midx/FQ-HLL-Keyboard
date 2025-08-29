@@ -84,7 +84,7 @@ public class CustomKeyboardApp extends InputMethodService
     private static final String[] zhuyinLetterArray = new String[]{"ㄅ", "ㄆ", "ㄇ", "ㄈ", "ㄉ", "ㄊ", "ㄋ", "ㄌ", "ㄍ", "ㄎ", "ㄏ", "ㄐ", "ㄑ", "ㄒ", "ㄓ", "ㄔ", "ㄕ", "ㄖ", "ㄗ", "ㄘ", "ㄙ", "ㄚ", "ㄛ", "ㄜ", "ㄝ", "ㄞ", "ㄟ", "ㄠ", "ㄡ", "ㄢ", "ㄣ", "ㄤ", "ㄥ", "ㄦ", "ㄧ", "ㄨ", "ㄩ", "ˉ", "ˊ", "ˇ", "ˋ", "˙"};
     private static String[] longPressSymbols = new String[]{};
     private static final String[] longPressSymbolsMain = new String[]{"\"", "}", "\\", "(", "/", ")", "*", "#", "&", "%", "+", "-", ">", "<", "^", "~", "?", "$", "'", "@", ";", "{", "!", "=", ":", "_"};
-    private static final String[] longPressSymbolsAlt = new String[]{"@", ";", "'", "£", "|", "_", "&", "-", ">", "+", "(", ")", "?", "!", "{", "}", "%", "=", "#", "[", "<", ":", "\\", "\"", "]", "*"};
+    private static final String[] longPressSymbolsAlt = new String[]{"@", ";", "'", "$", "|", "_", "&", "-", ">", "+", "(", ")", "?", "!", "{", "}", "%", "=", "#", "[", "<", ":", "\\", "\"", "]", "*"};
     private float scaleX, scaleY;
     private int lastTouchX, lastTouchY;
 
