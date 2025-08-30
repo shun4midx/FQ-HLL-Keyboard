@@ -456,6 +456,36 @@ public class CustomKeyboardApp extends InputMethodService
             case -1027: // uni
                 commitTextAndShowLabel("ₙ");
                 break;
+            case -1015: // theta
+                commitTextAndShowLabel("ㄥ");
+                break;
+            case -1014: // delta
+                commitTextAndShowLabel("△");
+                break;
+            case -1016: // pi
+                commitTextAndShowLabel("Π");
+                break;
+            case -1017: // f
+                commitTextAndShowLabel("∫");
+                break;
+            case -1032: // subseteq
+                commitTextAndShowLabel("≤");
+                break;
+            case -1033: // supseteq
+                commitTextAndShowLabel("≥");
+                break;
+            case -1013: // =>
+                commitTextAndShowLabel("⇐");
+                break;
+            case -1034: // qed
+                commitTextAndShowLabel("⊕");
+                break;
+            case -1035: // nullset
+                commitTextAndShowLabel("⊗");
+                break;
+            case -1036: // infty
+                commitTextAndShowLabel("⊙");
+                break;
 
             default:
                 // hold down eng letters for symbols, zhuyin letters to commit the letter
@@ -1096,6 +1126,9 @@ public class CustomKeyboardApp extends InputMethodService
         if (kv != null && kv.getKeyboard() == zhuyinKeyboard) {
             if (c == ' ' && zhuyinBuffer.length() == 0) {
                 ic.commitText(" ", 1);
+                return;
+            } else if (c == '，') {
+                ic.commitText("，", 1);
                 return;
             }
 
