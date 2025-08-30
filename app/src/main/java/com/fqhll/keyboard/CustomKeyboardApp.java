@@ -384,34 +384,34 @@ public class CustomKeyboardApp extends InputMethodService
             case '0':
                 commitTextAndShowLabel("⁰");
                 break;
-            case '¹':
+            case -1000: // superscript 1
                 commitTextAndShowLabel("₁");
                 break;
-            case '²':
+            case -1001:
                 commitTextAndShowLabel("₂");
                 break;
-            case '³':
+            case -1002:
                 commitTextAndShowLabel("₃");
                 break;
-            case '⁴':
+            case -1003:
                 commitTextAndShowLabel("₄");
                 break;
-            case '⁵':
+            case -1004:
                 commitTextAndShowLabel("₅");
                 break;
-            case '⁶':
+            case -1005:
                 commitTextAndShowLabel("₆");
                 break;
-            case '⁷':
+            case -1006:
                 commitTextAndShowLabel("₇");
                 break;
-            case '⁸':
+            case -1007:
                 commitTextAndShowLabel("₈");
                 break;
-            case '⁹':
+            case -1008:
                 commitTextAndShowLabel("₉");
                 break;
-            case '⁰':
+            case -1009:
                 commitTextAndShowLabel("₀");
                 break;
             case '+':
@@ -447,10 +447,10 @@ public class CustomKeyboardApp extends InputMethodService
             case '^':
                 commitTextAndShowLabel("₌");
                 break;
-            case '≡':
+            case -1023: // cong
                 commitTextAndShowLabel("≅");
                 break;
-            case 'π':
+            case -1016: // pi
                 commitTextAndShowLabel("ⁿ");
                 break;
 
