@@ -44,6 +44,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Deque;
+import java.util.ArrayDeque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -925,6 +927,32 @@ public class CustomKeyboardApp extends InputMethodService
                 break;
             case -71: // invis key
                 break;
+            case 61: // equal key for numpad
+                String expr = getCurrentExpression();
+                if (expr.isEmpty() || expr.charAt(expr.length() - 1) != '=') {
+                    ic.commitText("=", 1);
+                } else { // User wanted to calculate ==
+                    try {
+                        // remove the '=' at the end before evaluation
+                        expr = expr.substring(0, expr.length() - 1);
+                        double res = evaluateExpression(expr);  // returns primitive double
+
+                        String resultStr;
+                        if (Math.abs(res - Math.rint(res)) < 1e-9) {
+                            resultStr = String.valueOf((long) Math.round(res));
+                        } else {
+                            // Otherwise keep decimal form
+                            resultStr = String.valueOf(res);
+                        }
+
+                        ic.deleteSurroundingText(expr.length() + 1, 0); // Rmb the = deleted in param
+                        ic.commitText(resultStr, 1);
+                    } catch (Exception e) {
+                        // fallback if invalid
+                        ic.commitText("=", 1);
+                    }
+                }
+                break;
             default: {
                 if (isAlphabet(primaryCode)) {
                     commitChar(ic, primaryCode);
@@ -1046,6 +1074,90 @@ public class CustomKeyboardApp extends InputMethodService
             ic.commitText(replacement, 1);
             ic.endBatchEdit();
         }
+    }
+
+    private String getCurrentExpression() {
+        InputConnection ic = getCurrentInputConnection();
+        if (ic == null) return "";
+        ExtractedText et = ic.getExtractedText(new ExtractedTextRequest(), 0);
+        return et != null ? et.text.toString() : "";
+    }
+
+    private static double evaluateExpression(String expr) throws Exception {
+        // 1. Tokenize
+        List<String> tokens = new ArrayList<>();
+        StringBuilder num = new StringBuilder();
+        for (char c : expr.toCharArray()) {
+            if (Character.isDigit(c) || c == '.') {
+                num.append(c);
+            } else if ("+-*/()%".indexOf(c) >= 0) {
+                if (num.length() > 0) {
+                    tokens.add(num.toString());
+                    num.setLength(0);
+                }
+                tokens.add(Character.toString(c));
+            } else if (!Character.isWhitespace(c)) {
+                throw new Exception("Invalid char: " + c);
+            }
+        }
+        if (num.length() > 0) {
+            tokens.add(num.toString());
+        }
+
+        // 2. Infix to Postfix (Shunting-yard)
+        Map<String, Integer> prec = Map.of(
+                "+", 1, "-", 1,
+                "*", 2, "/", 2, "%", 2
+        );
+        List<String> output = new ArrayList<>();
+        Deque<String> ops = new ArrayDeque<>();
+        for (String t : tokens) {
+            if (t.matches("\\d+(\\.\\d+)?")) { // number
+                output.add(t);
+            } else if (prec.containsKey(t)) { // operator
+                while (!ops.isEmpty() && prec.containsKey(ops.peek()) &&
+                        prec.get(ops.peek()) >= prec.get(t)) {
+                    output.add(ops.pop());
+                }
+                ops.push(t);
+            } else if (t.equals("(")) {
+                ops.push(t);
+            } else if (t.equals(")")) {
+                while (!ops.isEmpty() && !ops.peek().equals("(")) {
+                    output.add(ops.pop());
+                }
+                if (ops.isEmpty() || !ops.peek().equals("("))
+                    throw new Exception("Mismatched parentheses");
+                ops.pop(); // discard "("
+            }
+        }
+        while (!ops.isEmpty()) {
+            String op = ops.pop();
+            if (op.equals("(") || op.equals(")"))
+                throw new Exception("Mismatched parentheses");
+            output.add(op);
+        }
+
+        // 3. Evaluate Postfix
+        Deque<Double> stack = new ArrayDeque<>();
+        for (String t : output) {
+            if (t.matches("\\d+(\\.\\d+)?")) {
+                stack.push(Double.parseDouble(t));
+            } else { // operator
+                double b = stack.pop(), a = stack.pop();
+                switch (t) {
+                    case "+": stack.push(a + b); break;
+                    case "-": stack.push(a - b); break;
+                    case "*": stack.push(a * b); break;
+                    case "/": stack.push(a / b); break;
+                    case "%": stack.push(a % b); break;
+                }
+            }
+        }
+        if (stack.size() != 1) {
+            throw new Exception("Invalid expression");
+        }
+        return stack.pop();
     }
 
     private String getLastWordOnCurrentLine(InputConnection ic) {
