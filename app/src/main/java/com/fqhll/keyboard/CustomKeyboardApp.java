@@ -340,12 +340,25 @@ public class CustomKeyboardApp extends InputMethodService
             case 65292: // chi comma -> chi full stop
                 commitTextAndShowLabel("。");
                 break;
-            case -4: // zhuyin enter -> open settings, eng enter -> skip word
+            case -4: // zhuyin enter -> open settings, eng enter -> skip word, numpad enter = new line
                 if (kv.getKeyboard() == zhuyinKeyboard) {
                     PackageManager manager = getPackageManager();
                     Intent launchIntent = manager.getLaunchIntentForPackage("com.fqhll.keyboard");
                     launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
                     startActivity(launchIntent);
+                } else if (kv.getKeyboard() == numpadKeyboard) {
+                    // Now send the Enter/new line per IME options
+                    EditorInfo editorInfo = getCurrentInputEditorInfo();
+                    if (editorInfo != null && (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) != 0) {
+                        ic.commitText("\n", 1);
+                    } else {
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER));
+                    }
+
+                    // Clear UI and mark bar inactive
+                    showSuggestions("");
+                    break;
                 }
                 else {
                     if (ic != null) {
