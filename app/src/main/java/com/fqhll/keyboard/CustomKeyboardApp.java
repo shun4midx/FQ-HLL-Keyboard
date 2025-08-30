@@ -522,6 +522,10 @@ public class CustomKeyboardApp extends InputMethodService
                 commitTextAndShowLabel("∝");
                 updateSuggestion(ic);
                 break;
+            case -1019: // beta
+                commitTextAndShowLabel("μ");
+                updateSuggestion(ic);
+                break;
             case '+':
                 commitTextAndShowLabel("⁺");
                 updateSuggestion(ic);
