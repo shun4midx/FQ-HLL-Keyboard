@@ -1065,7 +1065,7 @@ public class CustomKeyboardApp extends InputMethodService
                 }
                 break;
             default: {
-                if (isAlphabet(primaryCode) || kv.getKeyboard() != engKeyboard) {
+                if (isAlphabet(primaryCode) || (kv.getKeyboard() != engKeyboard && primaryCode != Keyboard.KEYCODE_DONE)) {
                     commitChar(ic, primaryCode);
                     updateSuggestion(ic);
                     return;
@@ -1111,12 +1111,40 @@ public class CustomKeyboardApp extends InputMethodService
                 String lastWordStr = partsStr.length > 0 ? partsStr[partsStr.length - 1] : "";
 
                 if (primaryCode == Keyboard.KEYCODE_DONE) {
-                    // Use EXACTLY what's currently shown in the bar
-                    String currentWord = getLastWordOnCurrentLine(ic);
+                    if (kv.getKeyboard() == numpadKeyboard) {
+                        expr = getCurrentExpression();
+                        try {
+                            expr = normalizeSuperscripts(expr);
+                            double res = evaluateExpression(expr);  // returns primitive double
 
-                    if (defaultAutocor && score >= AUTO_REPLACE_THRESHOLD && !top.isEmpty() && !top.equals(lastWordStr) && prevChar != ' ' && !isSkippedAutoreplace) {
-                        // Accept the visible center suggestion
-                        safeReplaceLastWord(ic, currentWord, top);
+                            String resultStr;
+                            if (Math.abs(res - Math.rint(res)) < 1e-9) {
+                                resultStr = String.valueOf((long) Math.round(res));
+                            } else {
+                                // Otherwise keep decimal form
+                                resultStr = String.valueOf(res);
+                            }
+
+                            ic.commitText("=" + resultStr, 1);
+
+                            // Clear UI and mark bar inactive
+                            showSuggestions("");
+                            break;
+                        } catch (Exception e) {
+                            // fallback if invalid, swallow it
+                        }
+                    } else if (kv.getKeyboard() == engKeyboard) {
+                        // Use EXACTLY what's currently shown in the bar
+                        String currentWord = getLastWordOnCurrentLine(ic);
+
+                        if (defaultAutocor && score >= AUTO_REPLACE_THRESHOLD && !top.isEmpty() && !top.equals(lastWordStr) && prevChar != ' ' && !isSkippedAutoreplace) {
+                            // Accept the visible center suggestion
+                            safeReplaceLastWord(ic, currentWord, top);
+                        }
+
+                        if (caps_state != 2) {
+                            resetCaps();
+                        }
                     }
 
                     // Now send the Enter/new line per IME options
@@ -1126,10 +1154,6 @@ public class CustomKeyboardApp extends InputMethodService
                     } else {
                         ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
                         ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER));
-                    }
-
-                    if (caps_state != 2) {
-                        resetCaps();
                     }
 
                     // Clear UI and mark bar inactive
@@ -1219,7 +1243,8 @@ public class CustomKeyboardApp extends InputMethodService
 
                 if (tok.equals("-")) {
                     // unary minus handling
-                    if (tokens.isEmpty() || "()+-*/%^".contains(tokens.get(tokens.size() - 1))) {
+                    String prev = tokens.isEmpty() ? "" : tokens.get(tokens.size() - 1);
+                    if (tokens.isEmpty() || "+-*/%^(".contains(prev)) {
                         tokens.add("0");
                     }
                 }
