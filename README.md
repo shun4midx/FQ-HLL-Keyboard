@@ -50,10 +50,18 @@ You can long press the text editor button to change languages.
 | full stop `.` | delete last word |
 | symbols `!?#` | numpad |
 | enter `↵` | skip replacement |
-| clipboard `⎘` | clear clipboard |
+| clipboard `⎘` | super/subscript mode |
 | text editor `𝙸` | change languages |
 
-#### Symbol Layouts
+#### Super/Subscript Keyboard
+
+Access the Super/Subscript keyboard by long pressing clipboard in the main keyboard. You can long press a superscripted character to type its subscripted version.
+
+#### Symbols
+
+There are two pages in the symbol keyboard, with the first being regular symbols, and the second being math symbols. More symbols can be accessed by holding down a symbol on either page.
+
+##### Symbol Layouts
 
 Default symbol layout (similar to Samsung keyboard layout, left), Alternative symbol layout (similar to Gboard layout, right)
 
@@ -72,7 +80,7 @@ You can delete an item by long pressing its box, or long press the clipboard but
 
 #### Numpad
 
-You can access the numpad by long pressing symbols, or through the emoji keyboard.
+You can access the numpad by long pressing symbols, or through the emoji keyboard. There is a built-in calculator that can be accessed by typing `==` after an expression to evaluate it.
 
 #### Text Editor
 
