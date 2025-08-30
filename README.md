@@ -80,7 +80,11 @@ You can delete an item by long pressing its box, or long press the clipboard but
 
 #### Numpad
 
-You can access the numpad by long pressing symbols, or through the emoji keyboard. There is a built-in calculator that can be accessed by typing `==` or hitting the enter key on the numpad after an expression to evaluate it.
+You can access the numpad by long pressing symbols, or through the emoji keyboard.
+
+There is a built-in calculator that can be accessed by typing `==` on the numpad/symbol keyboard, or hitting the enter key on the numpad after an expression to evaluate it.
+
+To enter a newline on the numpad, long press the enter key.
 
 #### Text Editor
 
