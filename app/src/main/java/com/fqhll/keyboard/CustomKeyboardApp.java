@@ -526,6 +526,10 @@ public class CustomKeyboardApp extends InputMethodService
                 commitTextAndShowLabel("μ");
                 updateSuggestion(ic);
                 break;
+            case -1024: // Summation
+                commitTextAndShowLabel("σ");
+                updateSuggestion(ic);
+                break;
             case '+':
                 commitTextAndShowLabel("⁺");
                 updateSuggestion(ic);
