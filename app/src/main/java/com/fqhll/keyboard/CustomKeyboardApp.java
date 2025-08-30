@@ -450,8 +450,11 @@ public class CustomKeyboardApp extends InputMethodService
             case -1023: // cong
                 commitTextAndShowLabel("≅");
                 break;
-            case -1016: // pi
+            case -1026: // int
                 commitTextAndShowLabel("ⁿ");
+                break;
+            case -1027: // uni
+                commitTextAndShowLabel("ₙ");
                 break;
 
             default:
@@ -566,7 +569,7 @@ public class CustomKeyboardApp extends InputMethodService
 
         if (-99 <= primaryCode && primaryCode <= -90) return; // clipboard
         if (-79 <= primaryCode && primaryCode <= -60) return; // text editor
-        if (-1049 <= primaryCode && primaryCode <= -1000) return; // math symbols
+//        if (-1049 <= primaryCode && primaryCode <= -1000) return; // math symbols
 
         // 1) Un‑scale into keyboard coords (you already have scaleX/scaleY set up)
         int kx = (int)((lastTouchX - kv.getPaddingLeft()) / scaleX);
