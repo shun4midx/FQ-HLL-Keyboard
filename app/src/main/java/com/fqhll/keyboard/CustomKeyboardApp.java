@@ -522,6 +522,7 @@ public class CustomKeyboardApp extends InputMethodService
             case -1029: // ni
                 commitTextAndShowLabel("↦");
                 updateSuggestion(ic);
+                break;
             case '+':
                 commitTextAndShowLabel("⁺");
                 updateSuggestion(ic);
