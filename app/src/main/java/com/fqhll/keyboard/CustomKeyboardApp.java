@@ -151,6 +151,12 @@ public class CustomKeyboardApp extends InputMethodService
 
     private ZhuyinTyper zhuyinTyper;
 
+    // Map math Unicode symbols to ASCII equivalents
+    private static final Map<Character, String> mathNaturalize = Map.ofEntries(
+            Map.entry('×', "*"),
+            Map.entry('÷', "/")
+    );
+
     // Map superscript Unicode chars to normal digits/operators
     private static final Map<Character, String> superscripts = Map.ofEntries(
             Map.entry('⁰', "0"),
@@ -319,11 +325,7 @@ public class CustomKeyboardApp extends InputMethodService
                 }
                 break;
             case 47: // slash -> backslash
-                if (kv.getKeyboard() == numpadKeyboard) {
-                    commitTextAndShowLabel("ᐟ");
-                } else {
-                    commitTextAndShowLabel("\\");
-                }
+                commitTextAndShowLabel("\\");
                 updateSuggestion(ic);
                 break;
             case 65292: // chi comma -> chi full stop
@@ -520,11 +522,7 @@ public class CustomKeyboardApp extends InputMethodService
                 updateSuggestion(ic);
                 break;
             case '*':
-                if (kv.getKeyboard() == numpadKeyboard) {
-                    commitTextAndShowLabel("ˣ");
-                } else {
-                    commitTextAndShowLabel("⁾");
-                }
+                commitTextAndShowLabel("⁾");
                 updateSuggestion(ic);
                 break;
             case '#':
@@ -1046,6 +1044,7 @@ public class CustomKeyboardApp extends InputMethodService
                         // remove the '=' at the end before evaluation
                         expr = expr.substring(0, expr.length() - 1);
                         expr = normalizeSuperscripts(expr);
+                        expr = normalizeMathSymbols(expr);
                         double res = evaluateExpression(expr);  // returns primitive double
 
                         String resultStr;
@@ -1115,6 +1114,7 @@ public class CustomKeyboardApp extends InputMethodService
                         expr = getCurrentExpression();
                         try {
                             expr = normalizeSuperscripts(expr);
+                            expr = normalizeMathSymbols(expr);
                             double res = evaluateExpression(expr);  // returns primitive double
 
                             String resultStr;
@@ -1226,7 +1226,7 @@ public class CustomKeyboardApp extends InputMethodService
         for (char c : expr.toCharArray()) {
             if (Character.isDigit(c) || c == '.') {
                 num.append(c);
-            } else if ("+-*/()%^".indexOf(c) >= 0) {
+            } else if ("+-*/()^".indexOf(c) >= 0) {
                 if (num.length() > 0) {
                     tokens.add(num.toString());
                     num.setLength(0);
@@ -1250,6 +1250,15 @@ public class CustomKeyboardApp extends InputMethodService
                 }
 
                 tokens.add(tok);
+            } else if (c == '%') {
+                if (num.length() > 0) {
+                    // Turn the number into a percentage
+                    double val = Double.parseDouble(num.toString()) / 100.0;
+                    tokens.add(String.valueOf(val));
+                    num.setLength(0);
+                } else {
+                    throw new Exception("Unexpected %");
+                }
             } else if (!Character.isWhitespace(c)) {
                 throw new Exception("Invalid char: " + c);
             }
@@ -1344,6 +1353,21 @@ public class CustomKeyboardApp extends InputMethodService
             out.append("^(").append(expBuf).append(")");
         }
 
+        return out.toString();
+    }
+
+    private static String normalizeMathSymbols(String expr) {
+        StringBuilder out = new StringBuilder();
+
+        for (int i = 0; i < expr.length(); i++) {
+            char c = expr.charAt(i);
+
+            if (mathNaturalize.containsKey(c)) {
+                out.append(mathNaturalize.get(c));
+            } else {
+                out.append(c);
+            }
+        }
         return out.toString();
     }
 
