@@ -10,7 +10,7 @@
         <Key android:codes="40" android:keyLabel="("/>
         <Key android:codes="61" android:keyLabel="="/>
         <Key android:codes="41" android:keyLabel=")"/>
-        <Key android:codes="-66" android:keyLabel="sel all" android:keyEdgeFlags="right"/>
+        <Key android:codes="-66" android:keyLabel="select all" android:keyEdgeFlags="right"/>
     </Row>
 
     <Row>

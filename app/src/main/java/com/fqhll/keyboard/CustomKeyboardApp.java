@@ -151,6 +151,28 @@ public class CustomKeyboardApp extends InputMethodService
 
     private ZhuyinTyper zhuyinTyper;
 
+    // Map superscript Unicode chars to normal digits/operators
+    private static final Map<Character, String> superscripts = Map.ofEntries(
+            Map.entry('⁰', "0"),
+            Map.entry('¹', "1"),
+            Map.entry('²', "2"),
+            Map.entry('³', "3"),
+            Map.entry('⁴', "4"),
+            Map.entry('⁵', "5"),
+            Map.entry('⁶', "6"),
+            Map.entry('⁷', "7"),
+            Map.entry('⁸', "8"),
+            Map.entry('⁹', "9"),
+            Map.entry('⁺', "+"),
+            Map.entry('⁻', "-"),
+            Map.entry('⁽', "("),
+            Map.entry('⁾', ")"),
+            Map.entry('ˣ', "*"),
+            Map.entry('ᐟ', "/"),
+            Map.entry('˙', ".")
+    );
+
+
 
     private void ensureNative() {
         if (!nativeLoaded) {
@@ -283,16 +305,26 @@ public class CustomKeyboardApp extends InputMethodService
                 ic.setSelection(0, beforeLen + afterLen);
                 break;
             case 46: // full stop -> delete last word or enter '//'
-                if (useFullStopComment) {
-                    commitTextAndShowLabel("//");
-                }
-                else {
-                    deleteLastWordWithSpace();
-                    showSuggestions("");
+                if (kv.getKeyboard() == numpadKeyboard) {
+                    commitTextAndShowLabel("˙");
+                    updateSuggestion(ic);
+                } else {
+                    if (useFullStopComment) {
+                        commitTextAndShowLabel("//");
+                    }
+                    else {
+                        deleteLastWordWithSpace();
+                        showSuggestions("");
+                    }
                 }
                 break;
             case 47: // slash -> backslash
-                commitTextAndShowLabel("\\");
+                if (kv.getKeyboard() == numpadKeyboard) {
+                    commitTextAndShowLabel("ᐟ");
+                } else {
+                    commitTextAndShowLabel("\\");
+                }
+                updateSuggestion(ic);
                 break;
             case 65292: // chi comma -> chi full stop
                 commitTextAndShowLabel("。");
@@ -313,180 +345,257 @@ public class CustomKeyboardApp extends InputMethodService
                 break;
             case '[':
                 commitTextAndShowLabel("{");
+                updateSuggestion(ic);
                 break;
             case ']':
                 commitTextAndShowLabel("}");
+                updateSuggestion(ic);
                 break;
             case '_':
                 commitTextAndShowLabel("|");
+                updateSuggestion(ic);
                 break;
             case '!':
                 commitTextAndShowLabel("！");
+                updateSuggestion(ic);
                 break;
             case '?':
                 commitTextAndShowLabel("？");
+                updateSuggestion(ic);
                 break;
             case '~':
                 commitTextAndShowLabel("～");
+                updateSuggestion(ic);
                 break;
             case ':':
                 commitTextAndShowLabel("：");
+                updateSuggestion(ic);
                 break;
             case '(':
-                commitTextAndShowLabel("（");
+                if (kv.getKeyboard() == numpadKeyboard) {
+                    commitTextAndShowLabel("⁽");
+                } else {
+                    commitTextAndShowLabel("（");
+                }
+                updateSuggestion(ic);
                 break;
             case ')':
-                commitTextAndShowLabel("）");
+                if (kv.getKeyboard() == numpadKeyboard) {
+                    commitTextAndShowLabel("⁾");
+                } else {
+                    commitTextAndShowLabel("）");
+                }
+                updateSuggestion(ic);
                 break;
             case '-':
-                commitTextAndShowLabel("、");
+                if (kv.getKeyboard() == numpadKeyboard) {
+                    commitTextAndShowLabel("⁻");
+                } else {
+                    commitTextAndShowLabel("、");
+                }
+                updateSuggestion(ic);
                 break;
             case '<':
                 commitTextAndShowLabel("「");
+                updateSuggestion(ic);
                 break;
             case '>':
                 commitTextAndShowLabel("」");
+                updateSuggestion(ic);
                 break;
             case '\'':
                 commitTextAndShowLabel("『");
+                updateSuggestion(ic);
                 break;
             case '"':
                 commitTextAndShowLabel("』");
+                updateSuggestion(ic);
                 break;
             case ';':
                 commitTextAndShowLabel("；");
+                updateSuggestion(ic);
                 break;
             case '1':
                 commitTextAndShowLabel("¹");
+                updateSuggestion(ic);
                 break;
             case '2':
                 commitTextAndShowLabel("²");
+                updateSuggestion(ic);
                 break;
             case '3':
                 commitTextAndShowLabel("³");
+                updateSuggestion(ic);
                 break;
             case '4':
                 commitTextAndShowLabel("⁴");
+                updateSuggestion(ic);
                 break;
             case '5':
                 commitTextAndShowLabel("⁵");
+                updateSuggestion(ic);
                 break;
             case '6':
                 commitTextAndShowLabel("⁶");
+                updateSuggestion(ic);
                 break;
             case '7':
                 commitTextAndShowLabel("⁷");
+                updateSuggestion(ic);
                 break;
             case '8':
                 commitTextAndShowLabel("⁸");
+                updateSuggestion(ic);
                 break;
             case '9':
                 commitTextAndShowLabel("⁹");
+                updateSuggestion(ic);
                 break;
             case '0':
                 commitTextAndShowLabel("⁰");
+                updateSuggestion(ic);
                 break;
             case -1000: // superscript 1
                 commitTextAndShowLabel("₁");
+                updateSuggestion(ic);
                 break;
             case -1001:
                 commitTextAndShowLabel("₂");
+                updateSuggestion(ic);
                 break;
             case -1002:
                 commitTextAndShowLabel("₃");
+                updateSuggestion(ic);
                 break;
             case -1003:
                 commitTextAndShowLabel("₄");
+                updateSuggestion(ic);
                 break;
             case -1004:
                 commitTextAndShowLabel("₅");
+                updateSuggestion(ic);
                 break;
             case -1005:
                 commitTextAndShowLabel("₆");
+                updateSuggestion(ic);
                 break;
             case -1006:
                 commitTextAndShowLabel("₇");
+                updateSuggestion(ic);
                 break;
             case -1007:
                 commitTextAndShowLabel("₈");
+                updateSuggestion(ic);
                 break;
             case -1008:
                 commitTextAndShowLabel("₉");
+                updateSuggestion(ic);
                 break;
             case -1009:
                 commitTextAndShowLabel("₀");
+                updateSuggestion(ic);
                 break;
             case '+':
                 commitTextAndShowLabel("⁺");
+                updateSuggestion(ic);
                 break;
             case '@':
                 commitTextAndShowLabel("⁻");
+                updateSuggestion(ic);
                 break;
             case '×':
                 commitTextAndShowLabel("ˣ");
+                updateSuggestion(ic);
                 break;
             case '÷':
                 commitTextAndShowLabel("ᐟ");
+                updateSuggestion(ic);
                 break;
             case '=':
                 commitTextAndShowLabel("⁼");
+                updateSuggestion(ic);
                 break;
             case '&':
                 commitTextAndShowLabel("⁽");
+                updateSuggestion(ic);
                 break;
             case '*':
-                commitTextAndShowLabel("⁾");
+                if (kv.getKeyboard() == numpadKeyboard) {
+                    commitTextAndShowLabel("ˣ");
+                } else {
+                    commitTextAndShowLabel("⁾");
+                }
+                updateSuggestion(ic);
                 break;
             case '#':
                 commitTextAndShowLabel("₊");
+                updateSuggestion(ic);
                 break;
             case '$':
                 commitTextAndShowLabel("₋");
+                updateSuggestion(ic);
                 break;
             case '%':
-                commitTextAndShowLabel("ₓ");
+                if (kv.getKeyboard() != numpadKeyboard) {
+                    commitTextAndShowLabel("ₓ");
+                    updateSuggestion(ic);
+                }
                 break;
             case '^':
                 commitTextAndShowLabel("₌");
+                updateSuggestion(ic);
                 break;
             case -1023: // cong
                 commitTextAndShowLabel("≅");
+                updateSuggestion(ic);
                 break;
             case -1026: // int
                 commitTextAndShowLabel("ⁿ");
+                updateSuggestion(ic);
                 break;
             case -1027: // uni
                 commitTextAndShowLabel("ₙ");
+                updateSuggestion(ic);
                 break;
             case -1015: // theta
                 commitTextAndShowLabel("ㄥ");
+                updateSuggestion(ic);
                 break;
             case -1014: // delta
                 commitTextAndShowLabel("△");
+                updateSuggestion(ic);
                 break;
             case -1016: // pi
                 commitTextAndShowLabel("Π");
+                updateSuggestion(ic);
                 break;
             case -1017: // f
                 commitTextAndShowLabel("∫");
+                updateSuggestion(ic);
                 break;
             case -1032: // subseteq
                 commitTextAndShowLabel("≤");
+                updateSuggestion(ic);
                 break;
             case -1033: // supseteq
                 commitTextAndShowLabel("≥");
+                updateSuggestion(ic);
                 break;
             case -1013: // =>
                 commitTextAndShowLabel("⇐");
+                updateSuggestion(ic);
                 break;
             case -1034: // qed
                 commitTextAndShowLabel("⊕");
+                updateSuggestion(ic);
                 break;
             case -1035: // nullset
                 commitTextAndShowLabel("⊗");
+                updateSuggestion(ic);
                 break;
             case -1036: // infty
                 commitTextAndShowLabel("⊙");
+                updateSuggestion(ic);
                 break;
 
             default:
@@ -716,6 +825,7 @@ public class CustomKeyboardApp extends InputMethodService
             InputConnection ic = getCurrentInputConnection();
             if (ic != null) {
                 ic.commitText(math_symbols.get(primaryCode), 1);
+                updateSuggestion(ic);
             }
             return;
         }
@@ -817,7 +927,7 @@ public class CustomKeyboardApp extends InputMethodService
                     else {
                         ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT));
                         ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_LEFT));
-                        showSuggestions("");
+//                        showSuggestions("");
                     }
                 }
                 return;
@@ -843,7 +953,7 @@ public class CustomKeyboardApp extends InputMethodService
                     else {
                         ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT));
                         ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_RIGHT));
-                        showSuggestions("");
+//                        showSuggestions("");
                     }
                 }
                 return;
@@ -852,7 +962,7 @@ public class CustomKeyboardApp extends InputMethodService
                 if (before2 != null && before2.length() > 0) {
                     ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP));
                     ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_UP));
-                    showSuggestions("");
+//                    showSuggestions("");
                 }
                 return;
             case -63: // select button
@@ -863,7 +973,7 @@ public class CustomKeyboardApp extends InputMethodService
                 if (after2 != null && after2.length() > 0) {
                     ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN));
                     ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN));
-                    showSuggestions("");
+//                    showSuggestions("");
                 }
                 return;
             case -65: // leftest
@@ -935,6 +1045,7 @@ public class CustomKeyboardApp extends InputMethodService
                     try {
                         // remove the '=' at the end before evaluation
                         expr = expr.substring(0, expr.length() - 1);
+                        expr = normalizeSuperscripts(expr);
                         double res = evaluateExpression(expr);  // returns primitive double
 
                         String resultStr;
@@ -954,8 +1065,9 @@ public class CustomKeyboardApp extends InputMethodService
                 }
                 break;
             default: {
-                if (isAlphabet(primaryCode)) {
+                if (isAlphabet(primaryCode) || kv.getKeyboard() != engKeyboard) {
                     commitChar(ic, primaryCode);
+                    updateSuggestion(ic);
                     return;
                 }
 
@@ -1090,12 +1202,29 @@ public class CustomKeyboardApp extends InputMethodService
         for (char c : expr.toCharArray()) {
             if (Character.isDigit(c) || c == '.') {
                 num.append(c);
-            } else if ("+-*/()%".indexOf(c) >= 0) {
+            } else if ("+-*/()%^".indexOf(c) >= 0) {
                 if (num.length() > 0) {
                     tokens.add(num.toString());
                     num.setLength(0);
                 }
-                tokens.add(Character.toString(c));
+
+                String tok = Character.toString(c);
+
+                // Implicit multiplication: number or ')' followed by '('
+                if (tok.equals("(") &&
+                        !tokens.isEmpty() &&
+                        (tokens.get(tokens.size() - 1).matches("\\d+(\\.\\d+)?") || tokens.get(tokens.size() - 1).equals(")"))) {
+                    tokens.add("*");
+                }
+
+                if (tok.equals("-")) {
+                    // unary minus handling
+                    if (tokens.isEmpty() || "()+-*/%^".contains(tokens.get(tokens.size() - 1))) {
+                        tokens.add("0");
+                    }
+                }
+
+                tokens.add(tok);
             } else if (!Character.isWhitespace(c)) {
                 throw new Exception("Invalid char: " + c);
             }
@@ -1107,7 +1236,8 @@ public class CustomKeyboardApp extends InputMethodService
         // 2. Infix to Postfix (Shunting-yard)
         Map<String, Integer> prec = Map.of(
                 "+", 1, "-", 1,
-                "*", 2, "/", 2, "%", 2
+                "*", 2, "/", 2, "%", 2,
+                "^", 3
         );
         List<String> output = new ArrayList<>();
         Deque<String> ops = new ArrayDeque<>();
@@ -1115,9 +1245,12 @@ public class CustomKeyboardApp extends InputMethodService
             if (t.matches("\\d+(\\.\\d+)?")) { // number
                 output.add(t);
             } else if (prec.containsKey(t)) { // operator
-                while (!ops.isEmpty() && prec.containsKey(ops.peek()) &&
-                        prec.get(ops.peek()) >= prec.get(t)) {
-                    output.add(ops.pop());
+                while (!ops.isEmpty() && prec.containsKey(ops.peek())) {
+                    // if right-associative operator (^) then use > instead of >=
+                    if ((t.equals("^") && prec.get(ops.peek()) > prec.get(t)) ||
+                            (!t.equals("^") && prec.get(ops.peek()) >= prec.get(t))) {
+                        output.add(ops.pop());
+                    } else break;
                 }
                 ops.push(t);
             } else if (t.equals("(")) {
@@ -1151,6 +1284,7 @@ public class CustomKeyboardApp extends InputMethodService
                     case "*": stack.push(a * b); break;
                     case "/": stack.push(a / b); break;
                     case "%": stack.push(a % b); break;
+                    case "^": stack.push(Math.pow(a, b)); break;
                 }
             }
         }
@@ -1158,6 +1292,34 @@ public class CustomKeyboardApp extends InputMethodService
             throw new Exception("Invalid expression");
         }
         return stack.pop();
+    }
+
+    private static String normalizeSuperscripts(String expr) {
+        StringBuilder out = new StringBuilder();
+        StringBuilder expBuf = new StringBuilder();
+
+        for (int i = 0; i < expr.length(); i++) {
+            char c = expr.charAt(i);
+
+            if (superscripts.containsKey(c)) {
+                // Add this superscript to the buffer
+                expBuf.append(superscripts.get(c));
+            } else {
+                // If we just finished a superscript run, flush it
+                if (expBuf.length() > 0) {
+                    out.append("^(").append(expBuf).append(")");
+                    expBuf.setLength(0);
+                }
+                out.append(c);
+            }
+        }
+
+        // Flush trailing exponent at end of string
+        if (expBuf.length() > 0) {
+            out.append("^(").append(expBuf).append(")");
+        }
+
+        return out.toString();
     }
 
     private String getLastWordOnCurrentLine(InputConnection ic) {
@@ -1258,6 +1420,7 @@ public class CustomKeyboardApp extends InputMethodService
             ic.commitText(emojis.get(code), 1);
         } else if (math_symbols.containsKey(code)) {
             ic.commitText(math_symbols.get(code), 1);
+            updateSuggestion(ic);
         } else {
             if (Character.isLetter(c) && caps_state > 0) {
                 c = Character.toUpperCase(c);
@@ -1269,15 +1432,25 @@ public class CustomKeyboardApp extends InputMethodService
     }
 
     private void updateSuggestion(InputConnection ic) {
+        CharSequence beforeCs = ic.getTextBeforeCursor(50, 0);
+        String before = (beforeCs == null ? "" : beforeCs.toString());
+        before = before.trim();
+
         if (kv != null && kv.getKeyboard() == zhuyinKeyboard) {
             String prefix = zhuyinBuffer.toString();
             showSuggestions(prefix);
             return;
-        }
+        } else if (kv.getKeyboard() != engKeyboard) {
+            // Take everything after the last space/newline
+            int lastSpace = Math.max(before.lastIndexOf(' '), before.lastIndexOf('\n'));
+            String lastToken = (lastSpace == -1) ? before : before.substring(lastSpace + 1);
 
-        CharSequence beforeCs = ic.getTextBeforeCursor(50, 0);
-        String before = (beforeCs == null ? "" : beforeCs.toString());
-        before = before.trim();
+            // Strip trailing '=' signs
+            lastToken = lastToken.replaceAll("=+$", "");
+
+            showSuggestions(lastToken);
+            return;
+        }
 
         if (before.isEmpty()) {
             showSuggestions("");
