@@ -384,6 +384,76 @@ public class CustomKeyboardApp extends InputMethodService
             case '0':
                 commitTextAndShowLabel("⁰");
                 break;
+            case '¹':
+                commitTextAndShowLabel("₁");
+                break;
+            case '²':
+                commitTextAndShowLabel("₂");
+                break;
+            case '³':
+                commitTextAndShowLabel("₃");
+                break;
+            case '⁴':
+                commitTextAndShowLabel("₄");
+                break;
+            case '⁵':
+                commitTextAndShowLabel("₅");
+                break;
+            case '⁶':
+                commitTextAndShowLabel("₆");
+                break;
+            case '⁷':
+                commitTextAndShowLabel("₇");
+                break;
+            case '⁸':
+                commitTextAndShowLabel("₈");
+                break;
+            case '⁹':
+                commitTextAndShowLabel("₉");
+                break;
+            case '⁰':
+                commitTextAndShowLabel("₀");
+                break;
+            case '+':
+                commitTextAndShowLabel("⁺");
+                break;
+            case '@':
+                commitTextAndShowLabel("⁻");
+                break;
+            case '×':
+                commitTextAndShowLabel("ˣ");
+                break;
+            case '÷':
+                commitTextAndShowLabel("ᐟ");
+                break;
+            case '=':
+                commitTextAndShowLabel("⁼");
+                break;
+            case '&':
+                commitTextAndShowLabel("⁽");
+                break;
+            case '*':
+                commitTextAndShowLabel("⁾");
+                break;
+            case '#':
+                commitTextAndShowLabel("₊");
+                break;
+            case '$':
+                commitTextAndShowLabel("₋");
+                break;
+            case '%':
+                commitTextAndShowLabel("ₓ");
+                break;
+            case '^':
+                commitTextAndShowLabel("₌");
+                break;
+            case '≡':
+                commitTextAndShowLabel("≅");
+                break;
+            case 'π':
+                commitTextAndShowLabel("ⁿ");
+                break;
+
             default:
                 // hold down eng letters for symbols, zhuyin letters to commit the letter
                 String symbol = "";
