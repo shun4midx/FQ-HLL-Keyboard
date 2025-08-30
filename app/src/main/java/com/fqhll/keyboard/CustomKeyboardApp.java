@@ -508,11 +508,11 @@ public class CustomKeyboardApp extends InputMethodService
                 updateSuggestion(ic);
                 break;
             case -1030: // subset
-                commitTextAndShowLabel("⇌");
+                commitTextAndShowLabel("ㄥ");
                 updateSuggestion(ic);
                 break;
             case -1031: // supset
-                commitTextAndShowLabel("⇋");
+                commitTextAndShowLabel("⇌");
                 updateSuggestion(ic);
                 break;
             case -1028: // in
@@ -586,7 +586,7 @@ public class CustomKeyboardApp extends InputMethodService
                 updateSuggestion(ic);
                 break;
             case -1015: // theta
-                commitTextAndShowLabel("ㄥ");
+                commitTextAndShowLabel("ᶿ");
                 updateSuggestion(ic);
                 break;
             case -1014: // delta
