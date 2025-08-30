@@ -283,6 +283,7 @@ public class CustomKeyboardApp extends InputMethodService
             case -2: // symbols -> numpad
                 kv.setKeyboard(numpadKeyboard);
                 kv.invalidateAllKeys();
+                updateCompositionBarVisibility();
                 break;
             case 44: // comma -> select all
                 if (ic == null) break;
