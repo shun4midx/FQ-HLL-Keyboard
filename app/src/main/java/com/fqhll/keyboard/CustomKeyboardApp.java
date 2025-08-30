@@ -2429,6 +2429,7 @@ public class CustomKeyboardApp extends InputMethodService
             } else if (kv.getKeyboard() == engKeyboard) {
                 supersubMode = !supersubMode;
                 updateSupersubLabels();
+                applyCapsState();
                 kv.invalidateAllKeys();
 
                 return true;
