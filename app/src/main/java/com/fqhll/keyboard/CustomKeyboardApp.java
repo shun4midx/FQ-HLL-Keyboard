@@ -88,7 +88,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     private boolean supersubMode = false;
     private static final String[] engSuperArray = new String[]{"ᵃ", "ᵇ", "ᶜ", "ᵈ", "ᵉ", "ᶠ", "ᵍ", "ʰ", "ⁱ", "ʲ", "ᵏ", "ˡ", "ᵐ", "ⁿ", "ᵒ", "ᵖ", "q", "ʳ", "ˢ", "ᵗ", "ᵘ", "ᵛ", "ʷ", "ˣ", "ʸ", "ᶻ"};
-    private static final String[] engSubArray = new String[]{"ₐ", "b", "꜀", "d", "ₑ", "f", "g", "ₕ", "ᵢ", "ⱼ", "ₖ", "ₗ", "ₘ", "ₙ", "ₒ", "ₚ", "q", "ᵣ", "ₛ", "ₜ", "ᵤ", "ᵥ", "ᵥᵥ", "ₓ", "ᵧ", "z"};
+    private static final String[] engSubArray = new String[]{"ₐ", "b", "꜀", "∂", "ₑ", "f", "g", "ₕ", "ᵢ", "ⱼ", "ₖ", "ₗ", "ₘ", "ₙ", "ₒ", "ₚ", "q", "ᵣ", "ₛ", "ₜ", "ᵤ", "ᵥ", "ᵥᵥ", "ₓ", "ᵧ", "z"};
     private static final String[] digitSuperArray = {"⁰","¹","²","³","⁴","⁵","⁶","⁷","⁸","⁹"};
     private static final String[] digitSubArray = {"₀","₁","₂","₃","₄","₅","₆","₇","₈","₉"};
 
@@ -483,6 +483,10 @@ public class CustomKeyboardApp extends InputMethodService
                 break;
             case -1011: // there exists
                 commitTextAndShowLabel("∴");
+                updateSuggestion(ic);
+                break;
+            case -1022: // approx
+                commitTextAndShowLabel("∂");
                 updateSuggestion(ic);
                 break;
             case -1030: // subset
