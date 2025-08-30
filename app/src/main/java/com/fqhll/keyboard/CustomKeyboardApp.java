@@ -499,6 +499,29 @@ public class CustomKeyboardApp extends InputMethodService
                 commitTextAndShowLabel("₀");
                 updateSuggestion(ic);
                 break;
+            case -1010: // for all
+                commitTextAndShowLabel("∵");
+                updateSuggestion(ic);
+                break;
+            case -1011: // there exists
+                commitTextAndShowLabel("∴");
+                updateSuggestion(ic);
+                break;
+            case -1030: // subset
+                commitTextAndShowLabel("⇌");
+                updateSuggestion(ic);
+                break;
+            case -1031: // supset
+                commitTextAndShowLabel("⇋");
+                updateSuggestion(ic);
+                break;
+            case -1028: // in
+                commitTextAndShowLabel("→");
+                updateSuggestion(ic);
+                break;
+            case -1029: // ni
+                commitTextAndShowLabel("↦");
+                updateSuggestion(ic);
             case '+':
                 commitTextAndShowLabel("⁺");
                 updateSuggestion(ic);
