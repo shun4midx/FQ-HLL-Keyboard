@@ -284,6 +284,7 @@ public class CustomKeyboardApp extends InputMethodService
                 kv.setKeyboard(numpadKeyboard);
                 kv.invalidateAllKeys();
                 updateCompositionBarVisibility();
+                updateModeSwitchLabel();
                 break;
             case 44: // comma -> select all
                 if (ic == null) break;
@@ -875,17 +876,20 @@ public class CustomKeyboardApp extends InputMethodService
                 kv.setKeyboard(symbolKeyboard);
                 kv.invalidateAllKeys();
                 updateCompositionBarVisibility();
+                updateModeSwitchLabel();
                 break;
             case -10: // back to main
                 kv.setKeyboard(keyboard);
                 applyCapsState();
                 updateCompositionBarVisibility();
+                updateModeSwitchLabel();
                 break;
             case -11: // emojis
                 kv.setKeyboard(emojiKeyboard);
                 kv.invalidateAllKeys();
                 showSuggestions("");
                 updateCompositionBarVisibility();
+                updateModeSwitchLabel();
                 break;
             case -12: // settings
                 PackageManager manager = getPackageManager();
@@ -897,11 +901,13 @@ public class CustomKeyboardApp extends InputMethodService
                 kv.setKeyboard(numpadKeyboard);
                 kv.invalidateAllKeys();
                 updateCompositionBarVisibility();
+                updateModeSwitchLabel();
                 break;
             case -14: // math symbols
                 kv.setKeyboard(mathKeyboard);
                 kv.invalidateAllKeys();
                 updateCompositionBarVisibility();
+                updateModeSwitchLabel();
                 break;
             case -42: // Left arrow
                 // Look at the char immediately before the cursor
@@ -1194,6 +1200,26 @@ public class CustomKeyboardApp extends InputMethodService
             }
         }
     }
+
+    private void updateModeSwitchLabel() {
+        if (kv == null || kv.getKeyboard() == null) return;
+
+        SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+        String keyboardLayout = prefs.getString("keyboard_layout", "qwerty").toLowerCase();
+
+        for (Keyboard.Key key : kv.getKeyboard().getKeys()) {
+            if (key.codes[0] == -10) { // abc <-> symbols key
+                if (keyboardLayout.equals("zhuyin")) {
+                    key.label = "中文"; // show 中文 when on Zhuyin
+                } else {
+                    key.label = "abc"; // default
+                }
+                break;
+            }
+        }
+        kv.invalidateAllKeys(); // refresh display
+    }
+
 
     private void safeReplaceLastWord(InputConnection ic, String lastWord, String replacement) {
         CharSequence beforeCs = ic.getTextBeforeCursor(50, 0);
@@ -2110,6 +2136,7 @@ public class CustomKeyboardApp extends InputMethodService
 
         // Always set keyboard first
         kv.setKeyboard(keyboard);
+        updateModeSwitchLabel();
 
         // Now update bar visibility correctly
         if (zhuyinCompositionBar != null) {
@@ -2243,11 +2270,13 @@ public class CustomKeyboardApp extends InputMethodService
                 kv.setKeyboard(keyboard);
                 kv.invalidateAllKeys();
                 updateCompositionBarVisibility();
+                updateModeSwitchLabel();
             }
             else if (!zhuyinExpanded) {
                 kv.setKeyboard(clipKeyboard);
                 kv.invalidateAllKeys();
                 updateCompositionBarVisibility();
+                updateModeSwitchLabel();
             } else {
                 // Minimize
                 expanded.setVisibility(View.GONE);
@@ -2347,27 +2376,33 @@ public class CustomKeyboardApp extends InputMethodService
                 kv.setKeyboard(keyboard);
                 kv.invalidateAllKeys();
                 updateCompositionBarVisibility();
+                updateModeSwitchLabel();
             }
             else if (kv.getKeyboard() != numpadKeyboard && !zhuyinExpanded) { // prevent long press for numpad on release go back to editor
                 kv.setKeyboard(editorKeyboard);
                 kv.invalidateAllKeys();
                 updateCompositionBarVisibility();
+                updateModeSwitchLabel();
             }
         });
 
-        // Long press text editor to commit a space without autocorrecting
         textEditor.setOnLongClickListener(v -> {
             if (kv.getKeyboard() == zhuyinKeyboard && !keyboard.equals(zhuyinKeyboard)) {
                 kv.setKeyboard(keyboard);
+                caps_state = (defaultCaps ? 1 : 0);
+                applyCapsState();
             }
             else if (kv.getKeyboard() == zhuyinKeyboard && keyboard.equals(zhuyinKeyboard)) {
                 kv.setKeyboard(engKeyboard);
+                caps_state = (defaultCaps ? 1 : 0);
+                applyCapsState();
             }
             else {
                 kv.setKeyboard(zhuyinKeyboard);
             }
             kv.invalidateAllKeys();
             updateCompositionBarVisibility();
+            updateModeSwitchLabel();
             return true;
         });
 
@@ -2389,6 +2424,7 @@ public class CustomKeyboardApp extends InputMethodService
 
         kv.setKeyboard(keyboard);
         updateCompositionBarVisibility();
+        updateModeSwitchLabel();
         kv.setOnKeyboardActionListener(this);
         kv.setPreviewEnabled(false);
         kv.setOnTouchListener((v, ev) -> {
