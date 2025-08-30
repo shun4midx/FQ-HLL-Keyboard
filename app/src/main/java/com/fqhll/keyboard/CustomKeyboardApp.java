@@ -87,8 +87,8 @@ public class CustomKeyboardApp extends InputMethodService
     private static String[] longPressSymbols = new String[]{};
 
     private boolean supersubMode = false;
-    private static final String[] engSuperArray = new String[]{"ᵃ", "ᵇ", "ᶜ", "ᵈ", "ᵉ", "ᶠ", "ᵍ", "ʰ", "ⁱ", "ʲ", "ᵏ", "ˡ", "ᵐ", "ⁿ", "ᵒ", "ᵖ", "q", "ʳ", "ˢ", "ᵗ", "ᵘ", "ᵛ", "ʷ", "ˣ", "ʸ", "ᶻ"};
-    private static final String[] engSubArray = new String[]{"ₐ", "b", "꜀", "∂", "ₑ", "f", "g", "ₕ", "ᵢ", "ⱼ", "ₖ", "ₗ", "ₘ", "ₙ", "ₒ", "ₚ", "q", "ᵣ", "ₛ", "ₜ", "ᵤ", "ᵥ", "ᵥᵥ", "ₓ", "ᵧ", "z"};
+    private static final String[] engSuperArray = new String[]{"ᵃ", "ᵇ", "ᶜ", "ᵈ", "ᵉ", "ᶠ", "ᵍ", "ʰ", "ⁱ", "ʲ", "ᵏ", "ˡ", "ᵐ", "ⁿ", "ᵒ", "ᵖ", "⁹", "ʳ", "ˢ", "ᵗ", "ᵘ", "ᵛ", "ʷ", "ˣ", "ʸ", "ᶻ"};
+    private static final String[] engSubArray = new String[]{"ₐ", "b", "꜀", "∂", "ₑ", "f", "g", "ₕ", "ᵢ", "ⱼ", "ₖ", "ₗ", "ₘ", "ₙ", "ₒ", "ₚ", "₉", "ᵣ", "ₛ", "ₜ", "ᵤ", "ᵥ", "ᵥᵥ", "ₓ", "ᵧ", "z"};
     private static final String[] digitSuperArray = {"⁰","¹","²","³","⁴","⁵","⁶","⁷","⁸","⁹"};
     private static final String[] digitSubArray = {"₀","₁","₂","₃","₄","₅","₆","₇","₈","₉"};
 
@@ -658,74 +658,74 @@ public class CustomKeyboardApp extends InputMethodService
         }
     }
 
-    private void showCandidatePopup(List<String> items) {
-        // Container for the list
-        Context ctx = this;
-        RecyclerView rv = new RecyclerView(ctx);
-
-        // LayoutManager: Flexbox if available, else 6-col Grid
-        RecyclerView.LayoutManager lm;
-        try {
-            Class.forName("com.google.android.flexbox.FlexboxLayoutManager");
-            com.google.android.flexbox.FlexboxLayoutManager flm =
-                    new com.google.android.flexbox.FlexboxLayoutManager(ctx);
-            flm.setFlexDirection(com.google.android.flexbox.FlexDirection.ROW);
-            flm.setFlexWrap(com.google.android.flexbox.FlexWrap.WRAP);
-            flm.setJustifyContent(com.google.android.flexbox.JustifyContent.FLEX_START);
-            flm.setAlignItems(com.google.android.flexbox.AlignItems.CENTER);
-            lm = flm;
-        } catch (Throwable noFlex) {
-            lm = new androidx.recyclerview.widget.GridLayoutManager(ctx, 6);
-        }
-        rv.setLayoutManager(lm);
-
-        // Simple adapter for chips
-        rv.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-            @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup p, int vt) {
-                View v = LayoutInflater.from(p.getContext())
-                        .inflate(R.layout.item_candidate_chip, p, false);
-                return new RecyclerView.ViewHolder(v) {};
-            }
-            @Override public void onBindViewHolder(RecyclerView.ViewHolder h, int i) {
-                TextView tv = h.itemView.findViewById(R.id.txt);
-                String s = items.get(i);
-                tv.setText(s);
-                tv.setOnClickListener(v -> {
-                    InputConnection ic = getCurrentInputConnection();
-                    if (ic != null) {
-                        replaceCurrentWord(s);
-                    }
-                    if (candidatesPopup != null && candidatesPopup.isShowing()) {
-                        candidatesPopup.dismiss();
-                    }
-                });
-            }
-            @Override public int getItemCount() { return items.size(); }
-        });
-
-        int pad = (int)(12 * getResources().getDisplayMetrics().density);
-        rv.setPadding(pad, pad, pad, pad);
-
-        // Build the popup
-        if (candidatesPopup != null && candidatesPopup.isShowing()) {
-            candidatesPopup.dismiss();
-        }
-        candidatesPopup = new android.widget.PopupWindow(
-                rv,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                (int)(getResources().getDisplayMetrics().heightPixels * 0.45f), // ~45% screen height
-                true /* focusable so back dismisses */
-        );
-        candidatesPopup.setOutsideTouchable(true);
-        candidatesPopup.setClippingEnabled(true);
-        // Optional: give it a tiny elevation/background
-        candidatesPopup.setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(0xFFFFFFFF));
-
-        // Anchor at bottom of your IME root
-        if (root != null) {
-            candidatesPopup.showAtLocation(root, Gravity.BOTTOM, 0, 0);
-        }
-    }
+//    private void showCandidatePopup(List<String> items) {
+//        // Container for the list
+//        Context ctx = this;
+//        RecyclerView rv = new RecyclerView(ctx);
+//
+//        // LayoutManager: Flexbox if available, else 6-col Grid
+//        RecyclerView.LayoutManager lm;
+//        try {
+//            Class.forName("com.google.android.flexbox.FlexboxLayoutManager");
+//            com.google.android.flexbox.FlexboxLayoutManager flm =
+//                    new com.google.android.flexbox.FlexboxLayoutManager(ctx);
+//            flm.setFlexDirection(com.google.android.flexbox.FlexDirection.ROW);
+//            flm.setFlexWrap(com.google.android.flexbox.FlexWrap.WRAP);
+//            flm.setJustifyContent(com.google.android.flexbox.JustifyContent.FLEX_START);
+//            flm.setAlignItems(com.google.android.flexbox.AlignItems.CENTER);
+//            lm = flm;
+//        } catch (Throwable noFlex) {
+//            lm = new androidx.recyclerview.widget.GridLayoutManager(ctx, 6);
+//        }
+//        rv.setLayoutManager(lm);
+//
+//        // Simple adapter for chips
+//        rv.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+//            @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup p, int vt) {
+//                View v = LayoutInflater.from(p.getContext())
+//                        .inflate(R.layout.item_candidate_chip, p, false);
+//                return new RecyclerView.ViewHolder(v) {};
+//            }
+//            @Override public void onBindViewHolder(RecyclerView.ViewHolder h, int i) {
+//                TextView tv = h.itemView.findViewById(R.id.txt);
+//                String s = items.get(i);
+//                tv.setText(s);
+//                tv.setOnClickListener(v -> {
+//                    InputConnection ic = getCurrentInputConnection();
+//                    if (ic != null) {
+//                        replaceCurrentWord(s);
+//                    }
+//                    if (candidatesPopup != null && candidatesPopup.isShowing()) {
+//                        candidatesPopup.dismiss();
+//                    }
+//                });
+//            }
+//            @Override public int getItemCount() { return items.size(); }
+//        });
+//
+//        int pad = (int)(12 * getResources().getDisplayMetrics().density);
+//        rv.setPadding(pad, pad, pad, pad);
+//
+//        // Build the popup
+//        if (candidatesPopup != null && candidatesPopup.isShowing()) {
+//            candidatesPopup.dismiss();
+//        }
+//        candidatesPopup = new android.widget.PopupWindow(
+//                rv,
+//                ViewGroup.LayoutParams.MATCH_PARENT,
+//                (int)(getResources().getDisplayMetrics().heightPixels * 0.45f), // ~45% screen height
+//                true /* focusable so back dismisses */
+//        );
+//        candidatesPopup.setOutsideTouchable(true);
+//        candidatesPopup.setClippingEnabled(true);
+//        // Optional: give it a tiny elevation/background
+//        candidatesPopup.setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(0xFFFFFFFF));
+//
+//        // Anchor at bottom of your IME root
+//        if (root != null) {
+//            candidatesPopup.showAtLocation(root, Gravity.BOTTOM, 0, 0);
+//        }
+//    }
 
     @Override
     public void onPress(int primaryCode) {
@@ -2548,40 +2548,75 @@ public class CustomKeyboardApp extends InputMethodService
             return;
         }
 
+//        for (Keyboard.Key key : kv.getKeyboard().getKeys()) {
+//            if (key.label == null) {
+//                continue;
+//            }
+//
+//            String label = key.label.toString();
+//
+//            if (supersubMode) {
+//                // letters
+//                for (int i = 0; i < engLetterArray.length; i++) {
+//                    if (label.equalsIgnoreCase(engLetterArray[i])) {
+//                        key.label = engSuperArray[i];
+//                        break;
+//                    }
+//                }
+//                // digits
+//                if (label.length() == 1 && Character.isDigit(label.charAt(0))) {
+//                    int d = label.charAt(0) - '0';
+//                    key.label = digitSuperArray[d];
+//                }
+//            } else {
+//                // revert to normal (letters and digits)
+//                for (int i = 0; i < engLetterArray.length; ++i) {
+//                    if (label.equals(engSuperArray[i])) {
+//                        key.label = (caps_state > 0) ? engLetterArray[i].toUpperCase() : engLetterArray[i];
+//                        break;
+//                    }
+//                }
+//                for (int d = 0; d < 10; ++d) {
+//                    if (label.equals(digitSuperArray[d])) {
+//                        key.label = String.valueOf(d);
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+
         for (Keyboard.Key key : kv.getKeyboard().getKeys()) {
             if (key.label == null) {
                 continue;
             }
 
-            String label = key.label.toString();
-
             if (supersubMode) {
-                // letters
                 for (int i = 0; i < engLetterArray.length; i++) {
-                    if (label.equalsIgnoreCase(engLetterArray[i])) {
+                    if (key.label.toString().equalsIgnoreCase(engLetterArray[i])) {
                         key.label = engSuperArray[i];
+                        key.popupCharacters = "letter";  // mark origin
                         break;
                     }
                 }
-                // digits
-                if (label.length() == 1 && Character.isDigit(label.charAt(0))) {
-                    int d = label.charAt(0) - '0';
+                if (key.label.length() == 1 && Character.isDigit(key.label.charAt(0))) {
+                    int d = key.label.charAt(0) - '0';
                     key.label = digitSuperArray[d];
+                    key.popupCharacters = "digit";  // mark origin
                 }
             } else {
-                // revert to normal (letters and digits)
-                for (int i = 0; i < engLetterArray.length; ++i) {
-                    if (label.equals(engSuperArray[i])) {
-                        key.label = (caps_state > 0) ? engLetterArray[i].toUpperCase() : engLetterArray[i];
-                        break;
+                if ("letter".equals(key.popupCharacters)) {
+                    // revert to q/Q
+                    int idx = Arrays.asList(engSuperArray).indexOf(key.label.toString());
+                    if (idx >= 0) {
+                        key.label = (caps_state > 0) ? engLetterArray[idx].toUpperCase() : engLetterArray[idx];
+                    }
+                } else if ("digit".equals(key.popupCharacters)) {
+                    int idx = Arrays.asList(digitSuperArray).indexOf(key.label.toString());
+                    if (idx >= 0) {
+                        key.label = String.valueOf(idx);
                     }
                 }
-                for (int d = 0; d < 10; ++d) {
-                    if (label.equals(digitSuperArray[d])) {
-                        key.label = String.valueOf(d);
-                        break;
-                    }
-                }
+                key.popupCharacters = null; // reset
             }
         }
     }
