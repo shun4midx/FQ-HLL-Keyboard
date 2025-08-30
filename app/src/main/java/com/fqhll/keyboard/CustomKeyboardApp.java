@@ -85,6 +85,13 @@ public class CustomKeyboardApp extends InputMethodService
     private static final String[] engLetterArray = new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
     private static final String[] zhuyinLetterArray = new String[]{"ㄅ", "ㄆ", "ㄇ", "ㄈ", "ㄉ", "ㄊ", "ㄋ", "ㄌ", "ㄍ", "ㄎ", "ㄏ", "ㄐ", "ㄑ", "ㄒ", "ㄓ", "ㄔ", "ㄕ", "ㄖ", "ㄗ", "ㄘ", "ㄙ", "ㄚ", "ㄛ", "ㄜ", "ㄝ", "ㄞ", "ㄟ", "ㄠ", "ㄡ", "ㄢ", "ㄣ", "ㄤ", "ㄥ", "ㄦ", "ㄧ", "ㄨ", "ㄩ", "ˉ", "ˊ", "ˇ", "ˋ", "˙"};
     private static String[] longPressSymbols = new String[]{};
+
+    private boolean supersubMode = false;
+    private static final String[] engSuperArray = new String[]{"ᵃ", "ᵇ", "ᶜ", "ᵈ", "ᵉ", "ᶠ", "ᵍ", "ʰ", "ⁱ", "ʲ", "ᵏ", "ˡ", "ᵐ", "ⁿ", "ᵒ", "ᵖ", "q", "ʳ", "ˢ", "ᵗ", "ᵘ", "ᵛ", "ʷ", "ˣ", "ʸ", "ᶻ"};
+    private static final String[] engSubArray = new String[]{"ₐ", "b", "꜀", "d", "ₑ", "f", "g", "ₕ", "ᵢ", "ⱼ", "ₖ", "ₗ", "ₘ", "ₙ", "ₒ", "ₚ", "q", "ᵣ", "ₛ", "ₜ", "ᵤ", "ᵥ", "ᵥᵥ", "ₓ", "ᵧ", "z"};
+    private static final String[] digitSuperArray = {"⁰","¹","²","³","⁴","⁵","⁶","⁷","⁸","⁹"};
+    private static final String[] digitSubArray = {"₀","₁","₂","₃","₄","₅","₆","₇","₈","₉"};
+
     private static final String[] longPressSymbolsMain = new String[]{"\"", "}", "\\", "(", "/", ")", "*", "#", "&", "%", "+", "-", ">", "<", "^", "~", "?", "$", "'", "@", ";", "{", "!", "=", ":", "_"};
     private static final String[] longPressSymbolsAlt = new String[]{"@", ";", "'", "$", "|", "_", "&", "-", ">", "+", "(", ")", "?", "!", "{", "}", "%", "=", "#", "[", "<", ":", "\\", "\"", "]", "*"};
     private float scaleX, scaleY;
@@ -419,46 +426,17 @@ public class CustomKeyboardApp extends InputMethodService
                 commitTextAndShowLabel("；");
                 updateSuggestion(ic);
                 break;
-            case '1':
-                commitTextAndShowLabel("¹");
+            case '0': case '1': case '2': case '3': case '4':
+            case '5': case '6': case '7': case '8': case '9': {
+                int d = primaryCode - '0';
+                if (supersubMode) {
+                    commitTextAndShowLabel(digitSubArray[d]);
+                } else {
+                    commitTextAndShowLabel(digitSuperArray[d]);
+                }
                 updateSuggestion(ic);
                 break;
-            case '2':
-                commitTextAndShowLabel("²");
-                updateSuggestion(ic);
-                break;
-            case '3':
-                commitTextAndShowLabel("³");
-                updateSuggestion(ic);
-                break;
-            case '4':
-                commitTextAndShowLabel("⁴");
-                updateSuggestion(ic);
-                break;
-            case '5':
-                commitTextAndShowLabel("⁵");
-                updateSuggestion(ic);
-                break;
-            case '6':
-                commitTextAndShowLabel("⁶");
-                updateSuggestion(ic);
-                break;
-            case '7':
-                commitTextAndShowLabel("⁷");
-                updateSuggestion(ic);
-                break;
-            case '8':
-                commitTextAndShowLabel("⁸");
-                updateSuggestion(ic);
-                break;
-            case '9':
-                commitTextAndShowLabel("⁹");
-                updateSuggestion(ic);
-                break;
-            case '0':
-                commitTextAndShowLabel("⁰");
-                updateSuggestion(ic);
-                break;
+            }
             case -1000: // superscript 1
                 commitTextAndShowLabel("₁");
                 updateSuggestion(ic);
@@ -589,6 +567,14 @@ public class CustomKeyboardApp extends InputMethodService
                 commitTextAndShowLabel("ᶿ");
                 updateSuggestion(ic);
                 break;
+            case -1020: // pm
+                commitTextAndShowLabel("ε");
+                updateSuggestion(ic);
+                break;
+            case -1021: // neq
+                commitTextAndShowLabel("δ");
+                updateSuggestion(ic);
+                break;
             case -1014: // delta
                 commitTextAndShowLabel("△");
                 updateSuggestion(ic);
@@ -627,6 +613,22 @@ public class CustomKeyboardApp extends InputMethodService
                 break;
 
             default:
+                if (supersubMode) {
+                    char c = (char) primaryCode;
+
+                    if (Character.isLetter(c)) {
+                        int idx = Character.toLowerCase(c) - 'a';
+                        if (idx >= 0 && idx < engSubArray.length) {
+                            commitTextAndShowLabel(engSubArray[idx]);
+                            return;
+                        }
+                    } else if (Character.isDigit(c)) {
+                        int d = c - '0';
+                        commitTextAndShowLabel(digitSubArray[d]);
+                        return;
+                    }
+                }
+
                 // hold down eng letters for symbols, zhuyin letters to commit the letter
                 String symbol = "";
                 String[] longPressText = longPressSymbols;
@@ -640,9 +642,11 @@ public class CustomKeyboardApp extends InputMethodService
                 for (int i=0; i<letterArray.length; i++) {
                     if (String.valueOf((char) primaryCode).equals(letterArray[i])) {
 
-                        if (i < longPressText.length) { // just in case i make it too short
+                        // fallback to normal longPressText
+                        if (i < longPressText.length) {
                             symbol = longPressText[i];
                         }
+
                         commitTextAndShowLabel(symbol);
                     }
                 }
@@ -788,9 +792,20 @@ public class CustomKeyboardApp extends InputMethodService
 
 
     public void showKeyPreview(Keyboard.Key key, int code) {
-        // Set text
-        char curr_char = (char) (code);
-        previewText.setText(String.valueOf(caps_state > 0 && code > 0 ? Character.toUpperCase(curr_char) : key.label));
+        CharSequence text;
+
+        if (supersubMode) {
+            // Always use the label you drew on the key
+            text = key.label;
+        } else {
+            char curr_char = (char) code;
+            if (caps_state > 0 && code > 0 && Character.isLetter(curr_char)) {
+                curr_char = Character.toUpperCase(curr_char);
+            }
+            text = (key.label != null ? key.label : String.valueOf(curr_char));
+        }
+
+        previewText.setText(text);
         previewText.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 
         // Match popup size to key size
@@ -1499,6 +1514,20 @@ public class CustomKeyboardApp extends InputMethodService
     }
     private void commitChar(InputConnection ic, int code) {
         char c = (char) code;
+
+        if (kv != null && kv.getKeyboard() == engKeyboard && supersubMode) {
+            if (Character.isLetter(c)) {
+                int idx = Character.toLowerCase(c) - 'a';
+                if (idx >= 0 && idx < engSuperArray.length) {
+                    ic.commitText(engSuperArray[idx], 1);
+                    return;
+                }
+            } else if (Character.isDigit(c)) {
+                int d = c - '0';
+                ic.commitText(digitSuperArray[d], 1);
+                return;
+            }
+        }
 
         // Zhuyin mode: keep in buffer instead of committing
         if (kv != null && kv.getKeyboard() == zhuyinKeyboard) {
@@ -2393,6 +2422,12 @@ public class CustomKeyboardApp extends InputMethodService
                 }
 
                 return true;
+            } else if (kv.getKeyboard() == engKeyboard) {
+                supersubMode = !supersubMode;
+                updateSupersubLabels();
+                kv.invalidateAllKeys();
+
+                return true;
             }
 
             return false;
@@ -2503,6 +2538,50 @@ public class CustomKeyboardApp extends InputMethodService
             prefs.edit().putString(curr_pref, prev_text).apply();
         }
     }
+
+    private void updateSupersubLabels() {
+        if (kv == null || kv.getKeyboard() != engKeyboard) {
+            return;
+        }
+
+        for (Keyboard.Key key : kv.getKeyboard().getKeys()) {
+            if (key.label == null) {
+                continue;
+            }
+
+            String label = key.label.toString();
+
+            if (supersubMode) {
+                // letters
+                for (int i = 0; i < engLetterArray.length; i++) {
+                    if (label.equalsIgnoreCase(engLetterArray[i])) {
+                        key.label = engSuperArray[i];
+                        break;
+                    }
+                }
+                // digits
+                if (label.length() == 1 && Character.isDigit(label.charAt(0))) {
+                    int d = label.charAt(0) - '0';
+                    key.label = digitSuperArray[d];
+                }
+            } else {
+                // revert to normal (letters and digits)
+                for (int i = 0; i < engLetterArray.length; ++i) {
+                    if (label.equals(engSuperArray[i])) {
+                        key.label = (caps_state > 0) ? engLetterArray[i].toUpperCase() : engLetterArray[i];
+                        break;
+                    }
+                }
+                for (int d = 0; d < 10; ++d) {
+                    if (label.equals(digitSuperArray[d])) {
+                        key.label = String.valueOf(d);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
 
     private void copyToClipboard(String text) {
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
