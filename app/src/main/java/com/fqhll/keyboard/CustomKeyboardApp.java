@@ -523,6 +523,10 @@ public class CustomKeyboardApp extends InputMethodService
                 commitTextAndShowLabel("↦");
                 updateSuggestion(ic);
                 break;
+            case -1018: // alpha
+                commitTextAndShowLabel("∝");
+                updateSuggestion(ic);
+                break;
             case '+':
                 commitTextAndShowLabel("⁺");
                 updateSuggestion(ic);
@@ -1095,7 +1099,7 @@ public class CustomKeyboardApp extends InputMethodService
                 }
                 break;
             default: {
-                if (isAlphabet(primaryCode) || (kv.getKeyboard() != engKeyboard && primaryCode != Keyboard.KEYCODE_DONE)) {
+                if (isAlphabet(primaryCode) || (kv.getKeyboard() != engKeyboard && kv.getKeyboard() != clipKeyboard && primaryCode != Keyboard.KEYCODE_DONE)) {
                     commitChar(ic, primaryCode);
                     updateSuggestion(ic);
                     return;
