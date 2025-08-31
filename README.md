@@ -67,7 +67,7 @@ More symbols can be accessed by holding down a symbol on either page.
 
 Default symbol layout (similar to Samsung keyboard layout, left), Alternative symbol layout (similar to Gboard layout, right)
 
-<img width="400" alt="symbol_layout_main" src="https://github.com/user-attachments/assets/830c337e-e5c6-454f-a6ea-49d872eea823" /> <img width="400" alt="symbol_layout_alternative" src="https://github.com/user-attachments/assets/0d127b07-3300-468b-9f52-1b8f0525cb5e" />
+<img width="400" alt="symbol_layout_main" src="https://github.com/user-attachments/assets/ae5c1059-14b0-4d22-9d29-8c1d88cc4369" /> <img width="400" alt="symbol_layout_alternative" src="https://github.com/user-attachments/assets/854dce6d-9a4c-40b5-b1a6-ca5fc061eb1e" />
 
 These images are representations of long press symbol layouts of the keyboard recreated using Keys Cafe, and are not screenshots of the FQ-HLL Keyboard.
 
