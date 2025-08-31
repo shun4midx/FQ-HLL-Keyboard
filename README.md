@@ -59,7 +59,9 @@ Access the Super/Subscript keyboard by long pressing clipboard in the main keybo
 
 #### Symbols
 
-There are two pages in the symbol keyboard, with the first being regular symbols, and the second being math symbols. More symbols can be accessed by holding down a symbol on either page.
+There are two pages in the symbol keyboard, with the first being regular symbols, and the second being math symbols.
+
+More symbols can be accessed by holding down a symbol on either page.
 
 ##### Symbol Layouts
 
@@ -71,6 +73,12 @@ These images are representations of long press symbol layouts of the keyboard re
 
 #### Zhuyin
 We now support traditional Chinese typing via Zhuyin, with both the normal Zhuyin layout an and alternate Eten layout! It supports fuzzy Zhuyin typing (i.e. there is no need for 100% accuracy with typing), and selection based on common phrases instead of word-by-word. However, as of right now, you would need to type the Zhuyin  **with the tone of the word**. The first tone is parsed as a "whitespace". We referenced `tsi.json` from [tobopomo.js](https://github.com/dylandy/tobopomo.js/tree/master/data/tsi.json), with the addition of the words 啲 (ㄉㄧ), 喺 (ㄒㄧˋ, ㄒㄧˊ), 佢 (ㄑㄩˊ), 㗎 (ㄐㄧㄚˋ), 嚟 (ㄌㄧˊ), 哋 (ㄉㄧˋ), and 嘢 (ㄧㄝˇ), which are words common in Cantonese speech. The addition of these words made us name it `tsi_custom.json`, which can be found [here](https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/src/main/assets/tsi_custom.json).
+
+##### Zhuyin Keyboard
+
+Individual Zhuyin characters can be typed by long pressing the respective key.
+
+Chinese symbols can be typed by long pressing symbols in the symbol keyboard.
 
 #### Clipboard
 
