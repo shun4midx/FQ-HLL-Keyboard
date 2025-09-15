@@ -20,9 +20,9 @@
     </Row>
 
     <Row>
-        <Key android:codes="-42" android:keyLabel="˂" android:keyEdgeFlags="left"/>
+        <Key android:codes="-42" android:keyLabel="˂" android:keyEdgeFlags="left" android:isRepeatable="true"/>
         <Key android:codes="-63" android:keyLabel="select"/>
-        <Key android:codes="-52" android:keyLabel="˃"/>
+        <Key android:codes="-52" android:keyLabel="˃" android:isRepeatable="true"/>
         <Key android:codes="-70" android:keyLabel="paste" android:keyEdgeFlags="right"/>
     </Row>
 
