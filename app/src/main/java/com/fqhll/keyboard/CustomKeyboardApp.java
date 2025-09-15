@@ -2664,7 +2664,9 @@ public class CustomKeyboardApp extends InputMethodService
 //        // if no empty slots, copy all slots down, then copy to first
 
         // copy all slots down then copy to first
-        moveClipboardContent(10);
+        if (prefs.getString("clipboard_text_1", "") != "") {
+            moveClipboardContent(10);
+        }
         prefs.edit().putString("clipboard_text_1", text).apply();
     }
 
