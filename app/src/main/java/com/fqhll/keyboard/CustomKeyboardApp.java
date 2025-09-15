@@ -2677,6 +2677,7 @@ public class CustomKeyboardApp extends InputMethodService
     }
 
     private void clearClipboard() {
+        SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
         for (int i = 1; i < 11; i++) {
             String clipboardPrefs = "clipboard_text_" + i;
             prefs.edit().putString(clipboardPrefs, "").apply();
