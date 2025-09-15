@@ -2370,10 +2370,7 @@ public class CustomKeyboardApp extends InputMethodService
         // long click to clear clipboard
         clipboard.setOnLongClickListener(v -> {
             if (kv.getKeyboard() == clipKeyboard && !zhuyinExpanded) {
-                for (int i = 1; i < 11; i++) {
-                    String clipboardPrefs = "clipboard_text_" + i;
-                    prefs.edit().putString(clipboardPrefs, "").apply();
-                }
+                clearClipboard();
                 return true;
             } else if (kv.getKeyboard() == zhuyinKeyboard || zhuyinExpanded) {
                 if (zhuyinExpanded) {
@@ -2668,6 +2665,13 @@ public class CustomKeyboardApp extends InputMethodService
             moveClipboardContent(10);
         }
         prefs.edit().putString("clipboard_text_1", text).apply();
+    }
+
+    private void clearClipboard() {
+        for (int i = 1; i < 11; i++) {
+            String clipboardPrefs = "clipboard_text_" + i;
+            prefs.edit().putString(clipboardPrefs, "").apply();
+        }
     }
 
     @Override
