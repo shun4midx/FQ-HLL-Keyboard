@@ -1095,12 +1095,14 @@ public class CustomKeyboardApp extends InputMethodService
                     copyToClipboard(cutText.toString());
                     ic.commitText("", 1);
                     adjustCapsAfterDeletion();
+                    isSelectToggled = false;
                 }
                 break;
             case -69: // copy
                 CharSequence copyText = ic.getSelectedText(0);
                 if (copyText != null) {
                     copyToClipboard(copyText.toString());
+                    isSelectToggled = false;
                 }
                 break;
             case -70: // paste
