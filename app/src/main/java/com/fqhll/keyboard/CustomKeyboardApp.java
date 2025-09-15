@@ -103,6 +103,8 @@ public class CustomKeyboardApp extends InputMethodService
     public static final String[] emoji_list = new String[]{"😭", "😂", "💀", "😔", "🫠", "💁‍♂️", "🧍‍♂️", "💩", "💅", "🫂", "🔥", "🍀", "👾", "👽", "🛸", "👀", "✨️", "🐟", "✅️", "❌️", "🐸", "🌸", "🎀", "🤡", "😡", "🙏", "👻", "🥺", "😐", "👍", "😤", "🤓", "😀", "🦆", "🥬", "🐒", "🧠"};
     public static final String[][] emoji_variation_list = new String[][]{new String[]{"🧍‍♂️", "🧍‍♀️", "🧍"}, new String[]{"💁‍♂️", "💁‍♀️", "💁"}};
     public static final Map<String, String[]> emoji_variations = new HashMap<>();
+    public static Map<Integer,String> emojis;
+    public static Map<Integer,String> math_symbols;
 
     private void init_emoji_variations() {
 
@@ -117,6 +119,12 @@ public class CustomKeyboardApp extends InputMethodService
     }
 
     public static final String[] math_symbol_list = new String[]{"¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹", "⁰", "∀", "∃", "⇔", "⇒", "Δ", "θ", "π", "ƒ", "α", "β", "±", "≠", "≈", "≡", "Σ", "√", "∩", "∪", "∈", "∋", "⊂", "⊃", "⊆", "⊇", "□", "∅", "∞"};
+
+    private void init_emoji_symbols() {
+        emojis = getEmojiCodes();
+        math_symbols = getMathCodes();
+    }
+                
     private LinearLayout suggestionBar;
     private View root;
 
@@ -229,6 +237,7 @@ public class CustomKeyboardApp extends InputMethodService
         defaultAutocor = prefs.getBoolean("autocorToggle", true);
         caps_state = defaultCaps ? 1 : 0;
         init_emoji_variations();
+        init_emoji_symbols();
         initSoundPool();
         editEmojiArray();
 
@@ -877,9 +886,6 @@ public class CustomKeyboardApp extends InputMethodService
         if (isLongPress) {
             return;
         }
-
-        Map<Integer,String> emojis = getEmojiCodes();
-        Map<Integer,String> math_symbols = getMathCodes();
 
         if (emojis.containsKey(primaryCode)) {
             InputConnection ic = getCurrentInputConnection();
@@ -2543,6 +2549,7 @@ public class CustomKeyboardApp extends InputMethodService
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         keyPreviewPopup.setAnimationStyle(0);
 
+        init_emoji_symbols();
         updateCapsLabel();
         updateEmojiLabel();
         updateMathLabel();
