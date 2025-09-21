@@ -100,7 +100,7 @@ public class CustomKeyboardApp extends InputMethodService
     private Keyboard.Key tapped;
 
     // (jperm voice) hope you can turn on word wrap
-    public static final String[] emoji_list = new String[]{"😭", "😂", "💀", "😔", "🫠", "💁‍♂️", "🧍‍♂️", "💩", "💅", "🫂", "🔥", "🍀", "👾", "👽", "🛸", "👀", "✨️", "🐟", "✅️", "❌️", "🐸", "🌸", "🎀", "🤡", "😡", "🙏", "👻", "🥺", "😐", "👍", "😤", "🤓", "😀", "🦆", "🥬", "🐒", "🧠"};
+    public static final String[] emoji_list = new String[]{"😭", "😂", "💀", "😔", "🫠", "💁‍♂️", "🧍‍♂️", "💩", "💅", "🫂", "🔥", "🍀", "👾", "👽", "🛸", "👀", "✨️", "🐑", "✅️", "❌️", "🐸", "🌸", "🎀", "🤡", "😡", "🙏", "👻", "🥺", "😐", "👍", "😤", "🤓", "😀", "🦆", "🥬", "🐒", "🧠"};
     public static final String[][] emoji_variation_list = new String[][]{new String[]{"🧍‍♂️", "🧍‍♀️", "🧍"}, new String[]{"💁‍♂️", "💁‍♀️", "💁"}};
     public static final Map<String, String[]> emoji_variations = new HashMap<>();
     public static Map<Integer,String> emojis;
@@ -459,6 +459,22 @@ public class CustomKeyboardApp extends InputMethodService
                 updateSuggestion(ic);
                 break;
             }
+            case -105: // shrug
+                commitTextAndShowLabel("🤷‍♂️");
+                updateSuggestion(ic);
+                break;
+            case -117: // shep -> fish
+                commitTextAndShowLabel("🐟");
+                updateSuggestion(ic);
+                break;
+            case -127: // 🥺
+                commitTextAndShowLabel("🥹");
+                updateSuggestion(ic);
+                break;
+            case -120: // frog
+                commitTextAndShowLabel("🐢");
+                updateSuggestion(ic);
+                break;
             case -1000: // superscript 1
                 commitTextAndShowLabel("₁");
                 updateSuggestion(ic);
