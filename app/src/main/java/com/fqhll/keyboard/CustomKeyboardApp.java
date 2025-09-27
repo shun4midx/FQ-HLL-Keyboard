@@ -475,6 +475,38 @@ public class CustomKeyboardApp extends InputMethodService
                 commitTextAndShowLabel("🐢");
                 updateSuggestion(ic);
                 break;
+            case -104: // melt
+                commitTextAndShowLabel("🥲");
+                updateSuggestion(ic);
+                break;
+            case -116: // sparkle -> lightning
+                commitTextAndShowLabel("⚡️");
+                updateSuggestion(ic);
+                break;
+            case -125: // pray -> kneel
+                commitTextAndShowLabel("🛐");
+                updateSuggestion(ic);
+                break;
+            case -100: // sob -> scared
+                commitTextAndShowLabel("😨");
+                updateSuggestion(ic);
+                break;
+            case -110: // fire -> middle finger
+                commitTextAndShowLabel("🖕");
+                updateSuggestion(ic);
+                break;
+            case -111: // clover -> heart
+                commitTextAndShowLabel("\uD83E\uDEF6");
+                updateSuggestion(ic);
+                break;
+            case -130: // inhale -> crown
+                commitTextAndShowLabel("👑");
+                updateSuggestion(ic);
+                break;
+            case -131: // nerd -> salt
+                commitTextAndShowLabel("🧂");
+                updateSuggestion(ic);
+                break;
             case -1000: // superscript 1
                 commitTextAndShowLabel("₁");
                 updateSuggestion(ic);
