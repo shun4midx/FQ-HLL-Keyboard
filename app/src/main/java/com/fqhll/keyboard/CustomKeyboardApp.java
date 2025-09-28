@@ -1,6 +1,7 @@
 package com.fqhll.keyboard;
 
 import android.content.ClipData;
+import android.content.ClipDescription;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +11,8 @@ import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.media.AudioManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Looper;
 import android.os.Handler;
 import android.util.TypedValue;
@@ -22,6 +25,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.ExtractedText;
 import android.view.inputmethod.ExtractedTextRequest;
 import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.InputContentInfo;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -357,37 +361,99 @@ public class CustomKeyboardApp extends InputMethodService
         }
     }
 
+//    private void handlePaste() {
+//        InputConnection ic = getCurrentInputConnection();
+//        if (ic != null) {
+//            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+//
+//            String myClipboard = getSharedPreferences("keyboard_settings", MODE_PRIVATE)
+//                    .getString("clipboard_text_1", "");
+//
+//            String systemClipboard = "";
+//            if (cm != null && cm.hasPrimaryClip()) {
+//                ClipData clip = cm.getPrimaryClip();
+//                if (clip != null && clip.getItemCount() > 0) {
+//                    CharSequence text = clip.getItemAt(0).getText();
+//                    if (text != null) {
+//                        systemClipboard = text.toString();
+//                    }
+//                }
+//            }
+//
+//            if (!myClipboard.isEmpty()) {
+//                if (systemClipboard.equals(myClipboard)) {
+//                    // Paste the system clipboard (they’re the same anyway)
+//                    ic.performContextMenuAction(android.R.id.paste);
+//                } else {
+//                    // Force paste from clipboard_1
+//                    ic.commitText(myClipboard, 1);
+//                }
+//            } else {
+//                // fallback: system paste
+//                ic.performContextMenuAction(android.R.id.paste);
+//            }
+//        }
+//    }
+
     private void handlePaste() {
         InputConnection ic = getCurrentInputConnection();
-        if (ic != null) {
-            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        if (ic == null) return;
 
-            String myClipboard = getSharedPreferences("keyboard_settings", MODE_PRIVATE)
-                    .getString("clipboard_text_1", "");
+        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        if (cm == null || !cm.hasPrimaryClip()) {
+            ic.performContextMenuAction(android.R.id.paste);
+            return;
+        }
 
-            String systemClipboard = "";
-            if (cm != null && cm.hasPrimaryClip()) {
-                ClipData clip = cm.getPrimaryClip();
-                if (clip != null && clip.getItemCount() > 0) {
-                    CharSequence text = clip.getItemAt(0).getText();
-                    if (text != null) {
-                        systemClipboard = text.toString();
-                    }
+        ClipData clip = cm.getPrimaryClip();
+        if (clip == null || clip.getItemCount() == 0) {
+            ic.performContextMenuAction(android.R.id.paste);
+            return;
+        }
+
+        ClipData.Item item = clip.getItemAt(0);
+
+        // 1. If it's an image, try to paste it
+        if (clip.getDescription().hasMimeType("image/*")) {
+            Uri imageUri = item.getUri();
+            if (imageUri != null) {
+                EditorInfo editorInfo = getCurrentInputEditorInfo();
+                InputContentInfo inputContentInfo = new InputContentInfo(
+                        imageUri,
+                        new ClipDescription("pasted_image", new String[]{"image/*"}),
+                        null
+                );
+                try {
+                    ic.commitContent(inputContentInfo,
+                            InputConnection.INPUT_CONTENT_GRANT_READ_URI_PERMISSION,
+                            null);
+                    return; // ✅ stop here if image was handled
+                } catch (Exception e) {
+                    // If app doesn’t support images, just fall through to text handling
                 }
             }
+        }
 
-            if (!myClipboard.isEmpty()) {
-                if (systemClipboard.equals(myClipboard)) {
-                    // Paste the system clipboard (they’re the same anyway)
-                    ic.performContextMenuAction(android.R.id.paste);
-                } else {
-                    // Force paste from clipboard_1
-                    ic.commitText(myClipboard, 1);
-                }
-            } else {
-                // fallback: system paste
+        // 2. Otherwise handle text
+        String myClipboard = getSharedPreferences("keyboard_settings", MODE_PRIVATE)
+                .getString("clipboard_text_1", "");
+        String systemClipboard = "";
+        CharSequence text = item.getText();
+        if (text != null) {
+            systemClipboard = text.toString();
+        }
+
+        if (!myClipboard.isEmpty()) {
+            if (systemClipboard.equals(myClipboard)) {
+                // Paste system clipboard (same as clipboard_1)
                 ic.performContextMenuAction(android.R.id.paste);
+            } else {
+                // Force paste from clipboard_1
+                ic.commitText(myClipboard, 1);
             }
+        } else {
+            // fallback: system paste
+            ic.performContextMenuAction(android.R.id.paste);
         }
     }
 
