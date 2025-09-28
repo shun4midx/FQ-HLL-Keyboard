@@ -224,7 +224,7 @@ public class ZhuyinTyper {
         );
 
         List<String> results = new ArrayList<>();
-        int MAX_KEYS = 8;
+        int MAX_KEYS = 15;
         int count = 0;
 
         for (Map.Entry<String,Integer> e : sorted) {

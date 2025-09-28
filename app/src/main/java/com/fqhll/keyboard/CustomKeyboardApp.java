@@ -91,6 +91,11 @@ public class CustomKeyboardApp extends InputMethodService
     private boolean supersubMode = false;
     private static final String[] engSuperArray = new String[]{"ᵃ", "ᵇ", "ᶜ", "ᵈ", "ᵉ", "ᶠ", "ᵍ", "ʰ", "ⁱ", "ʲ", "ᵏ", "ˡ", "ᵐ", "ⁿ", "ᵒ", "ᵖ", "⁹", "ʳ", "ˢ", "ᵗ", "ᵘ", "ᵛ", "ʷ", "ˣ", "ʸ", "ᶻ"};
     private static final String[] engSubArray = new String[]{"ₐ", "b", "꜀", "∂", "ₑ", "f", "g", "ₕ", "ᵢ", "ⱼ", "ₖ", "ₗ", "ₘ", "ₙ", "ₒ", "ₚ", "₉", "ᵣ", "ₛ", "ₜ", "ᵤ", "ᵥ", "ᵥᵥ", "ₓ", "ᵧ", "z"};
+
+    private static final String[] mathbbEngArray = new String[]{"𝔸", "𝔹", "ℂ", "𝔻", "𝔼", "𝔽", "𝔾", "ℍ", "𝕀", "𝕁", "𝕂", "𝕃", "𝕄", "ℕ", "𝕆", "ℙ", "ℚ", "ℝ", "𝕊", "𝕋", "𝕌", "𝕍", "𝕎", "𝕏", "𝕐", "ℤ"};
+    private static final String[] mathbbLowerEngArray = new String[]{"𝕒", "𝕓", "𝕔", "𝕕", "𝕖", "𝕗", "𝕘", "𝕙", "𝕚", "𝕛", "𝕜", "𝕝", "𝕞", "𝕟", "𝕠", "𝕡", "𝕢", "𝕣", "𝕤", "𝕥", "𝕦", "𝕧", "𝕨", "𝕩", "𝕪", "𝕫"};
+    private static final String[] mathbbDigitArray = new String[]{"𝟘", "𝟙", "𝟚", "𝟛", "𝟜", "𝟝", "𝟞", "𝟟", "𝟠", "𝟡"};
+
     private static final String[] digitSuperArray = {"⁰","¹","²","³","⁴","⁵","⁶","⁷","⁸","⁹"};
     private static final String[] digitSubArray = {"₀","₁","₂","₃","₄","₅","₆","₇","₈","₉"};
 
@@ -610,7 +615,11 @@ public class CustomKeyboardApp extends InputMethodService
             case '5': case '6': case '7': case '8': case '9': {
                 int d = primaryCode - '0';
                 if (supersubMode) {
-                    commitTextAndShowLabel(digitSubArray[d]);
+                    if (caps_state == 0) {
+                        commitTextAndShowLabel(digitSubArray[d]);
+                    } else {
+                        commitTextAndShowLabel(mathbbDigitArray[d]);
+                    }
                 } else {
                     commitTextAndShowLabel(digitSuperArray[d]);
                 }
@@ -863,12 +872,18 @@ public class CustomKeyboardApp extends InputMethodService
                     if (Character.isLetter(c)) {
                         int idx = Character.toLowerCase(c) - 'a';
                         if (idx >= 0 && idx < engSubArray.length) {
-                            commitTextAndShowLabel(engSubArray[idx]);
+                            if (caps_state == 0) {
+                                commitTextAndShowLabel(engSubArray[idx]);
+                            } else {
+                                commitTextAndShowLabel(mathbbLowerEngArray[idx]);
+                            }
                             return;
                         }
                     } else if (Character.isDigit(c)) {
                         int d = c - '0';
-                        commitTextAndShowLabel(digitSubArray[d]);
+                        if (caps_state == 0) {
+                            commitTextAndShowLabel(digitSubArray[d]);
+                        }
                         return;
                     }
                 }
@@ -899,75 +914,6 @@ public class CustomKeyboardApp extends InputMethodService
                 break;
         }
     }
-
-//    private void showCandidatePopup(List<String> items) {
-//        // Container for the list
-//        Context ctx = this;
-//        RecyclerView rv = new RecyclerView(ctx);
-//
-//        // LayoutManager: Flexbox if available, else 6-col Grid
-//        RecyclerView.LayoutManager lm;
-//        try {
-//            Class.forName("com.google.android.flexbox.FlexboxLayoutManager");
-//            com.google.android.flexbox.FlexboxLayoutManager flm =
-//                    new com.google.android.flexbox.FlexboxLayoutManager(ctx);
-//            flm.setFlexDirection(com.google.android.flexbox.FlexDirection.ROW);
-//            flm.setFlexWrap(com.google.android.flexbox.FlexWrap.WRAP);
-//            flm.setJustifyContent(com.google.android.flexbox.JustifyContent.FLEX_START);
-//            flm.setAlignItems(com.google.android.flexbox.AlignItems.CENTER);
-//            lm = flm;
-//        } catch (Throwable noFlex) {
-//            lm = new androidx.recyclerview.widget.GridLayoutManager(ctx, 6);
-//        }
-//        rv.setLayoutManager(lm);
-//
-//        // Simple adapter for chips
-//        rv.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-//            @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup p, int vt) {
-//                View v = LayoutInflater.from(p.getContext())
-//                        .inflate(R.layout.item_candidate_chip, p, false);
-//                return new RecyclerView.ViewHolder(v) {};
-//            }
-//            @Override public void onBindViewHolder(RecyclerView.ViewHolder h, int i) {
-//                TextView tv = h.itemView.findViewById(R.id.txt);
-//                String s = items.get(i);
-//                tv.setText(s);
-//                tv.setOnClickListener(v -> {
-//                    InputConnection ic = getCurrentInputConnection();
-//                    if (ic != null) {
-//                        replaceCurrentWord(s);
-//                    }
-//                    if (candidatesPopup != null && candidatesPopup.isShowing()) {
-//                        candidatesPopup.dismiss();
-//                    }
-//                });
-//            }
-//            @Override public int getItemCount() { return items.size(); }
-//        });
-//
-//        int pad = (int)(12 * getResources().getDisplayMetrics().density);
-//        rv.setPadding(pad, pad, pad, pad);
-//
-//        // Build the popup
-//        if (candidatesPopup != null && candidatesPopup.isShowing()) {
-//            candidatesPopup.dismiss();
-//        }
-//        candidatesPopup = new android.widget.PopupWindow(
-//                rv,
-//                ViewGroup.LayoutParams.MATCH_PARENT,
-//                (int)(getResources().getDisplayMetrics().heightPixels * 0.45f), // ~45% screen height
-//                true /* focusable so back dismisses */
-//        );
-//        candidatesPopup.setOutsideTouchable(true);
-//        candidatesPopup.setClippingEnabled(true);
-//        // Optional: give it a tiny elevation/background
-//        candidatesPopup.setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(0xFFFFFFFF));
-//
-//        // Anchor at bottom of your IME root
-//        if (root != null) {
-//            candidatesPopup.showAtLocation(root, Gravity.BOTTOM, 0, 0);
-//        }
-//    }
 
     @Override
     public void onPress(int primaryCode) {
@@ -1105,8 +1051,23 @@ public class CustomKeyboardApp extends InputMethodService
 
         if (forceEmptySuggestions) {
             InputConnection ic = getCurrentInputConnection();
-            if (ic != null && primaryCode != Keyboard.KEYCODE_DELETE && primaryCode != -1) {
-                ic.commitText((primaryCode >= 0 ? String.valueOf((char) primaryCode) : ""), 1);
+            if (primaryCode == -1) { // caps
+                handleCapsPress();
+            } else if (ic != null && primaryCode != Keyboard.KEYCODE_DELETE) {
+                if (primaryCode >= 0) {
+                    char pc = (char) primaryCode;
+
+                    if (Character.isLetter(pc)) {
+                        pc = Character.toLowerCase(pc); // normalize base
+                        if (caps_state > 0) {
+                            pc = Character.toUpperCase(pc);
+                        }
+                    }
+
+                    ic.commitText(String.valueOf(pc), 1);
+                } else {
+                    ic.commitText("", 1);
+                }
             } else if (primaryCode == Keyboard.KEYCODE_DELETE){
                 // First, see if there's any selected text
                 CharSequence selected = ic.getSelectedText(0);
@@ -1116,8 +1077,6 @@ public class CustomKeyboardApp extends InputMethodService
                 } else {
                     handleDelete();
                 }
-            } else if (primaryCode == -1) { // caps
-                handleCapsPress();
             }
             return;
         }
@@ -1286,17 +1245,6 @@ public class CustomKeyboardApp extends InputMethodService
                 if (after != null && after.length() > 0) {
 
                     if (isSelectToggled) {
-//                        int cursorPosition = ic.getExtractedText(new ExtractedTextRequest(), 0).selectionStart;
-//                        int selectedTextLength = 0;
-//                        CharSequence selectedText = ic.getSelectedText(0);
-//                        if (selectedText != null) {
-//                            selectedTextLength = selectedText.length();
-//                        }
-//
-//                        int newSelectionStart = cursorPosition + 1;
-//                        int newSelectionEnd = cursorPosition - selectedTextLength;
-//                        ic.setSelection(newSelectionStart, newSelectionEnd);
-
                         ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_SHIFT_LEFT));
                         ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT));
                         ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,   KeyEvent.KEYCODE_DPAD_RIGHT));
@@ -1849,12 +1797,20 @@ public class CustomKeyboardApp extends InputMethodService
             if (Character.isLetter(c)) {
                 int idx = Character.toLowerCase(c) - 'a';
                 if (idx >= 0 && idx < engSuperArray.length) {
-                    ic.commitText(engSuperArray[idx], 1);
+                    if (caps_state == 0) {
+                        ic.commitText(engSuperArray[idx], 1);
+                    } else {
+                        ic.commitText(mathbbEngArray[idx], 1);
+                    }
                     return;
                 }
             } else if (Character.isDigit(c)) {
                 int d = c - '0';
-                ic.commitText(digitSuperArray[d], 1);
+                if (caps_state == 0) {
+                    ic.commitText(digitSuperArray[d], 1);
+                } else {
+                    ic.commitText(mathbbDigitArray[d], 1);
+                }
                 return;
             }
         }
@@ -2123,23 +2079,6 @@ public class CustomKeyboardApp extends InputMethodService
         toast.show();
     }
 
-//    private String[] splitZhuyinBuffer() {
-//        String buf = zhuyinBuffer.toString();
-//        if (buf.isEmpty()) return new String[]{"", ""};
-//
-//        int i = 0;
-//        while (i < buf.length()) {
-//            char c = buf.charAt(i);
-//            if (ZHUYIN_DELIMITERS.contains(c)) {
-//                // include delimiter in the syllable
-//                return new String[]{ buf.substring(0, i + 1), buf.substring(i + 1).trim() };
-//            }
-//            i++;
-//        }
-//        // no delimiter -> whole buffer is one syllable
-//        return new String[]{ buf, "" };
-//    }
-
     private String[] splitAllZhuyinSyllables(String buf) {
         List<String> result = new ArrayList<>();
         int start = 0;
@@ -2377,9 +2316,9 @@ public class CustomKeyboardApp extends InputMethodService
             return;
         }
 
-        if (defaultCaps && isAtLineStart()) {
+        if (!forceEmptySuggestions && defaultCaps && isAtLineStart()) {
             caps_state = 1;
-        } else if (shouldAutoCap() && defaultCaps) {
+        } else if (!forceEmptySuggestions && shouldAutoCap() && defaultCaps) {
             caps_state = 1;
         } else {
             caps_state = 0;
@@ -2408,7 +2347,7 @@ public class CustomKeyboardApp extends InputMethodService
 
         if (caps_state == 2) {
 
-        } else if (defaultCaps && shouldAutoCap()) {
+        } else if (!forceEmptySuggestions && defaultCaps && shouldAutoCap()) {
             caps_state = 1;
         } else {
             caps_state = 0;
@@ -2422,7 +2361,7 @@ public class CustomKeyboardApp extends InputMethodService
 
         if (caps_state == 1 && !isAtLineStart()) {
             caps_state = 0;
-        } else if (defaultCaps && isAtLineStart()) {
+        } else if (!forceEmptySuggestions && defaultCaps && isAtLineStart()) {
             caps_state = 1;
         }
         applyCapsState();
@@ -2478,6 +2417,11 @@ public class CustomKeyboardApp extends InputMethodService
 
         kv.getKeyboard().setShifted(caps_state > 0);
         updateCapsLabel();
+
+        if (k == engKeyboard && supersubMode) {
+            updateSupersubLabels(); // force relabel to supersub or mathbb
+        }
+
         kv.invalidateAllKeys();
     }
 
@@ -2542,7 +2486,7 @@ public class CustomKeyboardApp extends InputMethodService
         }
 
         showSuggestions("");
-        caps_state = (defaultCaps && shouldAutoCap()) ? 1 : 0;
+        caps_state = (defaultCaps && !forceEmptySuggestions && shouldAutoCap()) ? 1 : 0;
         applyCapsState();
     }
 
@@ -2760,6 +2704,7 @@ public class CustomKeyboardApp extends InputMethodService
                 return true;
             } else if (kv.getKeyboard() == engKeyboard) {
                 supersubMode = !supersubMode;
+                caps_state = 0;
                 updateSupersubLabels();
                 applyCapsState();
                 kv.invalidateAllKeys();
@@ -2805,22 +2750,6 @@ public class CustomKeyboardApp extends InputMethodService
             updateModeSwitchLabel();
             return true;
         });
-
-//        // long press text editor to open numpad
-//        textEditor.setOnLongClickListener(v -> {
-//            kv.setKeyboard(numpadKeyboard);
-//            kv.invalidateAllKeys();
-//            return true;
-//        });
-
-//        suggestion1.setOnLongClickListener(v -> {
-//            InputConnection ic = getCurrentInputConnection();
-//            if (ic != null) {
-//                ic.commitText("added", 1);
-//                showSuggestions("");
-//            }
-//            return true;
-//        });
 
         kv.setKeyboard(keyboard);
         updateCompositionBarVisibility();
@@ -2869,117 +2798,70 @@ public class CustomKeyboardApp extends InputMethodService
 
     private void moveClipboardContent(int i) {
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-        for (int j = i-1; j > 0; j--) {
+        for (int j = i - 1; j > 0; j--) {
             String prev_pref = "clipboard_text_" + j;
-            String curr_pref = "clipboard_text_" + (j+1);
+            String curr_pref = "clipboard_text_" + (j + 1);
             String prev_text = prefs.getString(prev_pref, "");
             prefs.edit().putString(curr_pref, prev_text).apply();
         }
     }
 
     private void updateSupersubLabels() {
-        if (kv == null || kv.getKeyboard() != engKeyboard) {
-            return;
-        }
-
-//        for (Keyboard.Key key : kv.getKeyboard().getKeys()) {
-//            if (key.label == null) {
-//                continue;
-//            }
-//
-//            String label = key.label.toString();
-//
-//            if (supersubMode) {
-//                // letters
-//                for (int i = 0; i < engLetterArray.length; i++) {
-//                    if (label.equalsIgnoreCase(engLetterArray[i])) {
-//                        key.label = engSuperArray[i];
-//                        break;
-//                    }
-//                }
-//                // digits
-//                if (label.length() == 1 && Character.isDigit(label.charAt(0))) {
-//                    int d = label.charAt(0) - '0';
-//                    key.label = digitSuperArray[d];
-//                }
-//            } else {
-//                // revert to normal (letters and digits)
-//                for (int i = 0; i < engLetterArray.length; ++i) {
-//                    if (label.equals(engSuperArray[i])) {
-//                        key.label = (caps_state > 0) ? engLetterArray[i].toUpperCase() : engLetterArray[i];
-//                        break;
-//                    }
-//                }
-//                for (int d = 0; d < 10; ++d) {
-//                    if (label.equals(digitSuperArray[d])) {
-//                        key.label = String.valueOf(d);
-//                        break;
-//                    }
-//                }
-//            }
-//        }
+        if (kv == null || kv.getKeyboard() != engKeyboard) return;
 
         for (Keyboard.Key key : kv.getKeyboard().getKeys()) {
-            if (key.label == null) {
+            if (key.codes == null || key.codes.length == 0) continue;
+
+            int code = key.codes[0];
+            char ch = (char) code;
+
+            // Default reset
+            key.popupCharacters = null;
+
+            if (!supersubMode) {
+                // Normal English keyboard (respect Caps normally)
+                if (Character.isLetter(ch)) {
+                    int idx = Character.toLowerCase(ch) - 'a';
+                    if (idx >= 0 && idx < 26) {
+                        key.label = (caps_state > 0) ? Character.toString(idx + 'A') : Character.toString(idx + 'a');
+                    }
+                } else if (Character.isDigit(ch)) {
+                    key.label = String.valueOf(ch);
+                }
                 continue;
             }
 
-            if (supersubMode) {
-                for (int i = 0; i < engLetterArray.length; i++) {
-                    if (key.label.toString().equalsIgnoreCase(engLetterArray[i])) {
-                        key.label = engSuperArray[i];
-                        key.popupCharacters = "letter";  // mark origin
-                        break;
+            // supersubMode is ON
+            if (Character.isLetter(ch)) {
+                int idx = Character.toLowerCase(ch) - 'a';
+                if (idx >= 0 && idx < 26) {
+                    if (caps_state == 0) {
+                        // supersub lowercase
+                        key.label = engSuperArray[idx];
+                    } else {
+                        // mathbb uppercase
+                        key.label = mathbbEngArray[idx];
                     }
                 }
-                if (key.label.length() == 1 && Character.isDigit(key.label.charAt(0))) {
-                    int d = key.label.charAt(0) - '0';
-                    key.label = digitSuperArray[d];
-                    key.popupCharacters = "digit";  // mark origin
-                }
-            } else {
-                if ("letter".equals(key.popupCharacters)) {
-                    // revert to q/Q
-                    int idx = Arrays.asList(engSuperArray).indexOf(key.label.toString());
-                    if (idx >= 0) {
-                        key.label = (caps_state > 0) ? engLetterArray[idx].toUpperCase() : engLetterArray[idx];
-                    }
-                } else if ("digit".equals(key.popupCharacters)) {
-                    int idx = Arrays.asList(digitSuperArray).indexOf(key.label.toString());
-                    if (idx >= 0) {
-                        key.label = String.valueOf(idx);
+            } else if (Character.isDigit(ch)) {
+                int d = ch - '0';
+                if (d >= 0 && d <= 9) {
+                    if (caps_state == 0) {
+                        key.label = digitSuperArray[d];
+                    } else {
+                        key.label = mathbbDigitArray[d];
                     }
                 }
-                key.popupCharacters = null; // reset
             }
         }
+
+        kv.invalidateAllKeys();
     }
+
 
 
     private void copyToClipboard(String text) {
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-
-//        // slot names start from 1, ends at 10
-//        for (int i = 1; i < 11; i++) {
-//            String clipboard_pref = "clipboard_text_" + i;
-//            String clipboard_text = prefs.getString(clipboard_pref, "nothing here in this FQ-HLL clipboard slot"); // not naturally occurring def value
-//
-//            // if theres an empty slot, move everything below 1 slot then copy to first
-//            if (clipboard_text.equals("nothing here in this FQ-HLL clipboard slot")) {
-//
-//                moveClipboardContent(i);
-//                prefs.edit().putString("clipboard_text_1", text).apply();
-//                return;
-//            }
-//        }
-//
-//        // if no empty slots, copy all slots down, then copy to first
-
-//        // copy all slots down then copy to first
-//        if (prefs.getString("clipboard_text_1", "") != "") {
-//            moveClipboardContent(10);
-//        }
-//        prefs.edit().putString("clipboard_text_1", text).apply();
 
         List<String> entries = loadClipboard();
 
