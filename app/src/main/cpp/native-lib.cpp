@@ -205,7 +205,7 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
         // Replace autocorrect words with their suggestions
         for (int i = 0; i < 3; ++i) {
             if (autoreplace.find(suggestions[i]) != autoreplace.end()) {
-                string autoreplaced = autoreplace[key];
+                string autoreplaced = autoreplace[suggestions[i]];
 
                 if (!autocap && cap_uppercase.find(autoreplaced) != cap_uppercase.end()) {
                     autoreplaced[0] = toUpper(autoreplaced[0]);
@@ -227,13 +227,13 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
             reordered_scores = {confidences[1], confidences[0], confidences[2]};
         }
 
-        if (reordered[0] == "" && reordered[2] != "") {
-            reordered[0] = reordered[2];
-            reordered_scores[0] = reordered_scores[2];
-
-            reordered[2] = "";
-            reordered_scores[2] = 0;
-        }
+//        if (reordered[0] == "" && reordered[2] != "") {
+//            reordered[0] = reordered[2];
+//            reordered_scores[0] = reordered_scores[2];
+//
+//            reordered[2] = "";
+//            reordered_scores[2] = 0;
+//        }
 
         results = {reordered, reordered_scores};
     }

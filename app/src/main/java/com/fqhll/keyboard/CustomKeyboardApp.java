@@ -135,7 +135,7 @@ public class CustomKeyboardApp extends InputMethodService
         emojis = getEmojiCodes();
         math_symbols = getMathCodes();
     }
-                
+
     private LinearLayout suggestionBar;
     private View root;
 
@@ -2639,7 +2639,7 @@ public class CustomKeyboardApp extends InputMethodService
                     keyboard = new Keyboard(wrap, R.xml.custom_keypad_qwerty);
                     break;
             }
-            
+
             engKeyboard = keyboard;
         }
 
