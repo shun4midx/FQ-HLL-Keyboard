@@ -14,7 +14,7 @@
 
     <Row>
         <Key android:codes="-71" android:keyLabel="" android:keyEdgeFlags="left"/>
-        <Key android:codes="-62" android:keyLabel="˄"/>
+        <Key android:codes="-62" android:keyLabel="˄" android:isRepeatable="true"/>
         <Key android:codes="-71" android:keyLabel=""/>
         <Key android:codes="-69" android:keyLabel="copy" android:keyEdgeFlags="right"/>
     </Row>
@@ -28,7 +28,7 @@
 
     <Row>
         <Key android:codes="-71" android:keyLabel="" android:keyEdgeFlags="left"/>
-        <Key android:codes="-64" android:keyLabel="˅"/>
+        <Key android:codes="-64" android:keyLabel="˅" android:isRepeatable="true"/>
         <Key android:codes="-71" android:keyLabel=""/>
         <Key android:codes="-5" android:keyLabel="⌫" android:isRepeatable="true" android:keyEdgeFlags="right"/>
     </Row>

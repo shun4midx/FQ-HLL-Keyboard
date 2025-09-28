@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
 
+//    private var themes = arrayOf("Unselected", "Shun", "ShunV2", "ShunV3", "Ducky", "DuckyV2", "Cabbage", "Sage", "ThisIsFine", "ThisIsFinePremium", "ThisIsFinePremium2", "AntiThisIsFine", "AntiThisIsFinePremium", "Black", "Stargaze", "StargazePremium", "Hammerhead", "CottonCandy", "DarkBlue", "Yellow", "Teal", "Purple", "Green", "Cyan")
     private var themes = arrayOf("Unselected", "Shun", "ShunV2", "Ducky", "DuckyV2", "Cabbage", "Sage", "ThisIsFine", "ThisIsFinePremium", "ThisIsFinePremium2", "AntiThisIsFine", "AntiThisIsFinePremium", "Black", "Stargaze", "StargazePremium", "Hammerhead", "CottonCandy", "DarkBlue", "Yellow", "Teal", "Purple", "Green", "Cyan")
     private var keyboardHeights = arrayOf("Unselected", "Short", "Medium", "Tall", "Custom")
     private var keyboardLayouts = arrayOf("Unselected", "QWERTY", "QWERTZ", "AZERTY", "Dvorak", "Colemak", "Zhuyin")

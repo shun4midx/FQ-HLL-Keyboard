@@ -31,6 +31,7 @@
         <item name="keyboardBackground">@color/black</item>
         <item name="keyBorderColor">@color/custom_dark_grey</item>
         <item name="keyPressedColor">@color/black</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
@@ -45,6 +46,7 @@
         <item name="keyboardBackground">@color/black</item>
         <item name="keyBorderColor">@color/custom_fqhll_logo_wire_light_blue</item>
         <item name="keyPressedColor">@color/black</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
@@ -59,6 +61,7 @@
         <item name="keyboardBackground">@drawable/shunv2</item>
         <item name="keyBorderColor">@color/transparent</item>
         <item name="keyPressedColor">@color/teal_gradient_2</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">@color/black</item>
@@ -67,12 +70,28 @@
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
 
+<!--    <style name="Theme.FQHLLKeyboard.ShunV3" parent="Theme.FQHLLKeyboard">-->
+<!--        <item name="keyColor">@color/shunv3_key</item>-->
+<!--        <item name="keyTextColor">@color/shunv3_letter</item>-->
+<!--        <item name="keyboardBackground">@drawable/shunv3</item>-->
+<!--        <item name="keyBorderColor">@color/shunv3_key_border</item>-->
+<!--        <item name="keyPressedColor">@color/shunv3_pressed</item>-->
+<!--        <item name="keyPressedBorderColor">@color/shunv3_pressed_border</item>-->
+
+<!--        <item name="suggestionBarColor">@color/shunv3_sugg_bar</item>-->
+<!--        <item name="suggestionBarTextColor">@color/shunv3_sugg_text</item>-->
+
+<!--        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>-->
+<!--        <item name="keyPopupTextColor">@color/custom_dark_blue</item>-->
+<!--    </style>-->
+
     <style name="Theme.FQHLLKeyboard.Shun" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/shun_blue</item>
         <item name="keyTextColor">@color/custom_fqhll_logo_pink</item>
         <item name="keyboardBackground">@color/purple_900</item>
         <item name="keyBorderColor">@color/custom_blue</item>
         <item name="keyPressedColor">@color/black</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
@@ -87,6 +106,7 @@
         <item name="keyboardBackground">@drawable/duckyv2</item>
         <item name="keyBorderColor">@color/teal_gradient_5</item>
         <item name="keyPressedColor">@color/custom_light_blue_transparent</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">@color/teal_gradient_7</item>
@@ -101,6 +121,7 @@
         <item name="keyboardBackground">@color/custom_hammerhead_blue</item>
         <item name="keyBorderColor">@color/teal_gradient_5</item>
         <item name="keyPressedColor">@color/black</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
@@ -115,6 +136,7 @@
         <item name="keyboardBackground">@color/cotton_candy_light_blue</item>
         <item name="keyBorderColor">@color/custom_blue</item>
         <item name="keyPressedColor">@color/custom_fqhll_banner_pink</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
@@ -129,6 +151,7 @@
         <item name="keyboardBackground">@color/cabbage_blue</item>
         <item name="keyBorderColor">@color/cabbage_green</item>
         <item name="keyPressedColor">@color/black</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
@@ -143,6 +166,7 @@
         <item name="keyboardBackground">@color/black</item>
         <item name="keyBorderColor">@color/black</item>
         <item name="keyPressedColor">@color/custom_light_yellow</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
@@ -157,6 +181,7 @@
         <item name="keyboardBackground">@color/black</item>
         <item name="keyBorderColor">@color/black</item>
         <item name="keyPressedColor">@color/teal_gradient_2</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
@@ -171,6 +196,7 @@
         <item name="keyboardBackground">@color/custom_purple</item>
         <item name="keyBorderColor">@color/custom_purple</item>
         <item name="keyPressedColor">@color/purple_200</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
@@ -185,6 +211,7 @@
         <item name="keyboardBackground">@color/custom_green</item>
         <item name="keyBorderColor">@color/custom_green</item>
         <item name="keyPressedColor">@color/cabbage_green</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
@@ -199,6 +226,7 @@
         <item name="keyboardBackground">@color/custom_hammerhead_blue</item>
         <item name="keyBorderColor">@color/custom_hammerhead_blue</item>
         <item name="keyPressedColor">@color/shun_blue</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
@@ -213,6 +241,7 @@
         <item name="keyboardBackground">@color/teal_gradient_1</item>
         <item name="keyBorderColor">@color/teal_gradient_5</item>
         <item name="keyPressedColor">@color/black</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
@@ -227,6 +256,7 @@
         <item name="keyboardBackground">@color/custom_dark_blue</item>
         <item name="keyBorderColor">@color/custom_hammerhead_blue</item>
         <item name="keyPressedColor">@color/black</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
@@ -241,6 +271,7 @@
         <item name="keyboardBackground">@drawable/antithisisfine</item>
         <item name="keyBorderColor">@color/custom_light_blue_transparent_2</item>
         <item name="keyPressedColor">@color/custom_light_blue_transparent_2</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">@color/custom_hammerhead_blue</item>
@@ -255,6 +286,7 @@
         <item name="keyboardBackground">@color/sage_bg</item>
         <item name="keyBorderColor">@color/sage_border</item>
         <item name="keyPressedColor">@color/black</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
@@ -269,6 +301,7 @@
         <item name="keyboardBackground">@color/this_is_fine_orange</item>
         <item name="keyBorderColor">@color/black</item>
         <item name="keyPressedColor">@color/this_is_fine_green</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
@@ -283,6 +316,7 @@
         <item name="keyboardBackground">@drawable/thisisfine</item>
         <item name="keyBorderColor">@color/black</item>
         <item name="keyPressedColor">@color/this_is_fine_green_transparent</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">@color/this_is_fine_brown</item>
@@ -297,6 +331,7 @@
         <item name="keyboardBackground">@drawable/thisisfine</item>
         <item name="keyBorderColor">@color/this_is_fine_orange_transparent</item>
         <item name="keyPressedColor">@color/this_is_fine_green_transparent</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">@color/this_is_fine_brown</item>
@@ -311,6 +346,7 @@
         <item name="keyboardBackground">@color/anti_this_is_fine_blue</item>
         <item name="keyBorderColor">@color/black</item>
         <item name="keyPressedColor">@color/custom_blue</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">@color/this_is_fine_orange</item>
         <item name="suggestionBarTextColor">@color/custom_light_yellow</item>
@@ -320,11 +356,12 @@
     </style>
 
     <style name="Theme.FQHLLKeyboard.AntiThisIsFinePremium" parent="Theme.FQHLLKeyboard">
-        <item name="keyColor">@color/anti_this_is_fine_light_blue_transparent</item>
+        <item name="keyColor">@color/transparent_custom_blue</item>
         <item name="keyTextColor">@color/this_is_fine_yellow</item>
-        <item name="keyboardBackground">@drawable/antithisisfine</item>
+        <item name="keyboardBackground">@drawable/thisisnotfine</item>
         <item name="keyBorderColor">@color/black</item>
-        <item name="keyPressedColor">@color/custom_blue</item>
+        <item name="keyPressedColor">@color/anti_this_is_fine_light_blue_transparent</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
         <item name="suggestionBarColor">@color/this_is_fine_orange</item>
         <item name="suggestionBarTextColor">@color/custom_light_yellow</item>

@@ -66,8 +66,17 @@
     <color name="this_is_fine_green_transparent">#AD968F0D</color>
 
     <color name="anti_this_is_fine_light_blue">#45b5f5</color>
-    <color name="anti_this_is_fine_light_blue_transparent">#4156B7FA</color>
+    <color name="anti_this_is_fine_light_blue_transparent">#A656B7FA</color>
     <color name="anti_this_is_fine_light_blue_2">#2794D9</color>
     <color name="anti_this_is_fine_light_blue_2_transparent">#922794D9</color>
+    <color name="transparent_custom_blue">#80255FAB</color>
     <color name="anti_this_is_fine_blue">#161b52</color>
+
+    <color name="shunv3_sugg_bar">#000456</color>
+    <color name="shunv3_sugg_text">#A2CFFB</color>
+    <color name="shunv3_key_border">#092A7F</color>
+    <color name="shunv3_key">#80092A7F</color>
+    <color name="shunv3_letter">#9AD6F8</color>
+    <color name="shunv3_pressed">#80B120C1</color>
+    <color name="shunv3_pressed_border">#A6156D</color>
 </resources>

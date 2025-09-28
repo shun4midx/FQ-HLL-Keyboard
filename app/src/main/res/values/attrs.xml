@@ -7,6 +7,7 @@
     <attr name="keyPopupBackgroundColor"/>
     <attr name="keyBorderColor"/>
     <attr name="keyPressedColor"/>
+    <attr name="keyPressedBorderColor"/>
     <attr name="suggestionBarColor"/>
     <attr name="suggestionBarTextColor"/>
 </resources>

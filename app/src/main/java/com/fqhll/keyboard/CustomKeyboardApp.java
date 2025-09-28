@@ -1,5 +1,6 @@
 package com.fqhll.keyboard;
 
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,6 +29,7 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import android.media.SoundPool;
+import android.content.ClipboardManager;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -166,6 +168,9 @@ public class CustomKeyboardApp extends InputMethodService
 
     private ZhuyinTyper zhuyinTyper;
 
+    private boolean forceEmptySuggestions = false;
+    private int selectionAnchor = -1;
+
     // Map math Unicode symbols to ASCII equivalents
     private static final Map<Character, String> mathNaturalize = Map.ofEntries(
             Map.entry('×', "*"),
@@ -207,7 +212,7 @@ public class CustomKeyboardApp extends InputMethodService
     }
 
     private native void nativeInitAutocorrector(String path);
-    private native Suggestion nativeSuggest(String prefix);
+    private native Suggestion nativeSuggest(String prefix, boolean autocap);
     public static native void nativeAddWord(String word, String path);
     public static native void nativeRemoveWord(String word, String path);
 
@@ -227,6 +232,36 @@ public class CustomKeyboardApp extends InputMethodService
             zhuyinCompositionBar.setVisibility(View.VISIBLE);
         } else {
             zhuyinCompositionBar.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        ClipboardManager clipboard =
+                (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+
+        if (clipboard != null) {
+            clipboard.addPrimaryClipChangedListener(() -> {
+                if (clipboard.hasPrimaryClip()) {
+                    ClipData clipData = clipboard.getPrimaryClip();
+                    if (clipData != null && clipData.getItemCount() > 0) {
+                        CharSequence text = clipData.getItemAt(0).getText();
+                        if (text != null) {
+                            String newText = text.toString();
+
+                            SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+                            String lastSaved = prefs.getString("clipboard_text_1", "");
+
+                            if (!newText.equals(lastSaved)) {
+                                // only update if it’s different
+                                copyToClipboard(newText);
+                            }
+                        }
+                    }
+                }
+            });
         }
     }
 
@@ -281,15 +316,117 @@ public class CustomKeyboardApp extends InputMethodService
         setPreviewLabel(commitText);
     }
 
-    private void handleLongPress(int primaryCode) {
-        if (-99 <= primaryCode && primaryCode <= -90) { // long press to delete clipboard item
-            int clipboardCode = primaryCode + 90;
-            clipboardCode = -clipboardCode; // get code without -9 in front
-            clipboardCode = clipboardCode + 1; // since codes start from 0 but clipboard start from 1
+    private boolean maybeAutoReplace(InputConnection ic, String append) {
+        CharSequence beforeChar = ic.getTextBeforeCursor(1, 0);
+        char prevChar = (beforeChar != null && beforeChar.length() > 0) ? beforeChar.charAt(0) : '\0';
 
-            SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-            String clipboardPref = "clipboard_text_" + clipboardCode;
-            prefs.edit().putString(clipboardPref, "").apply();
+        String beforeStr = ic.getTextBeforeCursor(50, 0).toString();
+        String trimmedStr = beforeStr.replaceAll("\\s+$", "");
+        String[] partsStr = trimmedStr.split("\\s+");
+        String lastWordStr = partsStr.length > 0 ? partsStr[partsStr.length - 1] : "";
+
+        Suggestion s = nativeLoaded && !lastWordStr.isEmpty()
+                ? nativeSuggest(lastWordStr, defaultCaps)
+                : new Suggestion(new String[]{"", "", ""}, new double[]{0,0,0});
+
+        String top = s.suggestions[1];
+        double score = (s.scores.length > 0 ? s.scores[1] : 0);
+
+        if (!forceEmptySuggestions && defaultAutocor && score >= AUTO_REPLACE_THRESHOLD &&
+                !top.isEmpty() && !top.equals(lastWordStr) &&
+                prevChar != ' ' && !isSkippedAutoreplace) {
+
+            int toDelete = lastWordStr.length();
+            String newText = top + append;
+
+            ic.beginBatchEdit();
+            ic.deleteSurroundingText(toDelete, 0);
+            ic.commitText(newText, 1);
+            ic.endBatchEdit();
+
+            showSuggestions(""); // Clear UI
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void handlePaste() {
+        InputConnection ic = getCurrentInputConnection();
+        if (ic != null) {
+            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+
+            String myClipboard = getSharedPreferences("keyboard_settings", MODE_PRIVATE)
+                    .getString("clipboard_text_1", "");
+
+            String systemClipboard = "";
+            if (cm != null && cm.hasPrimaryClip()) {
+                ClipData clip = cm.getPrimaryClip();
+                if (clip != null && clip.getItemCount() > 0) {
+                    CharSequence text = clip.getItemAt(0).getText();
+                    if (text != null) {
+                        systemClipboard = text.toString();
+                    }
+                }
+            }
+
+            if (!myClipboard.isEmpty()) {
+                if (systemClipboard.equals(myClipboard)) {
+                    // Paste the system clipboard (they’re the same anyway)
+                    ic.performContextMenuAction(android.R.id.paste);
+                } else {
+                    // Force paste from clipboard_1
+                    ic.commitText(myClipboard, 1);
+                }
+            } else {
+                // fallback: system paste
+                ic.performContextMenuAction(android.R.id.paste);
+            }
+        }
+    }
+
+    private void handleLongPress(int primaryCode) {
+        if (primaryCode == -1) { // Long press CAPS = copy/paste
+            InputConnection ic = getCurrentInputConnection();
+            if (ic != null) {
+                ExtractedText et = ic.getExtractedText(new ExtractedTextRequest(), 0);
+                CharSequence selected = ic.getSelectedText(0);
+                if (et != null && et.selectionStart != et.selectionEnd) {
+                    // copy
+                    ic.performContextMenuAction(android.R.id.copy);
+                    copyToClipboard(selected.toString());
+                } else {
+                    // paste
+                    handlePaste();
+//                    ic.performContextMenuAction(android.R.id.paste);
+                }
+            }
+            return;
+        }
+
+        if (-99 <= primaryCode && primaryCode <= -90) { // long press to delete clipboard item
+//            int clipboardCode = primaryCode + 90;
+//            clipboardCode = -clipboardCode; // get code without -9 in front
+//            clipboardCode = clipboardCode + 1; // since codes start from 0 but clipboard start from 1
+//
+//            SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+//            String clipboardPref = "clipboard_text_" + clipboardCode;
+//            prefs.edit().putString(clipboardPref, "").apply();
+//            return;
+
+            int clipboardCode = primaryCode + 90;
+            clipboardCode = -clipboardCode;
+            clipboardCode = clipboardCode + 1; // index 1..10
+
+            List<String> entries = loadClipboard();
+            if (clipboardCode - 1 < entries.size()) {
+                entries.remove(clipboardCode - 1); // list is 0-based
+            }
+
+            saveClipboard(entries);
+            updateClipboardLabel();
+            kv.invalidateAllKeys();
             return;
         }
 
@@ -343,7 +480,9 @@ public class CustomKeyboardApp extends InputMethodService
                 }
                 break;
             case 47: // slash -> backslash
-                commitTextAndShowLabel("\\");
+                if (!maybeAutoReplace(ic, "\\")) {
+                    commitTextAndShowLabel("\\");
+                }
                 updateSuggestion(ic);
                 break;
             case 65292: // chi comma -> chi full stop
@@ -371,8 +510,27 @@ public class CustomKeyboardApp extends InputMethodService
                 }
                 else {
                     if (ic != null) {
-                        isSkippedAutoreplace = true;
-                        showSuggestions("");
+                        // check the bar, not the IC text
+                        if (forceEmptySuggestions) {
+                            // second toggle: restore normal suggestions
+                            forceEmptySuggestions = false;
+                        } else {
+                            // only enter force-empty mode if the middle slot is already empty
+                            String[] currentWords = new String[]{
+                                    ((TextView) suggestionBar.getChildAt(1)).getText().toString(),
+                                    ((TextView) suggestionBar.getChildAt(2)).getText().toString(),
+                                    ((TextView) suggestionBar.getChildAt(3)).getText().toString()
+                            };
+                            if (currentWords[1].isEmpty()) {
+                                forceEmptySuggestions = true;
+                                caps_state = 0;
+                                applyCapsState();
+                                showSuggestions("");
+                            } else {
+                                isSkippedAutoreplace = true;
+                                showSuggestions("");
+                            }
+                        }
                     }
                 }
                 break;
@@ -587,6 +745,10 @@ public class CustomKeyboardApp extends InputMethodService
                 commitTextAndShowLabel("σ");
                 updateSuggestion(ic);
                 break;
+            case -1025: // sqrt
+                commitTextAndShowLabel("λ");
+                updateSuggestion(ic);
+                break;
             case '+':
                 commitTextAndShowLabel("⁺");
                 updateSuggestion(ic);
@@ -729,7 +891,9 @@ public class CustomKeyboardApp extends InputMethodService
                             symbol = longPressText[i];
                         }
 
-                        commitTextAndShowLabel(symbol);
+                        if (!maybeAutoReplace(ic, symbol)) {
+                            commitTextAndShowLabel(symbol);
+                        }
                     }
                 }
                 break;
@@ -874,6 +1038,10 @@ public class CustomKeyboardApp extends InputMethodService
 
 
     public void showKeyPreview(Keyboard.Key key, int code) {
+        if (code == -11) { // don't show for emoji
+            return;
+        }
+
         CharSequence text;
 
         if (supersubMode) {
@@ -935,6 +1103,42 @@ public class CustomKeyboardApp extends InputMethodService
             return;
         }
 
+        if (forceEmptySuggestions) {
+            InputConnection ic = getCurrentInputConnection();
+            if (ic != null && primaryCode != Keyboard.KEYCODE_DELETE && primaryCode != -1) {
+                ic.commitText((primaryCode >= 0 ? String.valueOf((char) primaryCode) : ""), 1);
+            } else if (primaryCode == Keyboard.KEYCODE_DELETE){
+                // First, see if there's any selected text
+                CharSequence selected = ic.getSelectedText(0);
+                if (selected != null && selected.length() > 0) {
+                    // If so, replace it (commit empty string) and return
+                    ic.commitText("", 1);
+                } else {
+                    handleDelete();
+                }
+            } else if (primaryCode == -1) { // caps
+                handleCapsPress();
+            }
+            return;
+        }
+
+        if (-99 <= primaryCode && primaryCode <= -90) {
+            // clipboard button
+            int clipboardCode = primaryCode + 90;
+            clipboardCode = -clipboardCode; // get code without -9 in front
+            clipboardCode = clipboardCode + 1; // since codes start from 0 but clipboard start from 1
+
+            SharedPreferences prefs2 = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+            String clipboardPref = "clipboard_text_" + clipboardCode;
+            String clipboardText = prefs2.getString(clipboardPref, "");
+
+            if (!clipboardText.isEmpty()) {
+                InputConnection ic = getCurrentInputConnection();
+                ic.commitText(clipboardText, 1);
+            }
+            return;
+        }
+
         if (emojis.containsKey(primaryCode)) {
             InputConnection ic = getCurrentInputConnection();
             if (ic != null) {
@@ -978,6 +1182,7 @@ public class CustomKeyboardApp extends InputMethodService
 
         switch (primaryCode) {
             case Keyboard.KEYCODE_DELETE:
+                isSelectToggled = false;
                 // First, see if there's any selected text
                 CharSequence selected = ic.getSelectedText(0);
                 if (selected != null && selected.length() > 0) {
@@ -995,6 +1200,10 @@ public class CustomKeyboardApp extends InputMethodService
                 handleCapsPress();
                 break;
             case -2: // symbols
+                if (kv.getKeyboard() == engKeyboard) {
+                    maybeAutoReplace(ic, "");
+                }
+
                 kv.setKeyboard(symbolKeyboard);
                 kv.invalidateAllKeys();
                 updateCompositionBarVisibility();
@@ -1007,6 +1216,10 @@ public class CustomKeyboardApp extends InputMethodService
                 updateModeSwitchLabel();
                 break;
             case -11: // emojis
+                if (kv.getKeyboard() == engKeyboard) {
+                    maybeAutoReplace(ic, "");
+                }
+
                 kv.setKeyboard(emojiKeyboard);
                 kv.invalidateAllKeys();
                 showSuggestions("");
@@ -1020,6 +1233,10 @@ public class CustomKeyboardApp extends InputMethodService
                 startActivity(launchIntent);
                 break;
             case -13: // numpad
+                if (kv.getKeyboard() == engKeyboard) {
+                    maybeAutoReplace(ic, "");
+                }
+
                 kv.setKeyboard(numpadKeyboard);
                 kv.invalidateAllKeys();
                 updateCompositionBarVisibility();
@@ -1037,18 +1254,23 @@ public class CustomKeyboardApp extends InputMethodService
                 if (before != null && before.length() > 0) {
 
                     if (isSelectToggled) {
-                        int cursorPosition = ic.getExtractedText(new ExtractedTextRequest(), 0).selectionStart;
-                        int selectedTextLength = 0;
-                        CharSequence selectedText = ic.getSelectedText(0);
-                        if (selectedText != null) {
-                            selectedTextLength = selectedText.length();
-                        }
+//                        int cursorPosition = ic.getExtractedText(new ExtractedTextRequest(), 0).selectionStart;
+//                        int selectedTextLength = 0;
+//                        CharSequence selectedText = ic.getSelectedText(0);
+//                        if (selectedText != null) {
+//                            selectedTextLength = selectedText.length();
+//                        }
+//
+//                        if (cursorPosition > 0) {
+//                            int newSelectionStart = cursorPosition - 1;
+//                            int newSelectionEnd = cursorPosition + selectedTextLength;
+//                            ic.setSelection(newSelectionStart, newSelectionEnd);
+//                        }
 
-                        if (cursorPosition > 0) {
-                            int newSelectionStart = cursorPosition - 1;
-                            int newSelectionEnd = cursorPosition + selectedTextLength;
-                            ic.setSelection(newSelectionStart, newSelectionEnd);
-                        }
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_SHIFT_LEFT));
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_LEFT));
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,   KeyEvent.KEYCODE_DPAD_LEFT));
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,   KeyEvent.KEYCODE_SHIFT_LEFT));
                     }
 
                     else {
@@ -1064,17 +1286,21 @@ public class CustomKeyboardApp extends InputMethodService
                 if (after != null && after.length() > 0) {
 
                     if (isSelectToggled) {
-                        int cursorPosition = ic.getExtractedText(new ExtractedTextRequest(), 0).selectionStart;
-                        int selectedTextLength = 0;
-                        CharSequence selectedText = ic.getSelectedText(0);
-                        if (selectedText != null) {
-                            selectedTextLength = selectedText.length();
-                        }
+//                        int cursorPosition = ic.getExtractedText(new ExtractedTextRequest(), 0).selectionStart;
+//                        int selectedTextLength = 0;
+//                        CharSequence selectedText = ic.getSelectedText(0);
+//                        if (selectedText != null) {
+//                            selectedTextLength = selectedText.length();
+//                        }
+//
+//                        int newSelectionStart = cursorPosition + 1;
+//                        int newSelectionEnd = cursorPosition - selectedTextLength;
+//                        ic.setSelection(newSelectionStart, newSelectionEnd);
 
-                        int newSelectionStart = cursorPosition + 1;
-                        int newSelectionEnd = cursorPosition - selectedTextLength;
-                        ic.setSelection(newSelectionStart, newSelectionEnd);
-
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_SHIFT_LEFT));
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_RIGHT));
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,   KeyEvent.KEYCODE_DPAD_RIGHT));
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,   KeyEvent.KEYCODE_SHIFT_LEFT));
                     }
 
                     else {
@@ -1087,9 +1313,16 @@ public class CustomKeyboardApp extends InputMethodService
             case -62: // up arrow
                 CharSequence before2 = ic.getTextBeforeCursor(1, 0);
                 if (before2 != null && before2.length() > 0) {
-                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP));
-                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_UP));
-//                    showSuggestions("");
+                    if (isSelectToggled) {
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_SHIFT_LEFT));
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP));
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,   KeyEvent.KEYCODE_DPAD_UP));
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,   KeyEvent.KEYCODE_SHIFT_LEFT));
+                    } else {
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_UP));
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_UP));
+                        //                    showSuggestions("");
+                    }
                 }
                 return;
             case -63: // select button
@@ -1098,9 +1331,16 @@ public class CustomKeyboardApp extends InputMethodService
             case -64: // down arrow
                 CharSequence after2 = ic.getTextAfterCursor(1, 0);
                 if (after2 != null && after2.length() > 0) {
-                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN));
-                    ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN));
-//                    showSuggestions("");
+                    if (isSelectToggled) {
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_SHIFT_LEFT));
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN));
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,   KeyEvent.KEYCODE_DPAD_DOWN));
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP,   KeyEvent.KEYCODE_SHIFT_LEFT));
+                    } else {
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_DPAD_DOWN));
+                        ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_DPAD_DOWN));
+                        //  showSuggestions("");
+                    }
                 }
                 return;
             case -65: // leftest
@@ -1146,6 +1386,7 @@ public class CustomKeyboardApp extends InputMethodService
             case -68: // cut
                 CharSequence cutText = ic.getSelectedText(0);
                 if (cutText != null) {
+                    ic.performContextMenuAction(android.R.id.copy);
                     copyToClipboard(cutText.toString());
                     ic.commitText("", 1);
                     adjustCapsAfterDeletion();
@@ -1155,6 +1396,7 @@ public class CustomKeyboardApp extends InputMethodService
             case -69: // copy
                 CharSequence copyText = ic.getSelectedText(0);
                 if (copyText != null) {
+                    ic.performContextMenuAction(android.R.id.copy);
                     copyToClipboard(copyText.toString());
                     isSelectToggled = false;
                 }
@@ -1162,9 +1404,18 @@ public class CustomKeyboardApp extends InputMethodService
             case -70: // paste
                 SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
                 String pasteText = prefs.getString("clipboard_text_1", "");
-                ic.commitText(pasteText, 1);
+                if (pasteText != null) {
+                    handlePaste();
+//                    ic.performContextMenuAction(android.R.id.paste);
+//                    ic.commitText(pasteText, 1);
+                    isSelectToggled = false;
+                }
                 break;
             case -71: // invis key
+                break;
+            case -60: // Undo
+                break;
+            case -61: // Redo
                 break;
             case 61: // equal key for numpad
                 String expr = getCurrentExpression();
@@ -1194,29 +1445,27 @@ public class CustomKeyboardApp extends InputMethodService
                     }
                 }
                 break;
+            case -90: case -91: case -92: case -93: case -94:
+            case -95: case -96: case -97: case -98: case -99:
+                // clipboard button
+                int clipboardCode = primaryCode + 90;
+                clipboardCode = -clipboardCode; // get code without -9 in front
+                clipboardCode = clipboardCode + 1; // since codes start from 0 but clipboard start from 1
+
+                SharedPreferences prefs2 = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+                String clipboardPref = "clipboard_text_" + clipboardCode;
+                String clipboardText = prefs2.getString(clipboardPref, "");
+
+                if (!clipboardText.isEmpty()) {
+                    ic.commitText(clipboardText, 1);
+                }
+                return;
             default: {
-                if (isAlphabet(primaryCode) || (kv.getKeyboard() != engKeyboard && kv.getKeyboard() != clipKeyboard && primaryCode != Keyboard.KEYCODE_DONE)) {
+                if (isAlphabet(primaryCode) || (kv.getKeyboard() != engKeyboard && kv.getKeyboard() != symbolKeyboard && kv.getKeyboard() != mathKeyboard && kv.getKeyboard() != clipKeyboard && primaryCode != Keyboard.KEYCODE_DONE)) {
                     commitChar(ic, primaryCode);
                     updateSuggestion(ic);
                     return;
                 }
-
-                // if clipboard button, commit text in clipboard
-                else if (-99 <= primaryCode && primaryCode <= -90) {
-                    int clipboardCode = primaryCode + 90;
-                    clipboardCode = -clipboardCode; // get code without -9 in front
-                    clipboardCode = clipboardCode + 1; // since codes start from 0 but clipboard start from 1
-
-                    SharedPreferences prefs2 = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-                    String clipboardPref = "clipboard_text_" + clipboardCode;
-                    String clipboardText = prefs2.getString(clipboardPref, "");
-
-                    if (!clipboardText.isEmpty()) {
-                        ic.commitText(clipboardText, 1);
-                    }
-                    break;
-                }
-
                 // Figure out the last word before space
                 CharSequence beforeCs = ic.getTextBeforeCursor(50, 0);
                 String raw = (beforeCs == null ? "" : beforeCs.toString());
@@ -1226,7 +1475,7 @@ public class CustomKeyboardApp extends InputMethodService
 
                 // Ask JNI for suggestions on lastWord
                 Suggestion s = nativeLoaded && !lastWord.isEmpty()
-                        ? nativeSuggest(lastWord)
+                        ? nativeSuggest(lastWord, defaultCaps)
                         : new Suggestion(new String[]{"", "", ""}, new double[]{0, 0, 0});
                 String top = s.suggestions[1];
                 double score = s.scores.length > 0 ? s.scores[1] : 0;
@@ -1646,6 +1895,11 @@ public class CustomKeyboardApp extends InputMethodService
     }
 
     private void updateSuggestion(InputConnection ic) {
+        if (forceEmptySuggestions) {
+            showSuggestions(""); // always blank
+            return;
+        }
+
         CharSequence beforeCs = ic.getTextBeforeCursor(50, 0);
         String before = (beforeCs == null ? "" : beforeCs.toString());
         before = before.trim();
@@ -1678,11 +1932,15 @@ public class CustomKeyboardApp extends InputMethodService
     }
 
     private void showSuggestions(String prefix) {
+        if (forceEmptySuggestions) {
+            return;
+        }
+
         ensureNative();
         suggestionBar.setVisibility(View.VISIBLE);
 
         Suggestion s = nativeLoaded && !prefix.isEmpty()
-                ? nativeSuggest(prefix)
+                ? nativeSuggest(prefix, defaultCaps)
                 : new Suggestion(new String[]{"", "", ""}, new double[]{0,0,0});
 
         String[] words  = s.suggestions;
@@ -2717,11 +2975,25 @@ public class CustomKeyboardApp extends InputMethodService
 //
 //        // if no empty slots, copy all slots down, then copy to first
 
-        // copy all slots down then copy to first
-        if (prefs.getString("clipboard_text_1", "") != "") {
-            moveClipboardContent(10);
+//        // copy all slots down then copy to first
+//        if (prefs.getString("clipboard_text_1", "") != "") {
+//            moveClipboardContent(10);
+//        }
+//        prefs.edit().putString("clipboard_text_1", text).apply();
+
+        List<String> entries = loadClipboard();
+
+        // insert new text at the top
+        entries.add(0, text);
+
+        // keep only 10
+        if (entries.size() > 10) {
+            entries = entries.subList(0, 10);
         }
-        prefs.edit().putString("clipboard_text_1", text).apply();
+
+        saveClipboard(entries);
+        updateClipboardLabel();
+        kv.invalidateAllKeys();
     }
 
     private void clearClipboard() {
@@ -2730,6 +3002,29 @@ public class CustomKeyboardApp extends InputMethodService
             String clipboardPrefs = "clipboard_text_" + i;
             prefs.edit().putString(clipboardPrefs, "").apply();
         }
+    }
+
+    // Load all clipboard entries into a list
+    private List<String> loadClipboard() {
+        SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+        List<String> entries = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            String text = prefs.getString("clipboard_text_" + i, "");
+            if (!text.isEmpty()) {
+                entries.add(text);
+            }
+        }
+        return entries;
+    }
+
+    // Save a list of entries back to SharedPreferences
+    private void saveClipboard(List<String> entries) {
+        SharedPreferences.Editor editor = getSharedPreferences("keyboard_settings", MODE_PRIVATE).edit();
+        for (int i = 1; i <= 10; i++) {
+            String text = (i <= entries.size()) ? entries.get(i - 1) : "";
+            editor.putString("clipboard_text_" + i, text);
+        }
+        editor.apply();
     }
 
     @Override

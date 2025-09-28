@@ -10,6 +10,7 @@ using std::string;
 using std::vector;
 using std::pair;
 using std::unordered_map;
+using std::unordered_set;
 
 static std::unique_ptr<Autocorrector> g_ac;
 
@@ -58,7 +59,7 @@ int getCaseState(const std::string& word) {
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_fqhll_keyboard_CustomKeyboardApp_nativeAddWord(JNIEnv* env, jobject /* this */, jstring jword, jstring jpath) {
+Java_com_fqhll_keyboard_CustomKeyboardApp_nativeAddWord(JNIEnv* env, jclass, jstring jword, jstring jpath) {
     if (!g_ac) return;
 
     const char* c_word = env->GetStringUTFChars(jword, nullptr);
@@ -85,7 +86,7 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeAddWord(JNIEnv* env, jobject /* 
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_fqhll_keyboard_CustomKeyboardApp_nativeRemoveWord(JNIEnv* env, jobject /* this */, jstring jword, jstring jpath) {
+Java_com_fqhll_keyboard_CustomKeyboardApp_nativeRemoveWord(JNIEnv* env, jclass, jstring jword, jstring jpath) {
     if (!g_ac) return;
 
     const char* c_word = env->GetStringUTFChars(jword, nullptr);
@@ -134,7 +135,10 @@ JNIEXPORT jobject JNICALL
 Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
         JNIEnv* env,
         jobject /* this */,
-        jstring prefix) {
+        jstring prefix,
+        jboolean jautocap) {
+
+    bool autocap = (jautocap == JNI_TRUE);
 
     if (!g_ac) return nullptr;
 
@@ -143,23 +147,38 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
     std::string key(p);
     env->ReleaseStringUTFChars(prefix, p);
 
+    // Extract symbol prefix (non-letters at start)
+    std::string prefixSymbols;
+    while (!key.empty() && !std::isalpha(static_cast<unsigned char>(key[0]))) {
+        prefixSymbols.push_back(key[0]);
+        key.erase(0, 1);
+    }
+
     // Real logic: fill a vector of {text, confidence}
     pair<vector<string>, vector<double>> results;
 
-    unordered_map<string, string> autoreplace = {{"i", "I"}, {"im", "I'm"}, {"Im", "I'm"}, {"id", "I'd"}, {"Id", "I'd"}, {"youd", "you'd"}, {"Youd", "You'd"}, {"youll", "you'll"}, {"Youll", "You'll"}, {"isnt", "isn't"}, {"Isnt", "Isn't"},
-                                                 {"wasnt", "wasn't"}, {"Wasnt", "Wasn't"}, {"arent", "aren't"}, {"Arent", "Aren't"}, {"ill", "I'll"}, {"Ill", "I'll"}, {"doesnt", "doesn't"}, {"Doesnt", "Doesn't"}, {"dont", "don't"}, {"Dont", "Don't"},
+    unordered_map<string, string> autoreplace = {{"i", "i"}, {"im", "i'm"}, {"Im", "I'm"}, {"id", "i'd"}, {"Id", "I'd"}, {"youd", "you'd"}, {"Youd", "You'd"}, {"youll", "you'll"}, {"Youll", "You'll"}, {"isnt", "isn't"}, {"Isnt", "Isn't"},
+                                                 {"wasnt", "wasn't"}, {"Wasnt", "Wasn't"}, {"arent", "aren't"}, {"Arent", "Aren't"}, {"ill", "i'll"}, {"Ill", "I'll"}, {"doesnt", "doesn't"}, {"Doesnt", "Doesn't"}, {"dont", "don't"}, {"Dont", "Don't"},
                                                  {"wont", "won't"}, {"Wont", "Won't"}, {"hes", "he's"}, {"Hes", "He's"}, {"shes", "she's"}, {"Shes", "She's"}, {"its", "it's"}, {"Its",  "It's"}, {"lets", "let's"}, {"Lets", "Let's"},
                                                  {"hed", "he'd"}, {"Hed", "He'd"}, {"aint", "ain't"}, {"Aint", "Ain't"}, {"cant", "can't"}, {"Cant", "Can't"}, {"shouldnt", "shouldn't"}, {"Shouldnt", "Shouldn't"},
                                                  {"couldnt", "couldn't"}, {"Couldnt", "Couldn't"}, {"wouldnt", "wouldn't"}, {"Wouldnt", "Wouldn't"}, {"didnt", "didn't"}, {"Didnt", "Didn't"}, {"yall", "y'all"}, {"Yall", "Y'all"}, {"theyre", "they're"}, {"Theyre", "They're"},
-                                                 {"havent", "haven't"}, {"Havent", "Haven't"}, {"theres", "there's"}, {"Theres", "There's"}, {"thats", "that's"}, {"Thats", "That's"}, {"hasnt", "hasn't"}, {"Hasnt", "Hasn't"}, {"ive", "I've"}, {"Ive", "I've"},
+                                                 {"havent", "haven't"}, {"Havent", "Haven't"}, {"theres", "there's"}, {"Theres", "There's"}, {"thats", "that's"}, {"Thats", "That's"}, {"hasnt", "hasn't"}, {"Hasnt", "Hasn't"}, {"ive", "i've"}, {"Ive", "I've"},
                                                  {"youre", "you're"}, {"Youre", "You're"}, {"youve", "you've"}, {"Youve", "You've"}, {"whats", "what's"}, {"Whats", "What's"}, {"theyll", "they'll"}, {"Theyll", "They'll"}, {"well", "we'll"}, {"Well", "We'll"},
                                                  {"shouldve", "should've"}, {"Shouldve", "Should've"}, {"wouldve", "would've"}, {"Wouldve", "Would've"}, {"hows", "how's"}, {"Hows", "How's"}, {"theyd", "they'd"}, {"Theyd", "They'd"}, {"thatll", "that'll"}, {"Thatll", "That'll"}, {"werent", "weren't"}, {"Werent", "Weren't"}, {"whys", "Why's"}, {"theyve", "they've"}, {"Theyve", "They've"}, {"ll", "//"}, {"Ll", "//"}};
 
+    unordered_set<string> cap_uppercase = {"i", "i'm", "i'd", "i'll", "i've"};
+
     if (key.empty() || key == " ") {
-        results = {{" ", " ", " "},
+        results = {{" ", prefixSymbols + " ", " "},
                    {0.0, 0.0, 0.0}};
     } else if (autoreplace.find(key) != autoreplace.end()) {
-        results = {{key, autoreplace[key], " "},
+        string autoreplaced = autoreplace[key];
+
+        if (autocap && (cap_uppercase.find(autoreplaced) != cap_uppercase.end())) {
+            autoreplaced[0] = toUpper(autoreplaced[0]);
+        }
+
+        results = {{(key == "i" && !autocap ? " " : prefixSymbols + key), prefixSymbols + autoreplaced, " "},
                    {0.5, 0.8, 0.0}};
     } else {
         Results result = g_ac->top3(key);
@@ -185,7 +204,13 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
         // Replace autocorrect words with their suggestions
         for (int i = 0; i < 3; ++i) {
             if (autoreplace.find(suggestions[i]) != autoreplace.end()) {
-                suggestions[i] = autoreplace[suggestions[i]];
+                string autoreplaced = autoreplace[key];
+
+                if (!autocap && cap_uppercase.find(autoreplaced) != cap_uppercase.end()) {
+                    autoreplaced[0] = toUpper(autoreplaced[0]);
+                }
+
+                suggestions[i] = autoreplaced;
             }
         }
 
@@ -194,11 +219,19 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
         vector<double> reordered_scores;
 
         if (confidences[0] >= 0.6 && suggestions[0] != key) {
-            reordered = {key, suggestions[0], suggestions[1]};
+            reordered = {prefixSymbols + key, prefixSymbols + suggestions[0], prefixSymbols + suggestions[1]};
             reordered_scores = {0, confidences[0], confidences[1]};
         } else {
-            reordered = {suggestions[1], suggestions[0], suggestions[2]};
+            reordered = {prefixSymbols + suggestions[1], prefixSymbols + suggestions[0], prefixSymbols + suggestions[2]};
             reordered_scores = {confidences[1], confidences[0], confidences[2]};
+        }
+
+        if (reordered[0] == "" && reordered[2] != "") {
+            reordered[0] = reordered[2];
+            reordered_scores[0] = reordered_scores[2];
+
+            reordered[2] = "";
+            reordered_scores[2] = 0;
         }
 
         results = {reordered, reordered_scores};
