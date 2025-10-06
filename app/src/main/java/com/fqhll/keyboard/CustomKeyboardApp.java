@@ -207,8 +207,6 @@ public class CustomKeyboardApp extends InputMethodService
             Map.entry('˙', ".")
     );
 
-    private static boolean DEBUG_FLAG = true;
-
 
     private void ensureNative() {
         if (!nativeLoaded) {
@@ -301,7 +299,7 @@ public class CustomKeyboardApp extends InputMethodService
     private void copyAssetToInternal(Context ctx, String assetName) {
         try {
             File outFile = new File(ctx.getFilesDir(), assetName);
-            if (outFile.exists() && !DEBUG_FLAG) return;
+            if (outFile.exists()) return;
 
             InputStream is = ctx.getAssets().open(assetName);
             outFile.getParentFile().mkdirs();
@@ -312,8 +310,6 @@ public class CustomKeyboardApp extends InputMethodService
             while ((length = is.read(buffer)) > 0) {
                 os.write(buffer, 0, length);
             }
-
-            DEBUG_FLAG = false;
 
             is.close();
             os.close();
