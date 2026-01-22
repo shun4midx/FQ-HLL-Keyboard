@@ -40,6 +40,8 @@ When there is a bolded suggestion, the first suggestion to the left is the user-
 
 If the suggestion is wrong, you can long press enter to skip the replacement.
 
+When there are no suggestions, long pressing the enter key enters password mode, where your inputs are not displayed on the suggestion bar.
+
 You can long press the text editor button to change languages.
 
 #### Main Keyboard
@@ -49,13 +51,16 @@ You can long press the text editor button to change languages.
 | comma `,` | select all |
 | full stop `.` | delete last word |
 | symbols `!?#` | numpad |
-| enter `↵` | skip replacement |
+| enter `↵` | skip replacement/password mode |
 | clipboard `⎘` | super/subscript mode |
 | text editor `𝙸` | change languages |
+| caps lock `Caps` | copy selected/paste last copied |
 
-#### Super/Subscript Keyboard
+#### Super/Subscript Keyboard/Mathbb Keyboard
 
 Access the Super/Subscript keyboard by long pressing clipboard in the main keyboard. You can long press a superscripted character to type its subscripted version.
+
+The Caps key toggles between the mathbb keyboard and the super/subscript keyboard when using one of them.
 
 #### Symbols
 
@@ -82,7 +87,11 @@ Chinese symbols can be typed by long pressing symbols in the symbol keyboard.
 
 #### Clipboard
 
-The clipboard displays text copied from the text editor. You can paste an item by clicking on its box.
+The clipboard displays copied text. You can paste an item by clicking on its box.
+
+You can copy/paste by using the android copy/paste system, long pressing Caps to copy (if selected text) or paste (if no selected text) the last item in the clipboard, or using the text editor.
+
+The paste function supports pasting images, but images are not stored in the clipboard.
 
 You can delete an item by long pressing its box, or long press the clipboard button to clear the entire clipboard.
 
@@ -199,7 +208,7 @@ Prereleases are relatively more tested development versions of the app if you pr
 - [x] settings app layout
 - [x] hold keys for symbols
 - [x] add documentation on long press symbol modified samsung keyboard/gboard layouts
-- [ ] multiple languages support?
+- [x] multiple languages support?
 - [ ] customise keyboard height
 - [x] custom background image
 - [x] key opacity
