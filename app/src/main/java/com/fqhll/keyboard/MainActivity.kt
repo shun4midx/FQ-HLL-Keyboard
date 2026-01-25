@@ -24,6 +24,8 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.Paths
 import android.view.inputmethod.InputMethodManager;
+import android.net.Uri
+import android.app.Activity
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
@@ -194,7 +196,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val editDictField: EditText = findViewById(R.id.edit_dict_input)
         val addDictButton: Button = findViewById(R.id.add_dict_btn)
         val removeDictButton: Button = findViewById(R.id.remove_dict_btn)
-//        val getDictButton: Button = findViewById(R.id.get_dict_btn)
+        val getDictButton: Button = findViewById(R.id.get_dict_btn)
 
         addDictButton.setOnClickListener {
             val inputWord = editDictField.text.toString()
@@ -230,9 +232,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             }
         }
 
-//        getDictButton.setOnClickListener {
-//            saveFile()
-//        }
+        getDictButton.setOnClickListener {
+            saveFile()
+        }
 
 
         // launch keyboard stuff
@@ -349,14 +351,31 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             putExtra(Intent.EXTRA_TITLE, "FQ-HLL_Keyboard_Custom_Dictionary_Export.txt")
         }
 
-        val fileName = intent.getStringExtra(Intent.EXTRA_TITLE)
-        val file = fileName?.let { File(this.filesDir, it) }
-
-        showToast(message = fileName.toString())
-
+        // Launch the system file picker and wait for onActivityResult to get the URI.
         startActivityForResult(intent, CREATE_FILE)
-        if (file != null) {
-            alterDocument(file)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == CREATE_FILE && resultCode == Activity.RESULT_OK) {
+            val uri: Uri? = data?.data
+            if (uri != null) {
+                writeToUri(uri)
+            } else {
+                showToast(message = "No file selected")
+            }
+        }
+    }
+
+    private fun writeToUri(uri: Uri) {
+        try {
+            contentResolver.openOutputStream(uri)?.use { out ->
+                out.write("This is my custom file content.".toByteArray())
+                out.flush()
+            }
+            showToast(message = "File saved")
+        } catch (e: Exception) {
+            showToast(message = "Save failed: ${e.message}")
         }
     }
 
