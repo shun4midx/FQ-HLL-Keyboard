@@ -226,13 +226,22 @@ public class CustomKeyboardApp extends InputMethodService
 
     private static native void nativeSetLayout(String layout, String path);
 
+    private Set<String> dictCache = null;
+
+    private Set<String> loadDictOnce() throws IOException {
+        if (dictCache == null) {
+            File f = new File(getFilesDir(), "test_files/20k_texting.txt");
+            if (!f.exists()) {
+                copyAssetToInternal(this, "test_files/20k_texting.txt");
+                if (!f.exists()) return Set.of();
+            }
+            dictCache = new HashSet<>(Files.readAllLines(f.toPath()));
+        }
+        return dictCache;
+    }
+
     public boolean inDictionary(String word) throws IOException {
-        Path path = Paths.get(getFilesDir().getAbsolutePath() + "/test_files/20k_texting.txt");
-
-        List<String> lines = Files.readAllLines(path);
-        Set<String> word_set = new HashSet<>(lines);
-
-        return word_set.contains(word);
+        return loadDictOnce().contains(word);
     }
 
     private void updateCompositionBarVisibility() {
