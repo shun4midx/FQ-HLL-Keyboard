@@ -374,6 +374,12 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val wordSet: Set<String> = HashSet(lines)
         return wordSet
     }
+
+    private fun getCustomWordsString(): String {
+        val customWordSet = getCustomWords()
+        val outputString = customWordSet.joinToString(separator = "\n")
+        return outputString
+    }
     
     private val CREATE_FILE = 1
 
@@ -403,7 +409,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private fun writeToUri(uri: Uri) {
         try {
             contentResolver.openOutputStream(uri)?.use { out ->
-                out.write("This is my custom file content.".toByteArray())
+//                out.write("This is my custom file content.".toByteArray())
+                out.write(getCustomWordsString().toByteArray())
                 out.flush()
             }
             showToast(message = "File saved")
