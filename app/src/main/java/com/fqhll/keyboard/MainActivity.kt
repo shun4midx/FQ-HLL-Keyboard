@@ -41,6 +41,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Ensure dictionary assets exist in internal storage early to avoid NoSuchFileException
+        ensureDictionaryFilesExist()
+
         val repoLink: TextView = findViewById(R.id.repoLink)
         repoLink.movementMethod = LinkMovementMethod.getInstance()
 
@@ -251,6 +254,33 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
     }
 
+    private fun ensureDictionaryFilesExist() {
+        val baseDir = File(filesDir.absolutePath, "test_files")
+        if (!baseDir.exists()) {
+            baseDir.mkdirs()
+        }
+
+        val dictFile = File(baseDir, "20k_texting.txt")
+        if (!dictFile.exists()) {
+            try {
+                assets.open("test_files/20k_texting.txt").use { input ->
+                    FileOutputStream(dictFile).use { output ->
+                        input.copyTo(output)
+                    }
+                }
+            } catch (e: IOException) {
+                try { dictFile.createNewFile() } catch (_: Exception) {}
+            }
+        }
+
+        val customFile = File(baseDir, "custom_words.txt")
+        if (!customFile.exists()) {
+            try {
+                customFile.createNewFile()
+            } catch (_: Exception) {}
+        }
+    }
+
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val prefs = getSharedPreferences("keyboard_settings", Context.MODE_PRIVATE)
         if (parent != null) {
@@ -311,6 +341,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     external fun getSuggestion(input: String): String
 
     private fun addToDictionary(word: String) {
+        ensureDictionaryFilesExist()
+
         val dictPath = filesDir.absolutePath + "/test_files/20k_texting.txt"
         val customWordsPath = filesDir.absolutePath + "/test_files/custom_words.txt"
         CustomKeyboardApp.nativeAddWord(word, dictPath)
@@ -318,6 +350,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     }
 
     private fun removeFromDictionary(word: String) {
+        ensureDictionaryFilesExist()
+
         val dictPath = filesDir.absolutePath + "/test_files/20k_texting.txt"
         val customWordsPath = filesDir.absolutePath + "/test_files/custom_words.txt"
         CustomKeyboardApp.nativeRemoveWord(word, dictPath)
@@ -338,7 +372,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         val lines = Files.readAllLines(path)
         val wordSet: Set<String> = HashSet(lines)
-
         return wordSet
     }
     
