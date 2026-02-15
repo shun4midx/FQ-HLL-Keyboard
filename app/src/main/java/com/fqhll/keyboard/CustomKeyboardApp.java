@@ -41,6 +41,8 @@ import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.flexbox.FlexDirection;
 import com.google.android.flexbox.FlexWrap;
 
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -96,7 +98,7 @@ public class CustomKeyboardApp extends InputMethodService
     private static final String[] engSuperArray = new String[]{"ᵃ", "ᵇ", "ᶜ", "ᵈ", "ᵉ", "ᶠ", "ᵍ", "ʰ", "ⁱ", "ʲ", "ᵏ", "ˡ", "ᵐ", "ⁿ", "ᵒ", "ᵖ", "⁹", "ʳ", "ˢ", "ᵗ", "ᵘ", "ᵛ", "ʷ", "ˣ", "ʸ", "ᶻ"};
     private static final String[] engSubArray = new String[]{"ₐ", "b", "꜀", "∂", "ₑ", "f", "g", "ₕ", "ᵢ", "ⱼ", "ₖ", "ₗ", "ₘ", "ₙ", "ₒ", "ₚ", "₉", "ᵣ", "ₛ", "ₜ", "ᵤ", "ᵥ", "ᵥᵥ", "ₓ", "ᵧ", "z"};
 
-    private static final String[] mathbbEngArray = new String[]{"𝔸", "𝔹", "ℂ", "𝔻", "𝔼", "𝔽", "𝔾", "ℍ", "𝕀", "𝕁", "𝕂", "𝕃", "𝕄", "ℕ", "𝕆", "ℙ", "ℚ", "ℝ", "𝕊", "𝕋", "𝕌", "𝕍", "𝕎", "𝕏", "𝕐", "ℤ"};
+    private static final String[] mathbbEngArray = new String[]{"𝔸", "𝔹", "ℂ", "𝔻", "𝔼", "𝔽", "𝔾", "ℍ", "𝕀", "𝕁", "𝕂", "𝕃", "𝕄", "ℕ", "𝕆", "𝕏", "𝕐", "ℤ"};
     private static final String[] mathbbLowerEngArray = new String[]{"𝕒", "𝕓", "𝕔", "𝕕", "𝕖", "𝕗", "𝕘", "𝕙", "𝕚", "𝕛", "𝕜", "𝕝", "𝕞", "𝕟", "𝕠", "𝕡", "𝕢", "𝕣", "𝕤", "𝕥", "𝕦", "𝕧", "𝕨", "𝕩", "𝕪", "𝕫"};
     private static final String[] mathbbDigitArray = new String[]{"𝟘", "𝟙", "𝟚", "𝟛", "𝟜", "𝟝", "𝟞", "𝟟", "𝟠", "𝟡"};
 
@@ -2553,6 +2555,16 @@ public class CustomKeyboardApp extends InputMethodService
         applyCapsState();
     }
 
+    public void setEdgetoEdge(View root) {
+        // Ensure the keyboard can layout edge-to-edge and stay above navigation bar
+        ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
+            androidx.core.graphics.Insets nav = insets.getInsets(WindowInsetsCompat.Type.navigationBars());
+            v.setPadding(v.getPaddingLeft(), v.getPaddingTop(), v.getPaddingRight(), nav.bottom);
+            return insets;
+        });
+        ViewCompat.requestApplyInsets(root);
+    }
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
         Set<String> rebuild_prefs = new HashSet<>(Arrays.asList("key_color", "gridToggle", "keyboard_height", "keyboard_layout", "emoji_variation", "etenToggle", "keySoundToggle", "key_sound_effect", "altSymbolToggle", "fullStopCommentToggle"));
@@ -2567,6 +2579,7 @@ public class CustomKeyboardApp extends InputMethodService
         View newRoot = buildKeyboardView();
         setInputView(newRoot);
         root = newRoot;
+        setEdgetoEdge(root);
         applyCapsState();
     }
 
@@ -2589,6 +2602,8 @@ public class CustomKeyboardApp extends InputMethodService
         LayoutInflater li = LayoutInflater.from(wrap);
         View root = li.cloneInContext(wrap)
                 .inflate(R.layout.custom_keyboard_layout, null);
+
+        setEdgetoEdge(root);
 
         // 3) (Exactly as before) wire up your KeyboardView + pop‑up machinery
         kv = root.findViewById(R.id.keyboard_view);
