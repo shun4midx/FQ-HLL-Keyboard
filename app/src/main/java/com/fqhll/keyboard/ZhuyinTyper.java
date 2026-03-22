@@ -136,107 +136,103 @@ public class ZhuyinTyper {
         }
     }
 
-    public String[] suggest(String[] zhuyinInput, boolean useEten) {
-        if (zhuyinInput == null || zhuyinInput.length == 0) {
-            return new String[0];
-        }
+    public String[][] suggest(String[] zhuyinInput, boolean useEten) {
+        if (zhuyinInput == null || zhuyinInput.length == 0) return new String[0][];
 
-        // Special case for hahahahah
+        // haha special case
         String inputStr = zhuyinInput[0];
-        if (inputStr.length() >= 4 && inputStr.length() % 2 == 0) { // at least "ㄏㄚㄏㄚ"
+        if (inputStr.length() >= 4 && inputStr.length() % 2 == 0) {
             boolean allHa = true;
             for (int i = 0; i < inputStr.length(); i += 2) {
-                if (inputStr.charAt(i) != 'ㄏ' || inputStr.charAt(i + 1) != 'ㄚ') {
-                    allHa = false;
-                    break;
-                }
+                if (inputStr.charAt(i) != 'ㄏ' || inputStr.charAt(i + 1) != 'ㄚ') { allHa = false; break; }
             }
             if (allHa) {
                 int count = inputStr.length() / 2;
-                return new String[]{ "哈".repeat(count) };
+                return new String[][]{{"哈".repeat(count), String.valueOf(inputStr.length())}};
             }
         }
 
-        // Flatten input into joined string
-        StringBuilder sb = new StringBuilder();
-        for (String part : zhuyinInput) {
-            if (part != null) sb.append(part.replace(" ", ""));
-        }
-        String joined = sb.toString();
+        Map<String, Integer> allHits = new HashMap<>();
+        Map<String, Integer> hitInputLength = new HashMap<>(); // track input chars consumed per key
 
-//        List<String> results = new ArrayList<>();
-        Map<String,Integer> allHits = new HashMap<>();
-
-        // 1. Exact matches (prefix-based, longest first)
+        // Exact matches
         List<String> candidates = new ArrayList<>();
         StringBuilder candBuilder = new StringBuilder();
-
-        for (int i = 0; i < zhuyinInput.length; ++i) {
-            candBuilder.append(zhuyinInput[i].replace(" ", ""));
+        for (String part : zhuyinInput) {
+            candBuilder.append(part.replace(" ", ""));
             candidates.add(candBuilder.toString());
         }
-
         for (int i = candidates.size() - 1; i >= 0; --i) {
             String candidate = candidates.get(i);
             if (dict.containsKey(candidate)) {
                 allHits.putIfAbsent(candidate, 0);
+                int rawLen = 0;
+                for (int j = 0; j <= i; ++j) rawLen += zhuyinInput[j].length();
+                hitInputLength.putIfAbsent(candidate, rawLen); // exact: consume candidate.length()
             }
         }
 
-        // 2. Fuzzy matches
-        int fixed_size = allHits.size();
-//        if (fixed_size < 30) {
-            int THRESHOLD = 2;
-            Map<String,Integer> fuzzyHits = new HashMap<>();
-
-            // Multi-fuzzy: check 1–4 first syllables
-            for (int k = 1; k <= 4 && k <= zhuyinInput.length; ++k) {
-                StringBuilder target = new StringBuilder();
-                for (int i = 0; i < k; ++i) {
-                    target.append(zhuyinInput[i].replace(" ", ""));
-                }
-                String fuzzyTarget = target.toString();
-                if (fuzzyTarget.isEmpty()) {
-                    continue;
-                }
-
-                char firstInput = fuzzyTarget.charAt(0);
-
-                for (Map.Entry<Character, List<String>> entry : index.entrySet()) {
-                    if (keyDistance(firstInput, entry.getKey(), useEten) > 1) {
-                        continue;
-                    }
-
-                    for (String key : entry.getValue()) {
-                        int dist = fuzzyKeyboardDistance(fuzzyTarget, key, useEten, THRESHOLD);
-                        if (dist > 0 && dist <= THRESHOLD) {
-                            allHits.merge(key, dist, Math::min);
+        // Fuzzy matches
+        int THRESHOLD = 2;
+        for (int k = 1; k <= 4 && k <= zhuyinInput.length; ++k) {
+            StringBuilder target = new StringBuilder();
+            for (int i = 0; i < k; ++i) target.append(zhuyinInput[i].replace(" ", ""));
+            String fuzzyTarget = target.toString();
+            if (fuzzyTarget.isEmpty()) continue;
+            char firstInput = fuzzyTarget.charAt(0);
+            for (Map.Entry<Character, List<String>> entry : index.entrySet()) {
+                if (keyDistance(firstInput, entry.getKey(), useEten) > 1) continue;
+                for (String key : entry.getValue()) {
+                    int dist = fuzzyKeyboardDistance(fuzzyTarget, key, useEten, THRESHOLD);
+                    if (dist > 0 && dist <= THRESHOLD) {
+                        if (allHits.merge(key, dist, Math::min) == dist) {
+                            int rawLen = 0;
+                            for (int i = 0; i < k; ++i) rawLen += zhuyinInput[i].length();
+                            hitInputLength.put(key, rawLen); // user typed this many chars
                         }
                     }
                 }
             }
-//        }
+        }
 
-        List<Map.Entry<String,Integer>> sorted = new ArrayList<>(allHits.entrySet());
-        sorted.sort(
-                Comparator.<Map.Entry<String,Integer>>comparingInt(Map.Entry::getValue)
-                        .thenComparingInt((Map.Entry<String,Integer> a) -> -a.getKey().length())
-        );
-
-        List<String> results = new ArrayList<>();
-        int MAX_KEYS = 15;
-        int count = 0;
-
-        for (Map.Entry<String,Integer> e : sorted) {
-            // Expand *all words* for this zhuyin key
-            results.addAll(dict.getOrDefault(e.getKey(), Collections.emptyList()));
-
-            if (++count >= MAX_KEYS) {
-                break; // cap at max zhuyin variations, not words
+        // After the fuzzy loop, before sorting:
+        if (allHits.size() < 10) {
+            int THRESHOLD2 = 7; // higher threshold
+            for (int k = 1; k <= 4 && k <= zhuyinInput.length; ++k) {
+                StringBuilder target = new StringBuilder();
+                for (int i = 0; i < k; ++i) target.append(zhuyinInput[i].replace(" ", ""));
+                String fuzzyTarget = target.toString();
+                if (fuzzyTarget.isEmpty()) continue;
+                char firstInput = fuzzyTarget.charAt(0);
+                for (Map.Entry<Character, List<String>> entry : index.entrySet()) {
+                    if (keyDistance(firstInput, entry.getKey(), useEten) > 2) continue; // slightly wider
+                    for (String key : entry.getValue()) {
+                        int dist = fuzzyKeyboardDistance(fuzzyTarget, key, useEten, THRESHOLD2);
+                        if (dist > 0 && dist <= THRESHOLD2) {
+                            if (allHits.merge(key, dist, Math::min) == dist) {
+                                int rawLen = 0;
+                                for (int i = 0; i < k; ++i) rawLen += zhuyinInput[i].length();
+                                hitInputLength.put(key, rawLen);
+                            }
+                        }
+                    }
+                }
             }
         }
 
-        return results.toArray(new String[0]);
-    }
+        List<Map.Entry<String,Integer>> sorted = new ArrayList<>(allHits.entrySet());
+        sorted.sort(Comparator.<Map.Entry<String,Integer>>comparingInt(Map.Entry::getValue)
+                .thenComparingInt(a -> -a.getKey().length()));
 
+        List<String[]> results = new ArrayList<>();
+        int count = 0;
+        for (Map.Entry<String,Integer> e : sorted) {
+            int inputLen = hitInputLength.getOrDefault(e.getKey(), e.getKey().length());
+            for (String word : dict.getOrDefault(e.getKey(), Collections.emptyList())) {
+                results.add(new String[]{word, String.valueOf(inputLen)});
+            }
+            if (++count >= 12) break;
+        }
+        return results.toArray(new String[0][]);
+    }
 }

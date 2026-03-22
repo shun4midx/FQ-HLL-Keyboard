@@ -345,8 +345,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         val dictPath = filesDir.absolutePath + "/test_files/20k_texting.txt"
         val customWordsPath = filesDir.absolutePath + "/test_files/custom_words.txt"
-        CustomKeyboardApp.nativeAddWord(word, dictPath)
-        CustomKeyboardApp.nativeAddWord(word, customWordsPath)
+        val contractionPath = filesDir.absolutePath + "/test_files/user_contractions.txt"
+        CustomKeyboardApp.nativeAddWord(word, dictPath, contractionPath)
+        CustomKeyboardApp.nativeAddWord(word, customWordsPath, contractionPath)
     }
 
     private fun removeFromDictionary(word: String) {
@@ -354,8 +355,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         val dictPath = filesDir.absolutePath + "/test_files/20k_texting.txt"
         val customWordsPath = filesDir.absolutePath + "/test_files/custom_words.txt"
-        CustomKeyboardApp.nativeRemoveWord(word, dictPath)
-        CustomKeyboardApp.nativeRemoveWord(word, customWordsPath)
+        val contractionPath = filesDir.absolutePath + "/test_files/user_contractions.txt"
+        CustomKeyboardApp.nativeRemoveWord(word, dictPath, contractionPath)
+        CustomKeyboardApp.nativeRemoveWord(word, customWordsPath, contractionPath)
     }
 
     private fun inDictionary(word: String): Boolean {
