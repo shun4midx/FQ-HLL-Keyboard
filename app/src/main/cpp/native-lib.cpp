@@ -77,11 +77,21 @@ int getCaseState(const std::string& word) { // Change it to mean 1 = Standard, 2
             return 0;
         }
 
-        bool is_lower = isLower(word[1]);
-        for (int i = 2; i < word.length(); ++i) {
-            if (isLower(word[i]) != is_lower) { // Not consistently same case
-                return 0; // Another capitalization
-            }
+        bool is_lower = false;
+        bool found_second = false;
+        for (int i = 1; i < word.length(); ++i) {
+            char c = word[i];
+            if (!isLower(c) && !(c >= 'A' && c <= 'Z')) continue; // skip non-letters
+            is_lower = isLower(c);
+            found_second = true;
+            break;
+        }
+        if (!found_second) return 2; // only one letter
+
+        for (int i = 1; i < word.length(); ++i) {
+            char c = word[i];
+            if (!isLower(c) && !(c >= 'A' && c <= 'Z')) continue; // skip non-letters
+            if (isLower(c) != is_lower) return 0;
         }
 
         return is_lower ? 1 : 2;
@@ -319,6 +329,10 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
         if (case_state == 1) {
             // Capitalize first letter: "Rubik's"
             autoreplaced[0] = toUpper(autoreplaced[0]);
+        } else if (case_state == 2) {
+            for (char& c : autoreplaced) c = toUpper(c);
+        } else if (autocap && cap_uppercase.find(autoreplaced) != cap_uppercase.end()) {
+            autoreplaced[0] = toUpper(autoreplaced[0]);
         }
         results = {{prefixSymbols + key, prefixSymbols + autoreplaced, " "},
                    {0.5, 0.8, 0.0}};
@@ -364,13 +378,20 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
             }
 
             if (found) {
-                // Apply same case state
-                if (autocap && cap_uppercase.find(autoreplaced) != cap_uppercase.end()) {
-                    autoreplaced[0] = toUpper(autoreplaced[0]);
+                if (case_state == 2 && !autoreplaced.empty()) {
+                    for (char& c : autoreplaced) c = toUpper(c);
                 } else if (case_state == 1 && !autoreplaced.empty()) {
                     autoreplaced[0] = toUpper(autoreplaced[0]);
+                } else if (autocap && cap_uppercase.find(autoreplaced) != cap_uppercase.end()) {
+                    autoreplaced[0] = toUpper(autoreplaced[0]);
                 } else if (case_state == 0 && !autoreplaced.empty()) {
-                    for (char& c : autoreplaced) c = toLower(c);
+                    bool pureAlpha = true;
+                    for (char c : autoreplaced) {
+                        if (!std::isalpha(static_cast<unsigned char>(c))) { pureAlpha = false; break; }
+                    }
+                    if (pureAlpha) {
+                        for (char& c : autoreplaced) c = toLower(c);
+                    }
                 }
                 suggestions[i] = autoreplaced;
             }
