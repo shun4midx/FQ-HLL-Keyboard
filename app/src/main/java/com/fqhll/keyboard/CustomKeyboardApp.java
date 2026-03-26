@@ -747,6 +747,10 @@ public class CustomKeyboardApp extends InputMethodService
                 commitTextAndShowLabel("🥔️");
                 showSuggestions("");
                 break;
+            case -115: // eyes -> distorted face emoji
+                commitTextAndShowLabel("\uD83E\uDEEA");
+                showSuggestions("");
+                break;
             case -117: // shep -> fish
                 commitTextAndShowLabel("🐟");
                 showSuggestions("");
