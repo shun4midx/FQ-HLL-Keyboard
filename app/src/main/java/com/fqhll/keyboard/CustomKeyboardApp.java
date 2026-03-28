@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 import android.media.SoundPool;
 import android.content.ClipboardManager;
+import android.text.TextPaint;
 
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -213,6 +214,21 @@ public class CustomKeyboardApp extends InputMethodService
             Map.entry('˙', ".")
     );
 
+    private static final Map<Integer, String> SYMBOL_TO_CHI = Map.ofEntries(
+            Map.entry((int) ',', "，"),
+            Map.entry((int) '.', "。"),
+            Map.entry((int) '!', "！"),
+            Map.entry((int) '?', "？"),
+            Map.entry((int) ':', "："),
+            Map.entry((int) ';', "；"),
+            Map.entry((int) '(', "（"),
+            Map.entry((int) ')', "）"),
+            Map.entry((int) '<', "〈"),
+            Map.entry((int) '>', "〉"),
+            Map.entry((int) '\'', "『"),
+            Map.entry((int) '"', "』"),
+            Map.entry((int) '~', "～")
+    );
 
     private void ensureNative() {
         if (!nativeLoaded) {
@@ -266,6 +282,7 @@ public class CustomKeyboardApp extends InputMethodService
         if (k == engKeyboard || k == zhuyinKeyboard) {
             lastNonPageKeyboard = k;
         }
+        updateSymbolLabels();
         kv.setKeyboard(k);
         updateCompositionBarVisibility();
         updateModeSwitchLabel();
@@ -496,6 +513,69 @@ public class CustomKeyboardApp extends InputMethodService
         return;
     }
 
+    private void updatePagePunctuationLabels(Keyboard kb) {
+        if (kb == null) return;
+
+        boolean chinese = (lastNonPageKeyboard == zhuyinKeyboard);
+
+        for (Keyboard.Key key : kb.getKeys()) {
+            if (key.codes == null || key.codes.length == 0) continue;
+
+            int code = key.codes[0];
+
+            if (code == '<') {
+                key.label = "<";
+                continue;
+            }
+
+            if (code == '>') {
+                key.label = ">";
+                continue;
+            }
+
+            if (code == '\'') {
+                key.label = chinese ? "「" : "'";
+                continue;
+            }
+
+            if (code == '"') {
+                key.label = chinese ? "」" : "\"";
+                continue;
+            }
+
+            if (code == ',') {
+                key.label = chinese ? "，" : ",";
+                continue;
+            }
+
+            if (code == '.') {
+                key.label = chinese ? "。" : ".";
+                continue;
+            }
+
+            if (code == 32) { // SPACE
+                key.label = chinese ? "空格" : "SPACE";
+                key.icon = null;
+                key.iconPreview = null;
+                continue;
+            }
+
+            if (kb == symbolKeyboard) {
+                if (chinese && SYMBOL_TO_CHI.containsKey(code)) {
+                    key.label = SYMBOL_TO_CHI.get(code);
+                } else if (code > 0) {
+                    key.label = String.valueOf((char) code);
+                }
+            }
+        }
+    }
+
+    private void updateSymbolLabels() {
+        updatePagePunctuationLabels(symbolKeyboard);
+        updatePagePunctuationLabels(mathKeyboard);
+        updatePagePunctuationLabels(emojiKeyboard);
+    }
+
     private void handleLongPress(int primaryCode) {
         if (primaryCode == -1 || (primaryCode == -14 && kv.getKeyboard() == symbolKeyboard) || (primaryCode == -2 && kv.getKeyboard() == mathKeyboard)) { // Long press CAPS = copy/paste or the symbols 1/2 button or math 2/2 button
             InputConnection ic = getCurrentInputConnection();
@@ -562,8 +642,12 @@ public class CustomKeyboardApp extends InputMethodService
                 if (kv.getKeyboard() == numpadKeyboard) {
                     commitTextAndShowLabel("˙");
                     updateSuggestion(ic);
-                } else if (kv.getKeyboard() == symbolKeyboard || kv.getKeyboard() == mathKeyboard) { // Long press "." to get a special fraction symbol
-                    commitTextAndShowLabel("⁄");
+                } else if (kv.getKeyboard() == symbolKeyboard || kv.getKeyboard() == mathKeyboard) { // Long press "." to get a special fraction symbol (except for Chi keyboard)
+                    if (lastNonPageKeyboard != zhuyinKeyboard || kv.getKeyboard() == mathKeyboard) {
+                        commitTextAndShowLabel("⁄");
+                    } else {
+                        commitTextAndShowLabel(".");
+                    }
                 } else {
                     if (useFullStopComment) {
                         commitTextAndShowLabel("//");
@@ -575,7 +659,12 @@ public class CustomKeyboardApp extends InputMethodService
                 }
                 break;
             case 47: // slash -> backslash
-                if (!maybeAutoReplace(ic, "\\")) {
+//                if (!maybeAutoReplace(ic, "\\")) {
+//                    commitTextAndShowLabel("\\");
+//                }
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                    commitTextAndShowLabel("｜");
+                } else {
                     commitTextAndShowLabel("\\");
                 }
                 updateSuggestion(ic);
@@ -592,7 +681,11 @@ public class CustomKeyboardApp extends InputMethodService
                 } else if (kv.getKeyboard() == numpadKeyboard) {
                     // Now send the Enter/new line per IME options
                     EditorInfo editorInfo = getCurrentInputEditorInfo();
-                    if (editorInfo != null && (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) != 0) {
+                    boolean multiline =
+                            editorInfo != null &&
+                                    (editorInfo.inputType & android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE) != 0;
+
+                    if (multiline) {
                         ic.commitText("\n", 1);
                     } else {
                         ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
@@ -630,38 +723,70 @@ public class CustomKeyboardApp extends InputMethodService
                 }
                 break;
             case '[':
-                commitTextAndShowLabel("{");
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                    commitTextAndShowLabel("【");
+                } else {
+                    commitTextAndShowLabel("{");
+                }
                 updateSuggestion(ic);
                 break;
             case ']':
-                commitTextAndShowLabel("}");
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                    commitTextAndShowLabel("】");
+                } else {
+                    commitTextAndShowLabel("}");
+                }
                 updateSuggestion(ic);
                 break;
             case '_':
-                commitTextAndShowLabel("|");
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                    commitTextAndShowLabel("_");
+                } else {
+                    commitTextAndShowLabel("|");
+                }
                 updateSuggestion(ic);
                 break;
             case '!':
-                commitTextAndShowLabel("！");
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                    commitTextAndShowLabel("!");
+                } else {
+                    commitTextAndShowLabel("！");
+                }
                 updateSuggestion(ic);
                 break;
             case '?':
-                commitTextAndShowLabel("？");
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                    commitTextAndShowLabel("?");
+                } else {
+                    commitTextAndShowLabel("？");
+                }
                 updateSuggestion(ic);
                 break;
             case '~':
-                commitTextAndShowLabel("～");
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                    commitTextAndShowLabel("⋯⋯");
+                } else {
+                    commitTextAndShowLabel("～");
+                }
                 updateSuggestion(ic);
                 break;
             case ':':
-                commitTextAndShowLabel("：");
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                    commitTextAndShowLabel(":");
+                } else {
+                    commitTextAndShowLabel("：");
+                }
                 updateSuggestion(ic);
                 break;
             case '(':
                 if (kv.getKeyboard() == numpadKeyboard) {
                     commitTextAndShowLabel("⁽");
                 } else {
-                    commitTextAndShowLabel("（");
+                    if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                        commitTextAndShowLabel("《");
+                    } else {
+                        commitTextAndShowLabel("（");
+                    }
                 }
                 updateSuggestion(ic);
                 break;
@@ -669,7 +794,11 @@ public class CustomKeyboardApp extends InputMethodService
                 if (kv.getKeyboard() == numpadKeyboard) {
                     commitTextAndShowLabel("⁾");
                 } else {
-                    commitTextAndShowLabel("）");
+                    if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                        commitTextAndShowLabel("》");
+                    } else {
+                        commitTextAndShowLabel("）");
+                    }
                 }
                 updateSuggestion(ic);
                 break;
@@ -682,11 +811,19 @@ public class CustomKeyboardApp extends InputMethodService
                 updateSuggestion(ic);
                 break;
             case '<':
-                commitTextAndShowLabel("「");
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                    commitTextAndShowLabel("〈");
+                } else {
+                    commitTextAndShowLabel("「");
+                }
                 updateSuggestion(ic);
                 break;
             case '>':
-                commitTextAndShowLabel("」");
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                    commitTextAndShowLabel("〉");
+                } else {
+                    commitTextAndShowLabel("」");
+                }
                 updateSuggestion(ic);
                 break;
             case '\'':
@@ -698,7 +835,11 @@ public class CustomKeyboardApp extends InputMethodService
                 updateSuggestion(ic);
                 break;
             case ';':
-                commitTextAndShowLabel("；");
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                    commitTextAndShowLabel("・");
+                } else {
+                    commitTextAndShowLabel("；");
+                }
                 updateSuggestion(ic);
                 break;
             case '0': case '1': case '2': case '3': case '4':
@@ -813,6 +954,14 @@ public class CustomKeyboardApp extends InputMethodService
                 break;
             case -133: // duck -> bird
                 commitTextAndShowLabel("🐦");
+                showSuggestions("");
+                break;
+            case -134: // vegetable -> garlic
+                commitTextAndShowLabel("🧄");
+                showSuggestions("");
+                break;
+            case -135: // monkey -> chicken
+                commitTextAndShowLabel("🐔");
                 showSuggestions("");
                 break;
             case -136: // brain -> rock
@@ -1192,6 +1341,35 @@ public class CustomKeyboardApp extends InputMethodService
         }
     }
 
+    private boolean handleSymbolTap(InputConnection ic, int primaryCode) {
+        if (kv == null) return false;
+
+        Keyboard current = kv.getKeyboard();
+        if (current != symbolKeyboard && current != mathKeyboard && current != emojiKeyboard) {
+            return false;
+        }
+
+        if (lastNonPageKeyboard != zhuyinKeyboard) return false;
+
+        if (primaryCode == '\'') {
+            ic.commitText("「", 1);
+            showSuggestions("");
+            return true;
+        }
+
+        if (primaryCode == '"') {
+            ic.commitText("」", 1);
+            showSuggestions("");
+            return true;
+        }
+
+        String mapped = SYMBOL_TO_CHI.get(primaryCode);
+        if (mapped == null) return false;
+
+        ic.commitText(mapped, 1);
+        showSuggestions("");
+        return true;
+    }
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
 
@@ -1287,6 +1465,10 @@ public class CustomKeyboardApp extends InputMethodService
 
         if (defaultCaps && isAtLineStart() && caps_state == 1) {
             applyCapsState();
+        }
+
+        if (handleSymbolTap(ic, primaryCode)) { // Chinese vs Eng symbols
+            return;
         }
 
         switch (primaryCode) {
@@ -1435,9 +1617,11 @@ public class CustomKeyboardApp extends InputMethodService
                 ic.setSelection(0, beforeLen + afterLen);
                 break;
             case -67: // rightest
-                CharSequence rightestText = ic.getTextBeforeCursor(Integer.MAX_VALUE, 0)
-                        .toString() + ic.getTextAfterCursor(Integer.MAX_VALUE, 0).toString();
-                ic.setSelection(rightestText.length(), rightestText.length());
+                et = ic.getExtractedText(new ExtractedTextRequest(), 0);
+                if (et != null && et.text != null) {
+                    int end = et.text.length();
+                    ic.setSelection(end, end);
+                }
                 break;
             case -68: // cut
                 CharSequence cutText = ic.getSelectedText(0);
@@ -1585,7 +1769,11 @@ public class CustomKeyboardApp extends InputMethodService
 
                     // Now send the Enter/new line per IME options
                     EditorInfo editorInfo = getCurrentInputEditorInfo();
-                    if (editorInfo != null && (editorInfo.imeOptions & EditorInfo.IME_FLAG_NO_ENTER_ACTION) != 0) {
+                    boolean multiline =
+                            editorInfo != null &&
+                                    (editorInfo.inputType & android.text.InputType.TYPE_TEXT_FLAG_MULTI_LINE) != 0;
+
+                    if (multiline) {
                         ic.commitText("\n", 1);
                     } else {
                         ic.sendKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER));
@@ -2419,29 +2607,68 @@ public class CustomKeyboardApp extends InputMethodService
     private void updateClipboardLabel() {
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
 
+        float paddingPx = 5f * getResources().getDisplayMetrics().density;
+        float textSizeSp = 16f;
+
         for (Keyboard.Key key : clipKeyboard.getKeys()) {
             if (key.codes == null || key.codes.length == 0) continue;
 
             for (int i = 0; i < 10; i++) {
-                int clipboard_keycode = 90 + i;
-                clipboard_keycode = -clipboard_keycode; // just add the negative sign for negative keycode
-
+                int clipboard_keycode = -(90 + i);
                 int clipboard_pref_code = i + 1;
 
                 String clipboard_prefs = "clipboard_text_" + clipboard_pref_code;
                 String clipboard_text = prefs.getString(clipboard_prefs, "");
 
-                int truncate_length = 14;
-                if (clipboard_text.length() > truncate_length) {
-                    clipboard_text = clipboard_text.substring(0, truncate_length) + "...";
-                }
-
                 if (key.codes[0] == clipboard_keycode) {
-                    key.label = clipboard_text.isEmpty() ? null : clipboard_text;
+                    if (clipboard_text == null || clipboard_text.isEmpty()) {
+                        key.label = null;
+                    } else {
+                        key.label = ellipsizeToFit(clipboard_text, key.width, paddingPx, textSizeSp);
+                    }
                     break;
                 }
             }
         }
+    }
+
+    private String ellipsizeToFit(String text, float maxWidthPx, float paddingPx, float textSizeSp) {
+        if (text == null || text.isEmpty()) return "";
+
+        float availableWidth = maxWidthPx - 2 * paddingPx;
+        if (availableWidth <= 0) return "...";
+
+        TextPaint paint = new TextPaint();
+        paint.setTextSize(TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_SP,
+                textSizeSp,
+                getResources().getDisplayMetrics()
+        ));
+
+        if (paint.measureText(text) <= availableWidth) {
+            return text;
+        }
+
+        String ellipsis = "...";
+        float ellipsisWidth = paint.measureText(ellipsis);
+
+        StringBuilder sb = new StringBuilder();
+        int i = 0;
+
+        while (i < text.length()) {
+            int cp = text.codePointAt(i);
+            String ch = new String(Character.toChars(cp));
+
+            float nextWidth = paint.measureText(sb.toString() + ch);
+            if (nextWidth + ellipsisWidth > availableWidth) {
+                break;
+            }
+
+            sb.append(ch);
+            i += Character.charCount(cp);
+        }
+
+        return sb.length() == 0 ? ellipsis : sb + ellipsis;
     }
 
     private boolean shouldAutoCap() {
@@ -2754,6 +2981,8 @@ public class CustomKeyboardApp extends InputMethodService
         useFullStopComment = prefs.getBoolean("fullStopCommentToggle", false);
         isKeySoundEnabled = prefs.getBoolean("keySoundToggle", true);
 
+        updateSymbolLabels();
+
         if (useEtenLayout) {
             zhuyinKeyboard = new Keyboard(wrap, R.xml.custom_keypad_zhuyin_eten);
         }
@@ -2842,7 +3071,7 @@ public class CustomKeyboardApp extends InputMethodService
             if (kv.getKeyboard() == clipKeyboard && !zhuyinExpanded) {
                 clearClipboard();
                 return true;
-            } else if (kv.getKeyboard() == zhuyinKeyboard || zhuyinExpanded) {
+            } else if (lastNonPageKeyboard == zhuyinKeyboard || zhuyinExpanded) {
                 if (zhuyinExpanded) {
                     // Minimize
                     expanded.setVisibility(View.GONE);
@@ -2923,9 +3152,14 @@ public class CustomKeyboardApp extends InputMethodService
                 kv.invalidateAllKeys();
 
                 return true;
+            } else { // Return to latest opposite of curr lang
+                if (lastNonPageKeyboard == engKeyboard) {
+                    switchKeyboard(zhuyinKeyboard);
+                } else if (lastNonPageKeyboard == zhuyinKeyboard) {
+                    switchKeyboard(engKeyboard);
+                }
+                return true;
             }
-
-            return false;
         });
 
         // toggle text editor and normal keyboard
@@ -2939,7 +3173,7 @@ public class CustomKeyboardApp extends InputMethodService
         });
 
         textEditor.setOnLongClickListener(v -> {
-            if (kv.getKeyboard() == zhuyinKeyboard) {
+            if (lastNonPageKeyboard == zhuyinKeyboard) {
                 switchKeyboard(engKeyboard);
             } else {
                 switchKeyboard(zhuyinKeyboard);

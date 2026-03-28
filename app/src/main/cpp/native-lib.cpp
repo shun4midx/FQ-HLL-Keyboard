@@ -39,6 +39,10 @@ bool isLower(char c) {
     return c >= 'a' && c <= 'z';
 }
 
+bool isUpper(char c) {
+    return c >= 'A' && c <= 'Z';
+}
+
 char toUpper(char c) {
     if (c >= 'a' && c <= 'z') {
         return c - 'a' + 'A';
@@ -65,7 +69,7 @@ std::string strToLower(const std::string& word) {
     return ans;
 }
 
-int getCaseState(const std::string& word) { // Change it to mean 1 = Standard, 2 = STANDARD, 3 = Everything else
+int getCaseState(const std::string& word) { // Change it to mean 1 = CapitalTHeNWhAtEvEr, 2 = STANDARD, 3 = Everything else
     if (word.length() < 2) {
         if (isLower(word[0])) {
             return 0;
@@ -91,10 +95,10 @@ int getCaseState(const std::string& word) { // Change it to mean 1 = Standard, 2
         for (int i = 1; i < word.length(); ++i) {
             char c = word[i];
             if (!isLower(c) && !(c >= 'A' && c <= 'Z')) continue; // skip non-letters
-            if (isLower(c) != is_lower) return 0;
+            if (isLower(c)) return 1;
         }
 
-        return is_lower ? 1 : 2;
+        return 2;
     }
 }
 
@@ -343,13 +347,15 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
 
         int case_state = getCaseState(key);
 
-        if (case_state == 1) {
+        if (case_state == 1) { // Capital beginning
             for (int i = 0; i < 3; ++i) {
-                if (suggestions[i].length() > 0) {
+                if (strToLower(suggestions[i]) == strToLower(key)) { // Don't autocorrect correct spelling
+                    suggestions[i] = key;
+                } else if (!suggestions[i].empty()) {
                     suggestions[i][0] = toUpper(suggestions[i][0]);
                 }
             }
-        } else if (case_state == 2) {
+        } else if (case_state == 2) { // All caps
             for (int i = 0; i < 3; ++i) {
                 for (int j = 0; j < suggestions[i].length(); ++j) {
                     suggestions[i][j] = toUpper(suggestions[i][j]);
@@ -357,8 +363,12 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
             }
         } else if (case_state == 0) { // Any other/lower
             for (int i = 0; i < 3; ++i) {
-                if (suggestions[i] == strToLower(key)) { // Don't autocorrect correct spelling
+                if (strToLower(suggestions[i]) == strToLower(key)) { // Don't autocorrect correct spelling
                     suggestions[i] = key;
+                } else {
+                    for (int j = 0; j < suggestions[i].length(); ++j) {
+                        suggestions[i][j] = toLower(suggestions[i][j]);
+                    }
                 }
             }
         }
