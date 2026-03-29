@@ -331,14 +331,16 @@ public class ZhuyinTyper {
                 int dist = fuzzyZhuyinDistanceSmart(fuzzyTarget, key, useEten, threshold);
                 if (dist <= 0 || dist > threshold) continue;
 
+                int consumeLen = requireLeftMatch ? key.length() : rawLen;
+
                 Integer oldDist = allHits.get(key);
 
                 if (oldDist == null || dist < oldDist) {
                     allHits.put(key, dist);
-                    hitInputLength.put(key, rawLen);
+                    hitInputLength.put(key, consumeLen);
                 } else if (dist == oldDist) {
-                    int oldLen = hitInputLength.getOrDefault(key, rawLen);
-                    hitInputLength.put(key, betterConsumeLen(key, oldLen, rawLen));
+                    int oldLen = hitInputLength.getOrDefault(key, consumeLen);
+                    hitInputLength.put(key, betterConsumeLen(key, oldLen, consumeLen));
                 }
             }
         }
