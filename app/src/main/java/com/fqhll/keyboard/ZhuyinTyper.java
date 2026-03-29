@@ -298,6 +298,20 @@ public class ZhuyinTyper {
         return score;
     }
 
+    private int betterConsumeLen(String key, int oldLen, int newLen) {
+        int target = key.length();
+
+        int oldDiff = Math.abs(oldLen - target);
+        int newDiff = Math.abs(newLen - target);
+
+        if (newDiff != oldDiff) {
+            return newDiff < oldDiff ? newLen : oldLen;
+        }
+
+        // tie: prefer the smaller one so we don't over-delete
+        return Math.min(oldLen, newLen);
+    }
+
     private void collectHits(String fuzzyTarget, int rawLen, boolean useEten, int threshold, int firstKeyLimit, boolean requireLeftMatch, Map<String, Integer> allHits, Map<String, Integer> hitInputLength) {
         if (fuzzyTarget == null || fuzzyTarget.isEmpty()) return;
 
@@ -317,11 +331,14 @@ public class ZhuyinTyper {
                 int dist = fuzzyZhuyinDistanceSmart(fuzzyTarget, key, useEten, threshold);
                 if (dist <= 0 || dist > threshold) continue;
 
-                if (allHits.merge(key, dist, Math::min) == dist) {
-                    hitInputLength.put(key, Math.max(
-                            hitInputLength.getOrDefault(key, 0),
-                            rawLen
-                    ));
+                Integer oldDist = allHits.get(key);
+
+                if (oldDist == null || dist < oldDist) {
+                    allHits.put(key, dist);
+                    hitInputLength.put(key, rawLen);
+                } else if (dist == oldDist) {
+                    int oldLen = hitInputLength.getOrDefault(key, rawLen);
+                    hitInputLength.put(key, betterConsumeLen(key, oldLen, rawLen));
                 }
             }
         }
@@ -522,26 +539,44 @@ public class ZhuyinTyper {
             }
         }
 
-        int key_count = 0;
+        final int MAX_RESULTS = 90;
+        final int MAX_FUZZY_KEYS = 40;
+
+        int fuzzyKeyCount = 0;
+
         for (Map.Entry<String,Integer> e : sorted) {
-            if (e.getKey().equals(fullInput)) {
-                key_count++;
-                if (key_count >= 12) break;
+            String key = e.getKey();
+            if (key.equals(fullInput)) {
                 continue;
             }
 
-            int inputLen = hitInputLength.getOrDefault(e.getKey(), e.getKey().length());
+            int dist = e.getValue();
 
-            List<String> words = dict.getOrDefault(e.getKey(), Collections.emptyList());
+            // Treat distance 2+ as "real fuzzy" so dist 1 can still behave more like normal typo correction
+            boolean isFuzzy = dist >= 2;
+
+            if (isFuzzy && fuzzyKeyCount >= MAX_FUZZY_KEYS) {
+                continue;
+            }
+
+            int inputLen = hitInputLength.getOrDefault(key, key.length());
+            List<String> words = dict.getOrDefault(key, Collections.emptyList());
+
+            boolean addedAnyFromThisKey = false;
 
             for (String word : words) {
                 if (alreadyAdded.add(word)) {
                     results.add(new String[]{word, String.valueOf(inputLen)});
+                    addedAnyFromThisKey = true;
+
+                    if (results.size() >= MAX_RESULTS) {
+                        return results.toArray(new String[0][]);
+                    }
                 }
             }
 
-            if (results.size() >= 100) {
-                break;
+            if (isFuzzy && addedAnyFromThisKey) {
+                fuzzyKeyCount++;
             }
         }
         return results.toArray(new String[0][]);

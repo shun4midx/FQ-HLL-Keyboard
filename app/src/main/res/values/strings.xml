@@ -8,8 +8,8 @@
     <string name="layout_switcher">Keyboard Layout</string>
     <string name="key_height">70dp</string>
     <string name="repo_link"><a href="https://github.com/shun4midx/FQ-HLL-Keyboard">FQ-HLL Keyboard</a> made by <a href="https://github.com/shun4midx">Shun</a> and <a href="https://github.com/ducky4life">Ducky</a></string>
-    <string name="copyright_notice">Made with horrible Kotlin skills and Java coffee cups | © 2025 Shun and Ducky</string>
-    <string name="edit_dictionary">Dictionary</string>
+    <string name="copyright_notice">Made with horrible Kotlin skills and Java coffee cups | © 2026 Shun and Ducky</string>
+    <string name="edit_dictionary">English Dictionary</string>
     <string name="edit_dict_word">word to add/remove</string>
     <string name="add_to_dictionary">Add word to dictionary</string>
     <string name="remove_from_dictionary">Remove word from dictionary</string>

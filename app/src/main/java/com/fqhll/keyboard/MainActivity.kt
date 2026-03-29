@@ -239,6 +239,32 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             saveFile()
         }
 
+        // Chinese keyboard
+        val removeBtn = findViewById<Button>(R.id.btn_remove_chinese_dict)
+
+        removeBtn.setOnClickListener {
+            val file = File(filesDir.absolutePath + "/tsi_custom.json")
+
+            if (file.exists()) {
+                val deleted = file.delete()
+
+                if (deleted) {
+                    Toast.makeText(this, "Success! Reinstall the app to type Chinese.", Toast.LENGTH_LONG).show()
+
+                    // IMPORTANT: prevent it from being copied back
+                    getSharedPreferences("keyboard_settings", MODE_PRIVATE)
+                        .edit()
+                        .putBoolean("chinese_dict_removed", true)
+                        .apply()
+
+                } else {
+                    Toast.makeText(this, "Failed to remove Chinese dictionary.", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "Chinese dictionary already removed.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
 
         // launch keyboard stuff
 

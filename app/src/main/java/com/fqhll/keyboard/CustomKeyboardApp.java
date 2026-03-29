@@ -280,6 +280,8 @@ public class CustomKeyboardApp extends InputMethodService
             lastNonPageKeyboard = k;
         }
         updateSymbolLabels();
+        updateEditorLabels();
+        updateNumpadLabels();
         kv.setKeyboard(k);
         updateCompositionBarVisibility();
         updateModeSwitchLabel();
@@ -571,6 +573,47 @@ public class CustomKeyboardApp extends InputMethodService
         updatePagePunctuationLabels(symbolKeyboard);
         updatePagePunctuationLabels(mathKeyboard);
         updatePagePunctuationLabels(emojiKeyboard);
+    }
+
+    private void updateEditorLabels() {
+        if (editorKeyboard == null) return;
+
+        boolean chinese = (lastNonPageKeyboard == zhuyinKeyboard);
+
+        for (Keyboard.Key key : editorKeyboard.getKeys()) {
+            if (key.codes == null || key.codes.length == 0) continue;
+
+            switch (key.codes[0]) {
+                case -63: // select toggle
+                    key.label = chinese ? "選取" : "select";
+                    break;
+                case -66: // select all
+                    key.label = chinese ? "全選" : "select all";
+                    break;
+                case -69: // copy
+                    key.label = chinese ? "複製" : "copy";
+                    break;
+                case -70: // paste
+                    key.label = chinese ? "貼上" : "paste";
+                    break;
+            }
+        }
+    }
+
+    private void updateNumpadLabels() {
+        if (numpadKeyboard == null) return;
+
+        boolean chinese = (lastNonPageKeyboard == zhuyinKeyboard);
+
+        for (Keyboard.Key key : numpadKeyboard.getKeys()) {
+            if (key.codes == null || key.codes.length == 0) continue;
+
+            switch (key.codes[0]) {
+                case -66: // select all
+                    key.label = chinese ? "全選" : "select all";
+                    break;
+            }
+        }
     }
 
     private void handleLongPress(int primaryCode) {
@@ -2979,6 +3022,8 @@ public class CustomKeyboardApp extends InputMethodService
         isKeySoundEnabled = prefs.getBoolean("keySoundToggle", true);
 
         updateSymbolLabels();
+        updateEditorLabels();
+        updateNumpadLabels();
 
         if (useEtenLayout) {
             zhuyinKeyboard = new Keyboard(wrap, R.xml.custom_keypad_zhuyin_eten);
