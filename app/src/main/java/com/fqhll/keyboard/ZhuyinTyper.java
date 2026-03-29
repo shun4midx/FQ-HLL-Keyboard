@@ -346,6 +346,51 @@ public class ZhuyinTyper {
         }
     }
 
+    private void collectHitsCutSingleCharOnly(String fuzzyTarget, int rawLen, boolean useEten, int threshold, int firstKeyLimit, Map<String, Integer> allHits, Map<String, Integer> hitInputLength) {
+        if (fuzzyTarget == null || fuzzyTarget.isEmpty()) return;
+
+        char firstInput = fuzzyTarget.charAt(0);
+        List<Character> heads = getNearbyHeads(firstInput, useEten, firstKeyLimit);
+
+        for (char head : heads) {
+            for (String key : index.getOrDefault(head, Collections.emptyList())) {
+
+                int matchScore = leftWeightedExactMatches(fuzzyTarget, key);
+                if (matchScore < Math.max(1, fuzzyTarget.length())) {
+                    continue;
+                }
+
+                int dist = fuzzyZhuyinDistanceSmart(fuzzyTarget, key, useEten, threshold);
+                if (dist <= 0 || dist > threshold) continue;
+
+                List<String> words = dict.getOrDefault(key, Collections.emptyList());
+
+                boolean hasSingleCharWord = false;
+                for (String word : words) {
+                    if (realCharLength(word) == 1) {
+                        hasSingleCharWord = true;
+                        break;
+                    }
+                }
+                if (!hasSingleCharWord) {
+                    continue;
+                }
+
+                int consumeLen = key.length();
+
+                Integer oldDist = allHits.get(key);
+
+                if (oldDist == null || dist < oldDist) {
+                    allHits.put(key, dist);
+                    hitInputLength.put(key, consumeLen);
+                } else if (dist == oldDist) {
+                    int oldLen = hitInputLength.getOrDefault(key, consumeLen);
+                    hitInputLength.put(key, betterConsumeLen(key, oldLen, consumeLen));
+                }
+            }
+        }
+    }
+
     public String[][] suggest(String[] zhuyinInput, boolean useEten) {
         if (zhuyinInput == null || zhuyinInput.length == 0) return new String[0][];
 
@@ -446,7 +491,7 @@ public class ZhuyinTyper {
             String fuzzyTarget = fullInput.substring(0, cut);
             int rawLen = Math.min(fuzzyTarget.length(), fullInput.length());
 
-            collectHits(fuzzyTarget, rawLen, useEten, THRESHOLD, 2, true, allHits, hitInputLength);
+            collectHitsCutSingleCharOnly(fuzzyTarget, rawLen, useEten, THRESHOLD, 2, allHits, hitInputLength);
         }
 
         // After the fuzzy loop, before sorting:
@@ -541,7 +586,7 @@ public class ZhuyinTyper {
             }
         }
 
-        final int MAX_RESULTS = 90;
+        final int MAX_RESULTS = 150;
         final int MAX_FUZZY_KEYS = 40;
 
         int fuzzyKeyCount = 0;
