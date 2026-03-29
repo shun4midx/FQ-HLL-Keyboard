@@ -490,12 +490,12 @@ public class ZhuyinTyper {
                 // if one side is exact but tiny, and the other is a very plausible fuller fuzzy match,
                 // prefer the fuller one
                 if (distA == 0 && distB > 0) {
-                    if (inputB >= inputA + 2 && distB <= 3) {
+                    if (syllB > syllA && inputB >= inputA + 2 && distB <= 3) {
                         return 1;
                     }
                 }
                 if (distB == 0 && distA > 0) {
-                    if (inputA >= inputB + 2 && distA <= 3) {
+                    if (syllA > syllB && inputA >= inputB + 2 && distA <= 3) {
                         return -1;
                     }
                 }
