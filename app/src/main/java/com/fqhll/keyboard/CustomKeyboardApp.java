@@ -12,7 +12,6 @@ import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Looper;
 import android.os.Handler;
 import android.util.TypedValue;
@@ -50,8 +49,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Deque;
 import java.util.ArrayDeque;
@@ -740,7 +737,7 @@ public class CustomKeyboardApp extends InputMethodService
                 break;
             case '_':
                 if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
-                    commitTextAndShowLabel("_");
+                    commitTextAndShowLabel("——");
                 } else {
                     commitTextAndShowLabel("|");
                 }
@@ -3050,8 +3047,73 @@ public class CustomKeyboardApp extends InputMethodService
 //                zhuyinExpanded = false;
 //            }
 //        });
+
         clipboard.setOnClickListener(v -> {
             try {
+                if (lastNonPageKeyboard == zhuyinKeyboard) {
+                    regenerateZhuyinSuggestions(zhuyinBuffer.toString());
+
+                    if (!zhuyinSuggestions.isEmpty() || zhuyinExpanded) {
+                        if (zhuyinExpanded) {
+                            expanded.setVisibility(View.GONE);
+                            keyboardView.setVisibility(View.VISIBLE);
+                            zhuyinExpanded = false;
+                        } else {
+                            expanded.setVisibility(View.VISIBLE);
+                            keyboardView.setVisibility(View.GONE);
+
+                            expanded.getLayoutParams().height = keyboardView.getHeight();
+                            expanded.requestLayout();
+                            zhuyinExpanded = true;
+
+                            FlexboxLayoutManager lm = new FlexboxLayoutManager(this);
+                            lm.setFlexDirection(FlexDirection.ROW);
+                            lm.setFlexWrap(FlexWrap.WRAP);
+                            expanded.setLayoutManager(lm);
+
+                            regenerateZhuyinSuggestions(zhuyinBuffer.toString());
+
+                            expanded.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+                                @Override
+                                public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+                                    View v2 = LayoutInflater.from(parent.getContext())
+                                            .inflate(R.layout.item_candidate_chip, parent, false);
+                                    return new RecyclerView.ViewHolder(v2) {};
+                                }
+
+                                @Override
+                                public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+                                    TextView tv = holder.itemView.findViewById(R.id.txt);
+                                    String s = zhuyinSuggestions.get(position);
+                                    int dc = zhuyinSuggestionDeleteCounts.get(position);
+                                    tv.setText(s);
+
+                                    tv.setOnClickListener(v3 -> {
+                                        InputConnection ic = getCurrentInputConnection();
+                                        if (ic != null) {
+                                            replaceCurrentWord(s, dc);
+                                        }
+
+                                        expanded.setVisibility(View.GONE);
+                                        keyboardView.setVisibility(View.VISIBLE);
+                                        zhuyinExpanded = false;
+
+                                        if (zhuyinBuffer.length() > 0) {
+                                            regenerateZhuyinSuggestions(zhuyinBuffer.toString());
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public int getItemCount() {
+                                    return zhuyinSuggestions.size();
+                                }
+                            });
+                        }
+                        return;
+                    }
+                }
+
                 if (kv.getKeyboard() == clipKeyboard) {
                     returnToLastNonPageKeyboard();
                 } else if (!zhuyinExpanded) {
@@ -3062,7 +3124,6 @@ public class CustomKeyboardApp extends InputMethodService
                     zhuyinExpanded = false;
                 }
             } catch (Exception e) {
-
             }
         });
 
@@ -3150,9 +3211,8 @@ public class CustomKeyboardApp extends InputMethodService
                 updateSupersubLabels();
                 applyCapsState();
                 kv.invalidateAllKeys();
-
                 return true;
-            } else { // Return to latest opposite of curr lang
+            } else {
                 if (lastNonPageKeyboard == engKeyboard) {
                     switchKeyboard(zhuyinKeyboard);
                 } else if (lastNonPageKeyboard == zhuyinKeyboard) {

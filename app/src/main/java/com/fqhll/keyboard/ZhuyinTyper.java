@@ -13,6 +13,11 @@ import java.util.*;
 public class ZhuyinTyper {
     private final Map<String, List<String>> dict = new HashMap<>();
     private final Map<Character, List<String>> index = new HashMap<>();
+    private final Map<String, Integer> bestWordLen = new HashMap<>();
+    private final Map<Character, List<Character>> near2Standard = new HashMap<>();
+    private final Map<Character, List<Character>> near2Eten = new HashMap<>();
+    private final Map<Character, List<Character>> near3Standard = new HashMap<>();
+    private final Map<Character, List<Character>> near3Eten = new HashMap<>();
 
     // Row strings: one string per row of keys
     private static final String[] ETEN_LAYOUT = {
@@ -58,6 +63,33 @@ public class ZhuyinTyper {
 
     private boolean isTone(char ch) {
         return ch == '˙' || ch == 'ˊ' || ch == 'ˇ' || ch == 'ˋ';
+    }
+
+    private Map<Character, List<Character>> buildNearMap(Map<Character,int[]> posMap, int maxDist) {
+        Map<Character, List<Character>> out = new HashMap<>();
+        List<Character> chars = new ArrayList<>(posMap.keySet());
+
+        for (char a : chars) {
+            List<Character> near = new ArrayList<>();
+            int[] pa = posMap.get(a);
+            for (char b : chars) {
+                int[] pb = posMap.get(b);
+                int d = Math.abs(pa[0] - pb[0]) + Math.abs(pa[1] - pb[1]);
+                if (d <= maxDist) {
+                    near.add(b);
+                }
+            }
+            out.put(a, near);
+        }
+        return out;
+    }
+
+    private List<Character> getNearbyHeads(char firstInput, boolean useEten, int maxDist) {
+        if (useEten) {
+            return (maxDist <= 2 ? near2Eten : near3Eten).getOrDefault(firstInput, Collections.singletonList(firstInput));
+        } else {
+            return (maxDist <= 2 ? near2Standard : near3Standard).getOrDefault(firstInput, Collections.singletonList(firstInput));
+        }
     }
 
     static class ZhuyinParts {
@@ -202,19 +234,16 @@ public class ZhuyinTyper {
         return edits;
     }
 
-    private int bestWordLengthForKey(String key) {
-        int best = 0;
-        for (String word : dict.getOrDefault(key, Collections.emptyList())) {
-            best = Math.max(best, word.length());
-        }
-        return best;
-    }
-
     private int realCharLength(String s) {
         return s.codePointCount(0, s.length());
     }
 
     public ZhuyinTyper(Context ctx) {
+        near2Standard.putAll(buildNearMap(posStandard, 2));
+        near2Eten.putAll(buildNearMap(posEten, 2));
+        near3Standard.putAll(buildNearMap(posStandard, 3));
+        near3Eten.putAll(buildNearMap(posEten, 3));
+
         // Load the JSON file from internal storage
         File file = new File(ctx.getFilesDir(), "tsi_custom.json");
         if (file.exists()) {
@@ -233,11 +262,20 @@ public class ZhuyinTyper {
                 JSONArray arr = root.getJSONArray(key);
 
                 List<String> values = new ArrayList<>();
+                int best = 0;
+
                 for (int i = 0; i < arr.length(); i++) {
-                    values.add(arr.getString(i)); // e.g. ["住", "注", "柱"]
+                    String word = arr.getString(i);
+                    values.add(word);
+
+                    int len = realCharLength(word);
+                    if (len > best) best = len;
                 }
 
+                values.sort(Comparator.<String>comparingInt(this::realCharLength).reversed());
+
                 dict.put(key, values);
+                bestWordLen.put(key, best);
 
                 if (!key.isEmpty()) {
                     char first = key.charAt(0);
@@ -246,6 +284,46 @@ public class ZhuyinTyper {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private int leftWeightedExactMatches(String a, String b) {
+        int n = Math.min(a.length(), b.length());
+        int score = 0;
+        for (int i = 0; i < n; ++i) {
+            if (a.charAt(i) == b.charAt(i)) {
+                score += (n - i); // earlier positions worth more
+            }
+        }
+        return score;
+    }
+
+    private void collectHits(String fuzzyTarget, int rawLen, boolean useEten, int threshold, int firstKeyLimit, boolean requireLeftMatch, Map<String, Integer> allHits, Map<String, Integer> hitInputLength) {
+        if (fuzzyTarget == null || fuzzyTarget.isEmpty()) return;
+
+        char firstInput = fuzzyTarget.charAt(0);
+        List<Character> heads = getNearbyHeads(firstInput, useEten, firstKeyLimit);
+
+        for (char head : heads) {
+            for (String key : index.getOrDefault(head, Collections.emptyList())) {
+
+                if (requireLeftMatch) {
+                    int matchScore = leftWeightedExactMatches(fuzzyTarget, key);
+                    if (matchScore < Math.max(1, fuzzyTarget.length())) {
+                        continue;
+                    }
+                }
+
+                int dist = fuzzyZhuyinDistanceSmart(fuzzyTarget, key, useEten, threshold);
+                if (dist <= 0 || dist > threshold) continue;
+
+                if (allHits.merge(key, dist, Math::min) == dist) {
+                    hitInputLength.put(key, Math.max(
+                            hitInputLength.getOrDefault(key, 0),
+                            rawLen
+                    ));
+                }
+            }
         }
     }
 
@@ -306,10 +384,15 @@ public class ZhuyinTyper {
         Map<String, Integer> hitInputLength = new HashMap<>(); // track input chars consumed per key
 
         // Exact matches
+        int end = Math.min(7, zhuyinInput.length);
         List<String> candidates = new ArrayList<>();
         StringBuilder candBuilder = new StringBuilder();
-        for (String part : zhuyinInput) {
-            candBuilder.append(part.replace(" ", ""));
+        String[] cleaned = new String[end];
+        for (int i = 0; i < end; ++i) {
+            cleaned[i] = zhuyinInput[i].replace(" ", "");
+        }
+        for (int i = 0; i < end; ++i) {
+            candBuilder.append(cleaned[i]);
             candidates.add(candBuilder.toString());
         }
         for (int i = candidates.size() - 1; i >= 0; --i) {
@@ -324,71 +407,42 @@ public class ZhuyinTyper {
 
         // Fuzzy matches
         int THRESHOLD = 2;
-        for (int k = 1; k <= 4 && k <= zhuyinInput.length; ++k) {
-            String fuzzyTarget = candidates.get(k - 1);
-            if (fuzzyTarget.isEmpty()) continue;
-            char firstInput = fuzzyTarget.charAt(0);
-            for (Map.Entry<Character, List<String>> entry : index.entrySet()) {
-                if (keyDistance(firstInput, entry.getKey(), useEten) > 2) continue;
-                for (String key : entry.getValue()) {
-//                    int dist = fuzzyKeyboardDistance(fuzzyTarget, key, useEten, THRESHOLD);
-                    int dist = fuzzyZhuyinDistanceSmart(fuzzyTarget, key, useEten, THRESHOLD);
-                    if (dist > 0 && dist <= THRESHOLD) {
-                        if (allHits.merge(key, dist, Math::min) == dist) {
-                            int rawLen = 0;
-                            for (int i = 0; i < k; ++i) rawLen += zhuyinInput[i].length();
-                            hitInputLength.put(key, rawLen);
-                        }
-                    }
-                }
-            }
+        int[] prefixRawLens = new int[end];
+        int runningRawLen = 0;
+        for (int i = 0; i < end; ++i) {
+            runningRawLen += zhuyinInput[i].length();
+            prefixRawLens[i] = runningRawLen;
         }
 
+        for (int k = Math.min(4, zhuyinInput.length); k >= 1; --k) {
+            String fuzzyTarget = candidates.get(k - 1);
+            int rawLen = prefixRawLens[k - 1];
+            collectHits(fuzzyTarget, rawLen, useEten, THRESHOLD, 2, false, allHits, hitInputLength);
+        }
+
+
         String fullInput = candidates.get(candidates.size() - 1);
-        if (fullInput.length() > 4) {
-            for (int cut = 4; cut >= 2; --cut) {
-                String fuzzyTarget = fullInput.substring(0, cut);
-                char firstInput = fuzzyTarget.charAt(0);
 
-                for (Map.Entry<Character, List<String>> entry : index.entrySet()) {
-                    if (keyDistance(firstInput, entry.getKey(), useEten) > 2) continue;
+        for (int cut = Math.min(4, fullInput.length()); cut >= 1; --cut) {
+            String fuzzyTarget = fullInput.substring(0, cut);
+            int rawLen = Math.min(fuzzyTarget.length(), fullInput.length());
 
-                    for (String key : entry.getValue()) {
-                        int dist = fuzzyZhuyinDistanceSmart(fuzzyTarget, key, useEten, THRESHOLD);
-                        if (dist > 0 && dist <= THRESHOLD) {
-                            if (allHits.merge(key, dist, Math::min) == dist) {
-                                hitInputLength.put(key, Math.max(
-                                        hitInputLength.getOrDefault(key, 0),
-                                        key.length()
-                                ));
-                            }
-                        }
-                    }
-                }
-            }
+            collectHits(fuzzyTarget, rawLen, useEten, THRESHOLD, 2, true, allHits, hitInputLength);
         }
 
         // After the fuzzy loop, before sorting:
+        prefixRawLens = new int[end];
+        runningRawLen = 0;
+        for (int i = 0; i < end; ++i) {
+            runningRawLen += zhuyinInput[i].length();
+            prefixRawLens[i] = runningRawLen;
+        }
         if (allHits.size() < 4) {
-            int THRESHOLD2 = 3; // higher threshold
+            int THRESHOLD2 = 3;
             for (int k = 1; k <= 4 && k <= zhuyinInput.length; ++k) {
                 String fuzzyTarget = candidates.get(k - 1);
-                if (fuzzyTarget.isEmpty()) continue;
-                char firstInput = fuzzyTarget.charAt(0);
-                for (Map.Entry<Character, List<String>> entry : index.entrySet()) {
-                    if (keyDistance(firstInput, entry.getKey(), useEten) > 3) continue; // slightly wider
-                    for (String key : entry.getValue()) {
-//                        int dist = fuzzyKeyboardDistance(fuzzyTarget, key, useEten, THRESHOLD2);
-                        int dist = fuzzyZhuyinDistanceSmart(fuzzyTarget, key, useEten, THRESHOLD2);
-                        if (dist > 0 && dist <= THRESHOLD2) {
-                            if (allHits.merge(key, dist, Math::min) == dist) {
-                                int rawLen = 0;
-                                for (int i = 0; i < k; ++i) rawLen += zhuyinInput[i].length();
-                                hitInputLength.put(key, rawLen);
-                            }
-                        }
-                    }
-                }
+                int rawLen = prefixRawLens[k - 1];
+                collectHits(fuzzyTarget, rawLen, useEten, THRESHOLD2, 3, false, allHits, hitInputLength);
             }
         }
 
@@ -398,57 +452,69 @@ public class ZhuyinTyper {
 
         fullInput = candidates.get(candidates.size() - 1);
 
-        sorted.sort((a, b) -> {
-            int distA = a.getValue();
-            int distB = b.getValue();
+        try {
+            sorted.sort((a, b) -> {
+                int distA = a.getValue();
+                int distB = b.getValue();
 
-            int inputA = hitInputLength.getOrDefault(a.getKey(), 0);
-            int inputB = hitInputLength.getOrDefault(b.getKey(), 0);
+                String keyA = a.getKey();
+                String keyB = b.getKey();
 
-            // Special case:
-            // if one side is exact but tiny, and the other is a very plausible fuller fuzzy match,
-            // prefer the fuller one
-            if (distA == 0 && distB > 0) {
-                if (inputB >= inputA + 2 && distB <= 3) {
-                    return 1;
+                int inputA = hitInputLength.getOrDefault(keyA, 0);
+                int inputB = hitInputLength.getOrDefault(keyB, 0);
+
+                int syllA = keyA.length();
+                int syllB = keyB.length();
+
+                if (syllA == 2 && syllB != 2 && distA + 1 < distB) return -1;
+                if (syllB == 2 && syllA != 2 && distB + 1 < distA) return 1;
+
+                // Special case:
+                // if one side is exact but tiny, and the other is a very plausible fuller fuzzy match,
+                // prefer the fuller one
+                if (distA == 0 && distB > 0) {
+                    if (inputB >= inputA + 2 && distB <= 3) {
+                        return 1;
+                    }
                 }
-            }
-            if (distB == 0 && distA > 0) {
-                if (inputA >= inputB + 2 && distA <= 3) {
-                    return -1;
+                if (distB == 0 && distA > 0) {
+                    if (inputA >= inputB + 2 && distA <= 3) {
+                        return -1;
+                    }
                 }
-            }
 
-            // Longer-span bias only for fuzzy-vs-fuzzy
-            if (distA > 0 && distB > 0 && Math.abs(distA - distB) <= 1 && inputA != inputB) {
-                return Integer.compare(inputB, inputA);
-            }
+                // Only use longer-span bias when comparing meaningfully different spans
+                if (distA > 0 && distB > 0 && Math.abs(distA - distB) <= 1 && inputA != inputB && syllA != syllB) {
+                    return Integer.compare(inputB, inputA);
+                }
 
-            // Then usual typo quality
-            if (distA != distB) return Integer.compare(distA, distB);
+                // Then usual typo quality
+                if (distA != distB) return Integer.compare(distA, distB);
 
-            int syllA = a.getKey().length();
-            int syllB = b.getKey().length();
-            if (syllA != syllB) return Integer.compare(syllB, syllA);
+                if (syllA != syllB) return Integer.compare(syllB, syllA);
 
-            int lenA = bestWordLengthForKey(a.getKey());
-            int lenB = bestWordLengthForKey(b.getKey());
+                int lenA = bestWordLen.getOrDefault(keyA, 0);
+                int lenB = bestWordLen.getOrDefault(keyB, 0);
 
-            int scoreA = 4 * distA - lenA;
-            int scoreB = 4 * distB - lenB;
+                int scoreA = 4 * distA - lenA;
+                int scoreB = 4 * distB - lenB;
 
-            if (scoreA != scoreB) return Integer.compare(scoreA, scoreB);
+                if (scoreA != scoreB) return Integer.compare(scoreA, scoreB);
 
-            return Integer.compare(b.getKey().length(), a.getKey().length());
-        });
+                return Integer.compare(keyB.length(), keyA.length());
+            });
+        } catch (Exception e) {
+
+        }
 
         Set<String> alreadyAdded = new HashSet<>();
         List<String[]> results = new ArrayList<>();
 
         if (dict.containsKey(fullInput)) {
             int inputLen = hitInputLength.getOrDefault(fullInput, fullInput.length());
-            List<String> exactWords = new ArrayList<>(dict.get(fullInput));
-            exactWords.sort(Comparator.<String>comparingInt(this::realCharLength).reversed());
+//            List<String> exactWords = new ArrayList<>(dict.get(fullInput));
+//            exactWords.sort(Comparator.<String>comparingInt(this::realCharLength).reversed());
+            List<String> exactWords = dict.get(fullInput);
 
             for (String word : exactWords) {
                 results.add(new String[]{word, String.valueOf(inputLen)});
@@ -466,8 +532,7 @@ public class ZhuyinTyper {
 
             int inputLen = hitInputLength.getOrDefault(e.getKey(), e.getKey().length());
 
-            List<String> words = new ArrayList<>(dict.getOrDefault(e.getKey(), Collections.emptyList()));
-            words.sort(Comparator.<String>comparingInt(this::realCharLength).reversed());
+            List<String> words = dict.getOrDefault(e.getKey(), Collections.emptyList());
 
             for (String word : words) {
                 if (alreadyAdded.add(word)) {
@@ -475,7 +540,7 @@ public class ZhuyinTyper {
                 }
             }
 
-            if (results.size() >= 70) {
+            if (results.size() >= 100) {
                 break;
             }
         }
