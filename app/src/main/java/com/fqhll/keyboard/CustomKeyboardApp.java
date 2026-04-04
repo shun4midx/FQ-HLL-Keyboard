@@ -2927,6 +2927,13 @@ public class CustomKeyboardApp extends InputMethodService
         }
 
         Keyboard startKeyboard = currentKeyboard;
+
+        // Return to last non page keyboard
+        if (isPageKeyboard(startKeyboard)) {
+            startKeyboard = (lastNonPageKeyboard != null) ? lastNonPageKeyboard : keyboard;
+            currentKeyboard = startKeyboard;
+        }
+
         kv.setKeyboard(startKeyboard);
         updateModeSwitchLabel();
 
