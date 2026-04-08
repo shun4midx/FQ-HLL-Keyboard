@@ -306,7 +306,7 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
                                                  {"youre", "you're"}, {"Youre", "You're"}, {"youve", "you've"}, {"Youve", "You've"}, {"whats", "what's"}, {"Whats", "What's"}, {"theyll", "they'll"}, {"Theyll", "They'll"}, {"welll", "we'll"}, {"Welll", "We'll"},
                                                  {"shouldve", "should've"}, {"Shouldve", "Should've"}, {"wouldve", "would've"}, {"Wouldve", "Would've"}, {"hows", "how's"}, {"Hows", "How's"}, {"theyd", "they'd"}, {"Theyd", "They'd"}, {"thatll", "that'll"}, {"Thatll", "That'll"}, {"werent", "weren't"}, {"Werent", "Weren't"}, {"whys", "why's"}, {"Whys", "Why's"}, {"theyve", "they've"}, {"Theyve", "They've"},
                                                  {"itll", "it'll"}, {"Itll", "It'll"}, {"howd", "how'd"}, {"Howd", "How'd"}, {"whod", "who'd"}, {"Whod", "Who'd"}, {"whos", "who's"}, {"Whos", "Who's"}, {"heres", "here's"}, {"Heres", "Here's"}, {"wheres", "where's"}, {"Wheres", "Where's"}, {"whens", "when's"}, {"Whens", "When's"}, {"hadnt", "hadn't"}, {"Hadnt", "Hadn't"},
-                                                 {"itd", "it'd"}, {"Itd", "It'd"}, {"todays", "today's"}, {"Todays", "Today's"}, {"helll", "he'll"}, {"Helll", "He'll"}, {"shelll", "she'll"}, {"Shelll", "She'll"}, {"ll", "//"}, {"Ll", "//"}};
+                                                 {"itd", "it'd"}, {"Itd", "It'd"}, {"todays", "today's"}, {"Todays", "Today's"}, {"helll", "he'll"}, {"Helll", "He'll"}, {"shelll", "she'll"}, {"Shelll", "She'll"}, {"weree", "we're"}, {"Weree", "We're"}, {"ll", "//"}, {"Ll", "//"}};
 
     unordered_set<string> cap_uppercase = {"i", "i'm", "i'd", "i'll", "i've"};
 
