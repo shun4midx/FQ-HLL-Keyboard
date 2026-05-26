@@ -944,6 +944,10 @@ public class CustomKeyboardApp extends InputMethodService
                 commitTextAndShowLabel("🐢");
                 showSuggestions("");
                 break;
+            case -123: // clown -> egg
+                commitTextAndShowLabel("🥚");
+                showSuggestions("");
+                break;
             case -104: // melt
                 commitTextAndShowLabel("🥲");
                 showSuggestions("");
@@ -1417,7 +1421,7 @@ public class CustomKeyboardApp extends InputMethodService
             return;
         }
 
-        if (forceEmptySuggestions) {
+        if (forceEmptySuggestions && kv != null && kv.getKeyboard() == engKeyboard) {
             InputConnection ic = getCurrentInputConnection();
             if (primaryCode == -1) { // caps
                 handleCapsPress();
@@ -2914,6 +2918,17 @@ public class CustomKeyboardApp extends InputMethodService
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
         defaultCaps = prefs.getBoolean("capsToggle", true);
         defaultAutocor = prefs.getBoolean("autocorToggle", true);
+
+        isSkippedAutoreplace = false;
+        zhuyinExpanded = false;
+
+        if (root != null) {
+            View expanded = root.findViewById(R.id.expanded_candidates);
+            View keyboardView = root.findViewById(R.id.keyboard_view);
+
+            if (expanded != null) expanded.setVisibility(View.GONE);
+            if (keyboardView != null) keyboardView.setVisibility(View.VISIBLE);
+        }
 
         // Reset Zhuyin buffer + bar text
         zhuyinBuffer.setLength(0);
