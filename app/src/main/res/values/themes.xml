@@ -138,8 +138,8 @@
         <item name="keyPressedColor">@color/custom_fqhll_banner_pink</item>
         <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
 
-        <item name="suggestionBarColor">?attr/keyTextColor</item>
-        <item name="suggestionBarTextColor">?attr/keyColor</item>
+        <item name="suggestionBarColor">@color/white</item>
+        <item name="suggestionBarTextColor">@color/custom_fqhll_banner_pink</item>
 
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
