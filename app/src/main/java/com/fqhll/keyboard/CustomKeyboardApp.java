@@ -77,6 +77,13 @@ public class CustomKeyboardApp extends InputMethodService
     private Keyboard currentKeyboard;
     private Keyboard lastNonPageKeyboard;
 
+    private enum MainKeyboardMode {
+        ENGLISH,
+        ZHUYIN
+    }
+
+    private MainKeyboardMode mainKeyboardMode = MainKeyboardMode.ENGLISH;
+
     private PopupWindow keyPreviewPopup;
     private TextView previewText;
 
@@ -275,18 +282,32 @@ public class CustomKeyboardApp extends InputMethodService
     }
 
     private void switchKeyboard(Keyboard k) {
+        if (kv == null || k == null) return;
+
         currentKeyboard = k;
-        if (k == engKeyboard || k == zhuyinKeyboard) {
-            lastNonPageKeyboard = k;
+
+        if (k == engKeyboard) {
+            mainKeyboardMode = MainKeyboardMode.ENGLISH;
+            lastNonPageKeyboard = engKeyboard;
+        } else if (k == zhuyinKeyboard) {
+            mainKeyboardMode = MainKeyboardMode.ZHUYIN;
+            lastNonPageKeyboard = zhuyinKeyboard;
         }
+
         updateSymbolLabels();
         updateEditorLabels();
         updateNumpadLabels();
+
         kv.setKeyboard(k);
+
         updateCompositionBarVisibility();
         updateModeSwitchLabel();
         applyCapsState();
         kv.invalidateAllKeys();
+    }
+
+    private Keyboard getMainKeyboardForMode() {
+        return mainKeyboardMode == MainKeyboardMode.ZHUYIN ? zhuyinKeyboard : engKeyboard;
     }
 
     private boolean isPageKeyboard(Keyboard k) {
@@ -294,8 +315,7 @@ public class CustomKeyboardApp extends InputMethodService
     }
 
     private void returnToLastNonPageKeyboard() {
-        Keyboard target = (lastNonPageKeyboard != null) ? lastNonPageKeyboard : keyboard;
-        switchKeyboard(target);
+        switchKeyboard(getMainKeyboardForMode());
     }
 
     @Override
@@ -1852,7 +1872,7 @@ public class CustomKeyboardApp extends InputMethodService
                     }
 
                     // Auto-cap if punctuation (e.g., after ". ") ans space
-                    if (primaryCode == 32 && shouldAutoCap() && defaultCaps) {
+                    if (primaryCode == 32 && shouldAutoCap() && defaultCaps && caps_state != 2) {
                         caps_state = 1;
                         applyCapsState();
                     }
@@ -2915,12 +2935,27 @@ public class CustomKeyboardApp extends InputMethodService
 
     @Override
     public void onStartInputView(EditorInfo info, boolean restarting) {
+        super.onStartInputView(info, restarting);
+
+        coyoteHandler.removeCallbacks(flushRunnable);
+        synchronized (pendingKeys) {
+            pendingKeys.clear();
+        }
+
+        if (longPressRunnable != null) {
+            longPressHandler.removeCallbacks(longPressRunnable);
+        }
+        isLongPress = false;
+
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
         defaultCaps = prefs.getBoolean("capsToggle", true);
         defaultAutocor = prefs.getBoolean("autocorToggle", true);
 
         isSkippedAutoreplace = false;
         zhuyinExpanded = false;
+        supersubMode = false;
+        forceEmptySuggestions = false;
+        isSelectToggled = false;
 
         if (root != null) {
             View expanded = root.findViewById(R.id.expanded_candidates);
@@ -2936,31 +2971,20 @@ public class CustomKeyboardApp extends InputMethodService
             zhuyinCompositionText.setText("");
         }
 
-        // Always set keyboard first
-        if (currentKeyboard == null) {
-            currentKeyboard = keyboard;   // default only the first time
+        // Always restore a current Keyboard object, never reuse a Keyboard instance from an older rebuilt view.
+        Keyboard startKeyboard = getMainKeyboardForMode();
+        if (startKeyboard == null) {
+            startKeyboard = keyboard;
         }
 
-        Keyboard startKeyboard = currentKeyboard;
-
-        // Return to last non page keyboard
-        if (isPageKeyboard(startKeyboard)) {
-            startKeyboard = (lastNonPageKeyboard != null) ? lastNonPageKeyboard : keyboard;
-            currentKeyboard = startKeyboard;
-        }
-
-        kv.setKeyboard(startKeyboard);
-        updateModeSwitchLabel();
-
-        // Now update bar visibility correctly
-        if (zhuyinCompositionBar != null) {
-            zhuyinCompositionBar.setVisibility(
-                    kv.getKeyboard() == zhuyinKeyboard ? View.VISIBLE : View.GONE
-            );
+        if (startKeyboard != null && kv != null) {
+            switchKeyboard(startKeyboard);
         }
 
         showSuggestions("");
-        caps_state = (defaultCaps && !forceEmptySuggestions && shouldAutoCap()) ? 1 : 0;
+        if (caps_state != 2) {
+            caps_state = (defaultCaps && !forceEmptySuggestions && shouldAutoCap()) ? 1 : 0;
+        }
         applyCapsState();
     }
 
@@ -2996,7 +3020,9 @@ public class CustomKeyboardApp extends InputMethodService
         setInputView(newRoot);
         root = newRoot;
         setEdgetoEdge(root);
-        applyCapsState();
+
+        switchKeyboard(getMainKeyboardForMode());
+        showSuggestions("");
     }
 
     private View buildKeyboardView() {
@@ -3085,6 +3111,10 @@ public class CustomKeyboardApp extends InputMethodService
             int layoutXml = getResources().getIdentifier(layoutName, "xml", getPackageName());
             keyboard = new Keyboard(wrap, layoutXml);
             engKeyboard = keyboard;
+        }
+
+        if (currentKeyboard == null && lastNonPageKeyboard == null) {
+            mainKeyboardMode = keyboardLayout.equals("zhuyin") ? MainKeyboardMode.ZHUYIN : MainKeyboardMode.ENGLISH;
         }
 
         // Update layout
@@ -3319,23 +3349,22 @@ public class CustomKeyboardApp extends InputMethodService
 //        updateCompositionBarVisibility();
 //        updateModeSwitchLabel();
 //        switchKeyboard(keyboard);
-        Keyboard initial = (currentKeyboard != null) ? currentKeyboard : keyboard;
+        Keyboard initial = getMainKeyboardForMode();
+
         kv.setKeyboard(initial);
         currentKeyboard = initial;
-        if (initial == engKeyboard || initial == zhuyinKeyboard) {
-            lastNonPageKeyboard = initial;
-        }
+        lastNonPageKeyboard = initial;
 
-        kv.setOnKeyboardActionListener(this);
-        kv.setPreviewEnabled(false);
-        kv.setOnTouchListener((v, ev) -> {
-            if (ev.getAction() == MotionEvent.ACTION_DOWN) {
-                lastTouchX = (int) ev.getX();
-                lastTouchY = (int) ev.getY();
-            }
-            if (ev.getAction() == MotionEvent.ACTION_UP) v.performClick();
-            return false;
-        });
+//        kv.setOnKeyboardActionListener(this);
+//        kv.setPreviewEnabled(false);
+//        kv.setOnTouchListener((v, ev) -> {
+//            if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+//                lastTouchX = (int) ev.getX();
+//                lastTouchY = (int) ev.getY();
+//            }
+//            if (ev.getAction() == MotionEvent.ACTION_UP) v.performClick();
+//            return false;
+//        });
 
         updateCompositionBarVisibility();
         updateModeSwitchLabel();

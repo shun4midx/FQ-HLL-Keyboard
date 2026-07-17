@@ -142,6 +142,20 @@ std::string normalizeShortcut(const std::string& raw) {
     return out;
 }
 
+std::string stripOuterNonLetters(const std::string& raw) {
+    size_t start = 0;
+    while (start < raw.size() && !std::isalpha(static_cast<unsigned char>(raw[start]))) {
+        ++start;
+    }
+
+    size_t end = raw.size();
+    while (end > start && !std::isalpha(static_cast<unsigned char>(raw[end - 1]))) {
+        --end;
+    }
+
+    return raw.substr(start, end - start);
+}
+
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_fqhll_keyboard_CustomKeyboardApp_nativeAddWord(JNIEnv* env, jclass, jstring jword, jstring jpath, jstring jcontractionpath) {
@@ -155,23 +169,21 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeAddWord(JNIEnv* env, jclass, jst
     std::string cpath(c_cpath);
     env->ReleaseStringUTFChars(jcontractionpath, c_cpath);
 
-    std::string word = normalizeForAc(raw);
+    std::string cleanedRaw = stripOuterNonLetters(raw);
+    std::string word = normalizeForAc(cleanedRaw);
+
     if (word.empty()) {
         return;
     }
-    bool hasNonLetters = (word.length() < raw.length()) && !raw.empty();
-    if (hasNonLetters) {
-        std::string key = normalizeForAc(raw); // "shun4midx" or "rubiks"
+
+    // Only embedded special characters count, leading/trailing punctuation is ignored.
+    bool hasEmbeddedNonLetters = cleanedRaw.length() != word.length();
+
+    if (hasEmbeddedNonLetters) {
+        std::string key = normalizeForAc(cleanedRaw); // "shun4midx" or "rubiks"
 
         // Strip LEADING non-alpha chars from raw to get display value
-        std::string displayRaw = raw;
-        size_t firstAlpha = 0;
-        while (firstAlpha < displayRaw.size() &&
-               !(('a' <= displayRaw[firstAlpha] && displayRaw[firstAlpha] <= 'z') ||
-                 ('A' <= displayRaw[firstAlpha] && displayRaw[firstAlpha] <= 'Z'))) {
-            firstAlpha++;
-        }
-        displayRaw = displayRaw.substr(firstAlpha); // "shun4midx" stays, "4shun4midx" becomes "shun4midx"
+        std::string displayRaw = cleanedRaw;
 
         // Lowercase it
         std::string lowerDisplay = displayRaw;
@@ -300,6 +312,13 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
     while (!key.empty() && !std::isalpha(static_cast<unsigned char>(key[0]))) {
         prefixSymbols.push_back(key[0]);
         key.erase(0, 1);
+    }
+
+    // Extract symbol suffix (non-letters at end)
+    std::string suffixSymbols;
+    while (!key.empty() && !std::isalpha(static_cast<unsigned char>(key.back()))) {
+        suffixSymbols.insert(suffixSymbols.begin(), key.back());
+        key.pop_back();
     }
 
     // Real logic: fill a vector of {text, confidence}
@@ -955,8 +974,8 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
                     autoreplaced[0] = toUpper(autoreplaced[0]);
                 }
 
-                results = {{(key == "i" && !autocap ? " " : prefixSymbols + key),
-                                   prefixSymbols + autoreplaced, " "},
+                results = {{(key == "i" && !autocap ? " " : prefixSymbols + key + suffixSymbols),
+                                   prefixSymbols + autoreplaced + suffixSymbols, " "},
                            {0.5,   0.8,                          0.0}};
             } else if (autoreplace.find(normalizeForAc(key)) != autoreplace.end()) {
                 string autoreplaced = autoreplace[normalizeForAc(key)]; // always "rubik's"
@@ -969,7 +988,7 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
                 } else if (autocap && cap_uppercase.find(autoreplaced) != cap_uppercase.end()) {
                     autoreplaced[0] = toUpper(autoreplaced[0]);
                 }
-                results = {{prefixSymbols + key, prefixSymbols + autoreplaced, " "},
+                results = {{prefixSymbols + key + suffixSymbols, prefixSymbols + autoreplaced + suffixSymbols, " "},
                            {0.5,                 0.8,                          0.0}};
             } else {
                 Results result = g_ac->top3(key);
@@ -1050,12 +1069,12 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
                 vector<double> reordered_scores;
 
                 if (confidences[0] >= 0.6 && suggestions[0] != key) {
-                    reordered = {prefixSymbols + key, prefixSymbols + suggestions[0],
-                                 prefixSymbols + suggestions[1]};
+                    reordered = {prefixSymbols + key + suffixSymbols, prefixSymbols + suggestions[0] + suffixSymbols,
+                                 prefixSymbols + suggestions[1] + suffixSymbols};
                     reordered_scores = {0, confidences[0], confidences[1]};
                 } else {
-                    reordered = {prefixSymbols + suggestions[1], prefixSymbols + suggestions[0],
-                                 prefixSymbols + suggestions[2]};
+                    reordered = {prefixSymbols + suggestions[1] + suffixSymbols, prefixSymbols + suggestions[0] + suffixSymbols,
+                                 prefixSymbols + suggestions[2] + suffixSymbols};
                     reordered_scores = {confidences[1], confidences[0], confidences[2]};
                 }
 
