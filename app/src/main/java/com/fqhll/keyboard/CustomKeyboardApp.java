@@ -3550,4 +3550,10 @@ public class CustomKeyboardApp extends InputMethodService
     @Override
     public void swipeUp() {
     }
+
+    @Override
+    public boolean onEvaluateInputViewShown() {
+        super.onEvaluateInputViewShown();
+        return true;
+    }
 }
