@@ -100,6 +100,21 @@
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
 
+    <style name="Theme.FQHLLKeyboard.DuckyV3" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/teal_gradient_7_transparent_2</item>
+        <item name="keyTextColor">@color/custom_cyan</item>
+        <item name="keyboardBackground">@drawable/duckyv2</item>
+        <item name="keyBorderColor">@color/teal_gradient_5</item>
+        <item name="keyPressedColor">@color/custom_light_blue_transparent</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
+
+        <item name="suggestionBarColor">@color/custom_dark_blue</item>
+        <item name="suggestionBarTextColor">?attr/keyTextColor</item>
+
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+    </style>
+
     <style name="Theme.FQHLLKeyboard.DuckyV2" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/teal_gradient_7_transparent_2</item>
         <item name="keyTextColor">@color/custom_cyan</item>
