@@ -106,7 +106,7 @@
         <item name="keyboardBackground">@drawable/duckyv2</item>
         <item name="keyBorderColor">@color/teal_gradient_5</item>
         <item name="keyPressedColor">@color/custom_light_blue_transparent</item>
-        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
+        <item name="keyPressedBorderColor">@color/custom_light_blue_transparent</item>
 
         <item name="suggestionBarColor">@color/custom_dark_blue</item>
         <item name="suggestionBarTextColor">?attr/keyTextColor</item>
