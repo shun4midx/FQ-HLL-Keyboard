@@ -30,6 +30,8 @@ public class CustomKeyboardView extends KeyboardView {
     // vowel coloring
     Set<Integer> vowels = new HashSet<>(List.of(97, 101, 105, 111, 117));
     Set<Integer> math_operations = new HashSet<>(List.of(43, 40, 61, 41, 45, 215, 247));
+    Set<Integer> zhuyin_tones = new HashSet<>(List.of(729, 714, 711, 715));
+    Set<Integer> exponents = new HashSet<>(List.of(-1000, -1001, -1002, -1003, -1004, -1005, -1006, -1007, -1008, -1009));
 
     // number coloring
     Set<Integer> numbers = new HashSet<>(List.of(48, 49, 50, 51, 52, 53, 54, 55, 56, 57));
@@ -38,7 +40,7 @@ public class CustomKeyboardView extends KeyboardView {
     Set<Integer> symbols = new HashSet<>(List.of(44, 46, 65292));
 
     // modifier coloring
-    Set<Integer> modifiers = new HashSet<>(List.of(-1, -5, -2, -11, -12, -4, -42, -52, -10, -62, -64, -2, -14));
+    Set<Integer> modifiers = new HashSet<>(List.of(-1, -5, -2, -11, -12, -4, -42, -52, -10, -62, -64, -2, -14, -13));
 
     private boolean isColorBlocksTheme() {
         SharedPreferences prefs = getContext().getSharedPreferences("keyboard_settings", Context.MODE_PRIVATE);
@@ -59,7 +61,7 @@ public class CustomKeyboardView extends KeyboardView {
             Drawable background;
             int drawableID = R.drawable.key_colorblocks_default_background;
 
-            if (vowels.contains(code) || math_operations.contains(code)) {
+            if (vowels.contains(code) || math_operations.contains(code) || zhuyin_tones.contains(code) || exponents.contains(code)) {
                 drawableID = R.drawable.key_colorblocks_vowel_background;
             }
             else if (numbers.contains(code)) {
