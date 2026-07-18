@@ -2815,12 +2815,19 @@ public class CustomKeyboardApp extends InputMethodService
 //
 //        CharSequence text = et.text;
 
-        if (caps_state == 2) {
+        int newCapsState;
 
+        if (caps_state == 2) {
+            newCapsState = 2;
         } else if (!forceEmptySuggestions && defaultCaps && shouldAutoCap()) {
-            caps_state = 1;
+            newCapsState = 1;
         } else {
-            caps_state = 0;
+            newCapsState = 0;
+        }
+
+        if (newCapsState != caps_state) {
+            caps_state = newCapsState;
+            applyCapsState();
         }
 
         applyCapsState();
