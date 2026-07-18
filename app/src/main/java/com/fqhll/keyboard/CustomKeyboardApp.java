@@ -1004,6 +1004,14 @@ public class CustomKeyboardApp extends InputMethodService
                 commitTextAndShowLabel("\uD83E\uDEF6");
                 showSuggestions("");
                 break;
+            case -128: // :| -> !?
+                commitTextAndShowLabel("⁉️");
+                showSuggestions("");
+                break;
+            case -129: // thumb -> double exclamation
+                commitTextAndShowLabel("‼️");
+                showSuggestions("");
+                break;
             case -130: // inhale -> crown
                 commitTextAndShowLabel("👑");
                 showSuggestions("");
