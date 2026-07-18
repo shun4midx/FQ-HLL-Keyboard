@@ -8,7 +8,7 @@
     <!-- your original shape -->
     <shape android:shape="rectangle">
         <!-- fill -->
-        <solid android:color="@color/cabbage_green" />
+        <solid android:color="@color/colorblocks_numbers" />
 
         <!-- rounded corners -->
         <corners android:radius="5dp" />

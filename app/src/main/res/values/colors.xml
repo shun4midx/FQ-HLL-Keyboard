@@ -81,4 +81,10 @@
     <color name="shunv3_letter">#9AD6F8</color>
     <color name="shunv3_pressed">#80B120C1</color>
     <color name="shunv3_pressed_border">#A6156D</color>
+
+    <color name="colorblocks_vowel">#03A9F4</color>
+    <color name="colorblocks_symbols">#4CAF50</color>
+    <color name="colorblocks_numbers">#F44336</color>
+    <color name="colorblocks_modifiers">#FF5722</color>
+    <color name="colorblocks_default">#213290</color>
 </resources>
