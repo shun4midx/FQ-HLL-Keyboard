@@ -17,9 +17,11 @@ import java.util.Set;
 public class CustomKeyboardView extends KeyboardView {
     public CustomKeyboardView(Context c, AttributeSet attrs) {
         super(c, attrs);
+        initColorBlocks();
     }
     public CustomKeyboardView(Context c, AttributeSet attrs, int defStyle) {
         super(c, attrs, defStyle);
+        initColorBlocks();
     }
     @Override
     public boolean performClick() {
@@ -28,55 +30,89 @@ public class CustomKeyboardView extends KeyboardView {
     }
 
     // vowel coloring
-    Set<Integer> vowels = new HashSet<>(List.of(97, 101, 105, 111, 117));
-    Set<Integer> math_operations = new HashSet<>(List.of(43, 40, 61, 41, 45, 215, 247));
-    Set<Integer> zhuyin_tones = new HashSet<>(List.of(729, 714, 711, 715));
-    Set<Integer> exponents = new HashSet<>(List.of(-1000, -1001, -1002, -1003, -1004, -1005, -1006, -1007, -1008, -1009));
+    public static final Set<Integer> vowels = new HashSet<>(List.of(97, 101, 105, 111, 117));
+    public static final Set<Integer> math_operations = new HashSet<>(List.of(43, 40, 61, 41, 45, 215, 247));
+    public static final Set<Integer> zhuyin_tones = new HashSet<>(List.of(729, 714, 711, 715));
+    public static final Set<Integer> exponents = new HashSet<>(List.of(-1000, -1001, -1002, -1003, -1004, -1005, -1006, -1007, -1008, -1009));
 
     // number coloring
-    Set<Integer> numbers = new HashSet<>(List.of(48, 49, 50, 51, 52, 53, 54, 55, 56, 57));
+    public static final Set<Integer> numbers = new HashSet<>(List.of(48, 49, 50, 51, 52, 53, 54, 55, 56, 57));
 
     // symbol coloring
-    Set<Integer> symbols = new HashSet<>(List.of(44, 46, 65292));
+    public static final Set<Integer> symbols = new HashSet<>(List.of(44, 46, 65292));
 
     // modifier coloring
-    Set<Integer> modifiers = new HashSet<>(List.of(-1, -5, -2, -11, -12, -4, -42, -52, -10, -62, -64, -2, -14, -13));
+    public static final Set<Integer> modifiers = new HashSet<>(List.of(-1, -5, -2, -11, -12, -4, -42, -52, -10, -62, -64, -14, -13));
 
-    private boolean isColorBlocksTheme() {
-        SharedPreferences prefs = getContext().getSharedPreferences("keyboard_settings", Context.MODE_PRIVATE);
-        String keyColor = prefs.getString("key_color", "Unselected");
-        return "ColorBlocks".equals(keyColor);
-    }
+    private Drawable defaultBackground;
+    private Drawable vowelBackground;
+    private Drawable numbersBackground;
+    private Drawable symbolsBackground;
+    private Drawable modifierBackground;
+
+    private int dpGapInPx;
+
+    private boolean colorBlocksTheme;
 
     @SuppressLint("UseCompatLoadingForDrawables")
+    private void initColorBlocks() {
+        defaultBackground = getResources().getDrawable(
+                R.drawable.key_colorblocks_default_background
+        );
+        vowelBackground = getResources().getDrawable(
+                R.drawable.key_colorblocks_vowel_background
+        );
+        numbersBackground = getResources().getDrawable(
+                R.drawable.key_colorblocks_numbers_background
+        );
+        symbolsBackground = getResources().getDrawable(
+                R.drawable.key_colorblocks_symbols_background
+        );
+        modifierBackground = getResources().getDrawable(
+                R.drawable.key_colorblocks_modifier_background
+        );
+
+        dpGapInPx = Math.round(
+                8 * getResources().getDisplayMetrics().density
+        );
+
+        SharedPreferences prefs = getContext().getSharedPreferences(
+                "keyboard_settings",
+                Context.MODE_PRIVATE
+        );
+
+        colorBlocksTheme = "ColorBlocks".equals(
+                prefs.getString("key_color", "Unselected")
+        );
+    }
+
     public void setColorBlocks(Canvas canvas) {
+        Keyboard keyboard = getKeyboard();
+        if (keyboard == null) {
+            return;
+        }
 
-        float density = getResources().getDisplayMetrics().density;
-        int dpGapInPx = Math.round(8 * density);
-
-        List<Keyboard.Key> keys = getKeyboard().getKeys();
-        for (Keyboard.Key key : keys) {
+        for (Keyboard.Key key : keyboard.getKeys()) {
             int code = key.codes != null && key.codes.length > 0 ? key.codes[0] : 0;
-
-            Drawable background;
-            int drawableID = R.drawable.key_colorblocks_default_background;
+            Drawable background = defaultBackground;
 
             if (vowels.contains(code) || math_operations.contains(code) || zhuyin_tones.contains(code) || exponents.contains(code)) {
-                drawableID = R.drawable.key_colorblocks_vowel_background;
-            }
-            else if (numbers.contains(code)) {
-                drawableID = R.drawable.key_colorblocks_numbers_background;
-            }
-            else if (symbols.contains(code)) {
-                drawableID = R.drawable.key_colorblocks_symbols_background;
-            }
-            else if (modifiers.contains(code)) {
-                drawableID = R.drawable.key_colorblocks_modifier_background;
+                background = vowelBackground;
+            } else if (numbers.contains(code)) {
+                background = numbersBackground;
+            } else if (symbols.contains(code)) {
+                background = symbolsBackground;
+            } else if (modifiers.contains(code)) {
+                background = modifierBackground;
             }
 
-            background = getContext().getResources().getDrawable(drawableID);
+            background.setBounds(
+                    key.x,
+                    key.y + dpGapInPx,
+                    key.x + key.width,
+                    key.y + key.height + dpGapInPx
+            );
 
-            background.setBounds(key.x, key.y+dpGapInPx, key.x + key.width, key.y + key.height + dpGapInPx);
             background.draw(canvas);
         }
     }
@@ -84,7 +120,7 @@ public class CustomKeyboardView extends KeyboardView {
      @SuppressLint("UseCompatLoadingForDrawables")
      @Override
      public void onDraw(Canvas canvas) {
-        if (isColorBlocksTheme()) {
+        if (colorBlocksTheme) {
             setColorBlocks(canvas);
         }
         super.onDraw(canvas); // make sure keycolor and keybordercolor are transparent for custom per-key color
