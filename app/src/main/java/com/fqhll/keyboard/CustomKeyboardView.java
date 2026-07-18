@@ -32,10 +32,11 @@ public class CustomKeyboardView extends KeyboardView {
     // vowel coloring
     public static final Set<Integer> vowels = new HashSet<>(List.of(97, 101, 105, 111, 117));
     public static final Set<Integer> math_operations = new HashSet<>(List.of(43, 40, 61, 41, 45, 215, 247));
-    public static final Set<Integer> zhuyin_tones = new HashSet<>(List.of(729, 714, 711, 715));
+    public static final Set<Integer> zhuyin_vowels = new HashSet<>(List.of(12583, 12584, 12585));
     public static final Set<Integer> exponents = new HashSet<>(List.of(-1000, -1001, -1002, -1003, -1004, -1005, -1006, -1007, -1008, -1009));
 
     // number coloring
+    public static final Set<Integer> zhuyin_tones = new HashSet<>(List.of(729, 714, 711, 715));
     public static final Set<Integer> numbers = new HashSet<>(List.of(48, 49, 50, 51, 52, 53, 54, 55, 56, 57));
 
     // symbol coloring
@@ -96,9 +97,9 @@ public class CustomKeyboardView extends KeyboardView {
             int code = key.codes != null && key.codes.length > 0 ? key.codes[0] : 0;
             Drawable background = defaultBackground;
 
-            if (vowels.contains(code) || math_operations.contains(code) || zhuyin_tones.contains(code) || exponents.contains(code)) {
+            if (vowels.contains(code) || math_operations.contains(code) || zhuyin_vowels.contains(code) || exponents.contains(code)) {
                 background = vowelBackground;
-            } else if (numbers.contains(code)) {
+            } else if (numbers.contains(code) || zhuyin_tones.contains(code) ) {
                 background = numbersBackground;
             } else if (symbols.contains(code)) {
                 background = symbolsBackground;
