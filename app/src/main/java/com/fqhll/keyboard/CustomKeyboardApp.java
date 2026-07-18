@@ -2263,13 +2263,6 @@ public class CustomKeyboardApp extends InputMethodService
         ensureNative();
         suggestionBar.setVisibility(View.VISIBLE);
 
-        Suggestion s = nativeLoaded && !prefix.isEmpty()
-                ? nativeSuggest(prefix, defaultCaps, getContractionPath())
-                : new Suggestion(new String[]{"", "", ""}, new double[]{0,0,0});
-
-        String[] words  = s.suggestions;
-        double[] scores = s.scores;
-
         View scrollView = root.findViewById(R.id.suggestion_scroll);
         LinearLayout strip = root.findViewById(R.id.suggestion_strip);
         TextView s1 = root.findViewById(R.id.suggestion_1);
@@ -2277,6 +2270,13 @@ public class CustomKeyboardApp extends InputMethodService
         TextView s3 = root.findViewById(R.id.suggestion_3);
 
         if (kv.getKeyboard() != zhuyinKeyboard) {
+            Suggestion s = nativeLoaded && !prefix.isEmpty()
+                    ? nativeSuggest(prefix, defaultCaps, getContractionPath())
+                    : new Suggestion(new String[]{"", "", ""}, new double[]{0,0,0});
+
+            String[] words  = s.suggestions;
+            double[] scores = s.scores;
+
             s1.setVisibility(View.VISIBLE);
             s2.setVisibility(View.VISIBLE);
             s3.setVisibility(View.VISIBLE);
@@ -2354,7 +2354,9 @@ public class CustomKeyboardApp extends InputMethodService
 
             regenerateZhuyinSuggestions(prefix);
 
-            for (int i = 0; i < zhuyinSuggestions.size(); i++) {
+            int visibleCount = Math.min(30, zhuyinSuggestions.size());
+
+            for (int i = 0; i < visibleCount; i++) {
                 String cand = zhuyinSuggestions.get(i);
                 int deleteCount = zhuyinSuggestionDeleteCounts.get(i);
                 TextView tv = makeSuggestionChip(cand, deleteCount);
@@ -2429,7 +2431,7 @@ public class CustomKeyboardApp extends InputMethodService
         tv.setClickable(true);
         tv.setOnClickListener(v -> {
             replaceCurrentWord(text, deleteCount);
-            updateSuggestion(getCurrentInputConnection());
+//            updateSuggestion(getCurrentInputConnection());
 
             if (zhuyinExpanded) {
                 RecyclerView expanded = root.findViewById(R.id.expanded_candidates);
@@ -2829,8 +2831,6 @@ public class CustomKeyboardApp extends InputMethodService
             caps_state = newCapsState;
             applyCapsState();
         }
-
-        applyCapsState();
     }
 
     private void resetCaps() {

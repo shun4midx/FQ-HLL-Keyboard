@@ -19,6 +19,9 @@ public class ZhuyinTyper {
     private final Map<Character, List<Character>> near3Standard = new HashMap<>();
     private final Map<Character, List<Character>> near3Eten = new HashMap<>();
 
+    private final Map<Character, Map<Integer, List<String>>> indexByHeadAndLength = new HashMap<>();
+    private final Set<String> keysWithSingleCharWord = new HashSet<>();
+
     // Row strings: one string per row of keys
     private static final String[] ETEN_LAYOUT = {
             "˙ˊˇˋㄝㄢㄣㄤㄥㄟ",
@@ -55,9 +58,15 @@ public class ZhuyinTyper {
     private final Map<Character,int[]> posEten = buildPosMap(ETEN_LAYOUT);
 
     private int keyDistance(char a, char b, boolean useEten) {
-        Map<Character,int[]> posMap = useEten ? posEten : posStandard;
-        int[] pa = posMap.getOrDefault(a, new int[]{-99, -99});
-        int[] pb = posMap.getOrDefault(b, new int[]{-99, -99});
+        Map<Character, int[]> posMap = useEten ? posEten : posStandard;
+
+        int[] pa = posMap.get(a);
+        int[] pb = posMap.get(b);
+
+        if (pa == null || pb == null) {
+            return 999;
+        }
+
         return Math.abs(pa[0] - pb[0]) + Math.abs(pa[1] - pb[1]);
     }
 
@@ -263,13 +272,21 @@ public class ZhuyinTyper {
 
                 List<String> values = new ArrayList<>();
                 int best = 0;
+                boolean hasSingleCharWord = false;
 
                 for (int i = 0; i < arr.length(); i++) {
                     String word = arr.getString(i);
                     values.add(word);
 
                     int len = realCharLength(word);
-                    if (len > best) best = len;
+
+                    if (len > best) {
+                        best = len;
+                    }
+
+                    if (len == 1) {
+                        hasSingleCharWord = true;
+                    }
                 }
 
                 values.sort(Comparator.<String>comparingInt(this::realCharLength).reversed());
@@ -277,9 +294,19 @@ public class ZhuyinTyper {
                 dict.put(key, values);
                 bestWordLen.put(key, best);
 
+                if (hasSingleCharWord) {
+                    keysWithSingleCharWord.add(key);
+                }
+
                 if (!key.isEmpty()) {
                     char first = key.charAt(0);
+
                     index.computeIfAbsent(first, k -> new ArrayList<>()).add(key);
+
+                    indexByHeadAndLength
+                            .computeIfAbsent(first, k -> new HashMap<>())
+                            .computeIfAbsent(key.length(), k -> new ArrayList<>())
+                            .add(key);
                 }
             }
         } catch (Exception e) {
@@ -313,79 +340,112 @@ public class ZhuyinTyper {
     }
 
     private void collectHits(String fuzzyTarget, int rawLen, boolean useEten, int threshold, int firstKeyLimit, boolean requireLeftMatch, Map<String, Integer> allHits, Map<String, Integer> hitInputLength) {
-        if (fuzzyTarget == null || fuzzyTarget.isEmpty()) return;
+        if (fuzzyTarget == null || fuzzyTarget.isEmpty()) {
+            return;
+        }
 
         char firstInput = fuzzyTarget.charAt(0);
         List<Character> heads = getNearbyHeads(firstInput, useEten, firstKeyLimit);
 
-        for (char head : heads) {
-            for (String key : index.getOrDefault(head, Collections.emptyList())) {
+        int targetLength = fuzzyTarget.length();
+        int minLength = Math.max(1, targetLength - 1);
+        int maxLength = targetLength + 1;
 
-                if (requireLeftMatch) {
-                    int matchScore = leftWeightedExactMatches(fuzzyTarget, key);
-                    if (matchScore < Math.max(1, fuzzyTarget.length())) {
-                        continue;
-                    }
+        for (char head : heads) {
+            Map<Integer, List<String>> lengthBuckets = indexByHeadAndLength.get(head);
+
+            if (lengthBuckets == null) {
+                continue;
+            }
+
+            for (int candidateLength = minLength; candidateLength <= maxLength; candidateLength++) {
+                List<String> keys = lengthBuckets.get(candidateLength);
+
+                if (keys == null) {
+                    continue;
                 }
 
-                int dist = fuzzyZhuyinDistanceSmart(fuzzyTarget, key, useEten, threshold);
-                if (dist <= 0 || dist > threshold) continue;
+                for (String key : keys) {
+                    if (requireLeftMatch) {
+                        int matchScore = leftWeightedExactMatches(fuzzyTarget, key);
+                        if (matchScore < Math.max(1, fuzzyTarget.length())) {
+                            continue;
+                        }
+                    }
 
-                int consumeLen = requireLeftMatch ? key.length() : rawLen;
+                    int dist = fuzzyZhuyinDistanceSmart(fuzzyTarget, key, useEten, threshold);
+                    if (dist <= 0 || dist > threshold) {
+                        continue;
+                    }
 
-                Integer oldDist = allHits.get(key);
+                    int consumeLen = requireLeftMatch ? key.length() : rawLen;
 
-                if (oldDist == null || dist < oldDist) {
-                    allHits.put(key, dist);
-                    hitInputLength.put(key, consumeLen);
-                } else if (dist == oldDist) {
-                    int oldLen = hitInputLength.getOrDefault(key, consumeLen);
-                    hitInputLength.put(key, betterConsumeLen(key, oldLen, consumeLen));
+                    Integer oldDist = allHits.get(key);
+
+                    if (oldDist == null || dist < oldDist) {
+                        allHits.put(key, dist);
+                        hitInputLength.put(key, consumeLen);
+                    } else if (dist == oldDist) {
+                        int oldLen = hitInputLength.getOrDefault(key, consumeLen);
+                        hitInputLength.put(key, betterConsumeLen(key, oldLen, consumeLen));
+                    }
                 }
             }
         }
     }
 
-    private void collectHitsCutSingleCharOnly(String fuzzyTarget, int rawLen, boolean useEten, int threshold, int firstKeyLimit, Map<String, Integer> allHits, Map<String, Integer> hitInputLength) {
-        if (fuzzyTarget == null || fuzzyTarget.isEmpty()) return;
+    private void collectHitsCutSingleCharOnly(String fuzzyTarget, int rawLen, boolean useEten, int threshold,int firstKeyLimit, Map<String, Integer> allHits, Map<String, Integer> hitInputLength) {
+        if (fuzzyTarget == null || fuzzyTarget.isEmpty()) {
+            return;
+        }
 
         char firstInput = fuzzyTarget.charAt(0);
         List<Character> heads = getNearbyHeads(firstInput, useEten, firstKeyLimit);
 
+        int targetLength = fuzzyTarget.length();
+        int minLength = Math.max(1, targetLength - 1);
+        int maxLength = targetLength + 1;
+
         for (char head : heads) {
-            for (String key : index.getOrDefault(head, Collections.emptyList())) {
+            Map<Integer, List<String>> lengthBuckets = indexByHeadAndLength.get(head);
 
-                int matchScore = leftWeightedExactMatches(fuzzyTarget, key);
-                if (matchScore < Math.max(1, fuzzyTarget.length())) {
+            if (lengthBuckets == null) {
+                continue;
+            }
+
+            for (int candidateLength = minLength; candidateLength <= maxLength; candidateLength++) {
+                List<String> keys = lengthBuckets.get(candidateLength);
+
+                if (keys == null) {
                     continue;
                 }
 
-                int dist = fuzzyZhuyinDistanceSmart(fuzzyTarget, key, useEten, threshold);
-                if (dist <= 0 || dist > threshold) continue;
-
-                List<String> words = dict.getOrDefault(key, Collections.emptyList());
-
-                boolean hasSingleCharWord = false;
-                for (String word : words) {
-                    if (realCharLength(word) == 1) {
-                        hasSingleCharWord = true;
-                        break;
+                for (String key : keys) {
+                    int matchScore = leftWeightedExactMatches(fuzzyTarget, key);
+                    if (matchScore < Math.max(1, fuzzyTarget.length())) {
+                        continue;
                     }
-                }
-                if (!hasSingleCharWord) {
-                    continue;
-                }
 
-                int consumeLen = key.length();
+                    int dist = fuzzyZhuyinDistanceSmart(fuzzyTarget, key, useEten, threshold);
+                    if (dist <= 0 || dist > threshold) {
+                        continue;
+                    }
 
-                Integer oldDist = allHits.get(key);
+                    if (!keysWithSingleCharWord.contains(key)) {
+                        continue;
+                    }
 
-                if (oldDist == null || dist < oldDist) {
-                    allHits.put(key, dist);
-                    hitInputLength.put(key, consumeLen);
-                } else if (dist == oldDist) {
-                    int oldLen = hitInputLength.getOrDefault(key, consumeLen);
-                    hitInputLength.put(key, betterConsumeLen(key, oldLen, consumeLen));
+                    int consumeLen = key.length();
+
+                    Integer oldDist = allHits.get(key);
+
+                    if (oldDist == null || dist < oldDist) {
+                        allHits.put(key, dist);
+                        hitInputLength.put(key, consumeLen);
+                    } else if (dist == oldDist) {
+                        int oldLen = hitInputLength.getOrDefault(key, consumeLen);
+                        hitInputLength.put(key, betterConsumeLen(key, oldLen, consumeLen));
+                    }
                 }
             }
         }
@@ -495,12 +555,12 @@ public class ZhuyinTyper {
         }
 
         // After the fuzzy loop, before sorting:
-        prefixRawLens = new int[end];
-        runningRawLen = 0;
-        for (int i = 0; i < end; ++i) {
-            runningRawLen += zhuyinInput[i].length();
-            prefixRawLens[i] = runningRawLen;
-        }
+//        prefixRawLens = new int[end];
+//        runningRawLen = 0;
+//        for (int i = 0; i < end; ++i) {
+//            runningRawLen += zhuyinInput[i].length();
+//            prefixRawLens[i] = runningRawLen;
+//        }
         if (allHits.size() < 4) {
             int THRESHOLD2 = 3;
             for (int k = 1; k <= 4 && k <= zhuyinInput.length; ++k) {
