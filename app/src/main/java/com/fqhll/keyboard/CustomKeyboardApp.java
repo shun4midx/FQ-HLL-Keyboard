@@ -2997,9 +2997,9 @@ public class CustomKeyboardApp extends InputMethodService
         }
 
         showSuggestions("");
-        if (caps_state != 2) {
-            caps_state = (defaultCaps && !forceEmptySuggestions && shouldAutoCap()) ? 1 : 0;
-        }
+//        if (caps_state != 2) {
+        caps_state = (defaultCaps && !forceEmptySuggestions && shouldAutoCap()) ? 1 : 0;
+//        }
         applyCapsState();
     }
 
