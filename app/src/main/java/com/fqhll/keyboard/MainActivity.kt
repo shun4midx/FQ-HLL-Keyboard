@@ -1,10 +1,14 @@
 package com.fqhll.keyboard
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.text.method.LinkMovementMethod
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -12,20 +16,17 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
-import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import androidx.core.content.edit
 import com.fqhll.keyboard.databinding.ActivityMainBinding
+import java.io.BufferedReader
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
+import java.io.InputStreamReader
 import java.nio.file.Files
 import java.nio.file.Paths
-import android.view.inputmethod.InputMethodManager;
-import android.net.Uri
-import android.app.Activity
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
@@ -200,22 +201,12 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val addDictButton: Button = findViewById(R.id.add_dict_btn)
         val removeDictButton: Button = findViewById(R.id.remove_dict_btn)
         val getDictButton: Button = findViewById(R.id.get_dict_btn)
+        val importDictButton: Button = findViewById(R.id.import_dict_btn)
 
         addDictButton.setOnClickListener {
             val inputWord = editDictField.text.toString()
 
-            if (!inDictionary(inputWord) && inputWord != "") {
-                showToast(message = "adding $inputWord to dictionary...")
-                addToDictionary(inputWord)
-            }
-
-            else if (inputWord == "") {
-                showToast(message = "word cannot be empty!")
-            }
-
-            else {
-                showToast(message = "$inputWord is already in your dictionary!")
-            }
+            smartAddToDictionary(inputWord)
         }
 
         removeDictButton.setOnClickListener {
@@ -237,6 +228,10 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         getDictButton.setOnClickListener {
             saveFile()
+        }
+
+        importDictButton.setOnClickListener {
+            openLocalFilePicker()
         }
 
         // Chinese keyboard
@@ -395,6 +390,21 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         return wordSet.contains(word)
     }
 
+    private fun smartAddToDictionary(word: String) {
+        if (!inDictionary(word) && word != "") {
+            showToast(message = "adding $word to dictionary...")
+            addToDictionary(word)
+        }
+
+        else if (word == "") {
+            showToast(message = "word cannot be empty!")
+        }
+
+        else {
+            showToast(message = "$word is already in your dictionary!")
+        }
+    }
+
     private fun getCustomWords(): Set<String> {
         val path = Paths.get(filesDir.absolutePath + "/test_files/custom_words.txt")
 
@@ -411,6 +421,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     
     private val CREATE_FILE = 1
 
+    private val PICK_FILE_REQUEST_CODE = 2
+
     private fun saveFile() {
         val intent = Intent(Intent.ACTION_CREATE_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
@@ -422,6 +434,15 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         startActivityForResult(intent, CREATE_FILE)
     }
 
+    private fun openLocalFilePicker() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
+        intent.addCategory(Intent.CATEGORY_OPENABLE)
+        intent.setType("text/plain")
+
+        startActivityForResult(intent, PICK_FILE_REQUEST_CODE)
+    }
+
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == CREATE_FILE && resultCode == Activity.RESULT_OK) {
@@ -430,6 +451,12 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 writeToUri(uri)
             } else {
                 showToast(message = "No file selected")
+            }
+        }
+        else if (requestCode == PICK_FILE_REQUEST_CODE && resultCode == RESULT_OK) {
+            if (data != null && data.data != null) {
+                val fileUri: Uri = data.data!!
+                readFileContent(fileUri)
             }
         }
     }
@@ -446,6 +473,35 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             showToast(message = "Save failed: ${e.message}")
         }
     }
+
+    private fun readFileContent(uri: Uri) {
+        try {
+            contentResolver.openInputStream(uri)?.use { inputStream ->
+                BufferedReader(InputStreamReader(inputStream)).use { reader ->
+                    val stringBuilder = StringBuilder()
+                    var line: String?
+
+                    while (reader.readLine().also { line = it } != null) {
+//                        stringBuilder.append(line).append("\n")
+                        if (line != null) {
+                            if (!inDictionary(line) && line != "") {
+                                addToDictionary(line)
+                            }
+                        }
+                    }
+
+//                    val fileContent = stringBuilder.toString()
+//                    showToast(message = "Save failed: $fileContent")
+                }
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
+//    private fun importDictFromTxt(fileContent: String) {
+//
+//    }
 
     private fun alterDocument(file: File) {
         FileOutputStream(file).use { fos -> fos.write("This is my custom file content.".toByteArray()) }
