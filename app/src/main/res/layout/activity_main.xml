@@ -237,8 +237,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
-                android:layout_marginBottom="10dp"
                 android:text="Files are in newline separated .txt format" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:layout_marginBottom="10dp"
+                android:text="Note: Importing from file might cause black screens to appear and increase lag temporarily (~1 min)" />
 
             <TextView
                 android:layout_marginTop="16sp"

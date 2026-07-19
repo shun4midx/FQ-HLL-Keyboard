@@ -456,6 +456,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         else if (requestCode == PICK_FILE_REQUEST_CODE && resultCode == RESULT_OK) {
             if (data != null && data.data != null) {
                 val fileUri: Uri = data.data!!
+                showToast(message = "Importing from file, please wait")
                 readFileContent(fileUri)
             }
         }
