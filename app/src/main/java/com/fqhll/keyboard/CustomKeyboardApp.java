@@ -948,6 +948,10 @@ public class CustomKeyboardApp extends InputMethodService
                 commitTextAndShowLabel("🥔️");
                 showSuggestions("");
                 break;
+            case -114: // flying saucer -> jellyfish
+                commitTextAndShowLabel("\uD83E\uDEBC");
+                showSuggestions("");
+                break;
             case -115: // eyes -> distorted face emoji
                 commitTextAndShowLabel("\uD83E\uDEEA");
                 showSuggestions("");

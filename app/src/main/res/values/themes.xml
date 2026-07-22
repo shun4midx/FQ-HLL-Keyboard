@@ -310,6 +310,21 @@
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
 
+    <style name="Theme.FQHLLKeyboard.Jellyfish" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/custom_hammerhead_blue_transparent</item>
+        <item name="keyTextColor">@color/custom_jellyfish_main</item>
+        <item name="keyboardBackground">@drawable/jellyfish</item>
+        <item name="keyBorderColor">@color/custom_light_blue_transparent_2</item>
+        <item name="keyPressedColor">@color/custom_light_blue_transparent_2</item>
+        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
+
+        <item name="suggestionBarColor">?attr/keyTextColor</item>
+        <item name="suggestionBarTextColor">@color/custom_jellyfish_suggestion</item>
+
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+    </style>
+
     <style name="Theme.FQHLLKeyboard.ThisIsFine" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/this_is_fine_brown</item>
         <item name="keyTextColor">@color/this_is_fine_yellow</item>

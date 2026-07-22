@@ -87,4 +87,8 @@
     <color name="colorblocks_numbers">#F44336</color>
     <color name="colorblocks_modifiers">#ff914d</color>
     <color name="colorblocks_default">#213290</color>
+
+    <color name="custom_jellyfish_main">#FFF4EB</color>
+    <color name="custom_jellyfish_suggestion">#102A6B</color>
+    <color name="custom_jellyfish_press">#773E4B8E</color>
 </resources>
