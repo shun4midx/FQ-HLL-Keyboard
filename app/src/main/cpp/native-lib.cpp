@@ -334,9 +334,9 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
                                                  {"shouldve", "should've"}, {"Shouldve", "Should've"}, {"wouldve", "would've"}, {"Wouldve", "Would've"}, {"hows", "how's"}, {"Hows", "How's"}, {"theyd", "they'd"}, {"Theyd", "They'd"}, {"thatll", "that'll"}, {"Thatll", "That'll"}, {"werent", "weren't"}, {"Werent", "Weren't"}, {"whys", "why's"}, {"Whys", "Why's"}, {"theyve", "they've"}, {"Theyve", "They've"},
                                                  {"itll", "it'll"}, {"Itll", "It'll"}, {"howd", "how'd"}, {"Howd", "How'd"}, {"whod", "who'd"}, {"Whod", "Who'd"}, {"whos", "who's"}, {"Whos", "Who's"}, {"heres", "here's"}, {"Heres", "Here's"}, {"wheres", "where's"}, {"Wheres", "Where's"}, {"whens", "when's"}, {"Whens", "When's"}, {"hadnt", "hadn't"}, {"Hadnt", "Hadn't"},
                                                  {"itd", "it'd"}, {"Itd", "It'd"}, {"todays", "today's"}, {"Todays", "Today's"}, {"helll", "he'll"}, {"Helll", "He'll"}, {"shelll", "she'll"}, {"Shelll", "She'll"}, {"weree", "we're"}, {"Weree", "We're"}, {"weve", "we've"}, {"Weve", "We've"},
-                                                 {"studentss", "student's"}, {"Studentss", "Student's"}, {"ll", "//"}, {"Ll", "//"}};
+                                                 {"studentss", "student's"}, {"Studentss", "Student's"}, {"whyd", "why'd"}, {"Whyd", "Why'd"}, {"alzheimers", "alzheimer's"}, {"Alzheimers", "Alzheimer's"}, {"cmon", "c'mon"}, {"Cmon", "C'mon"}, {"ll", "//"}, {"Ll", "//"}};
 
-    unordered_set<string> cap_uppercase = {"i", "i'm", "i'd", "i'll", "i've"};
+    unordered_set<string> cap_uppercase = {"i", "i'm", "i'd", "i'll", "i've", "alzheimer's"};
 
     // Testing purposes only
     unordered_map<string, string> flags = {
