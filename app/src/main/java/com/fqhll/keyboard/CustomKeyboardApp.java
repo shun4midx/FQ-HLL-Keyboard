@@ -100,6 +100,8 @@ public class CustomKeyboardApp extends InputMethodService
     private long last_caps_time = 0;
     private boolean defaultCaps = true;
     private boolean useFullStopComment = false;
+
+    private boolean useEten = false;
     private static final int DOUBLE_TAP_TIMEOUT = 300; // Smth like Gboard capping
 
     // Don't show pop-up for SPACE, CAPS (-1), DELETE (-5), Symbols (-10 from symbols page and -2 from main page), or ENTER (-4)
@@ -2417,8 +2419,7 @@ public class CustomKeyboardApp extends InputMethodService
             results = pinyinTyper.suggest(prefix);
         } else {
             String[] split = splitPrefix(prefix);
-            SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-            results = zhuyinTyper.suggest(split, prefs.getBoolean("etenToggle", false));
+            results = zhuyinTyper.suggest(split, useEten);
         }
 
         for (String[] pair : results) {
@@ -3123,6 +3124,7 @@ public class CustomKeyboardApp extends InputMethodService
         updateNumpadLabels();
 
         if (chiKeyboardLayout.equals("zhuyineten")) {
+            useEten = true;
             zhuyinKeyboard = new Keyboard(wrap, R.xml.custom_keypad_zhuyin_eten);
             chineseInputType = ChineseInputType.ZHUYIN;
             chiKeyboard = zhuyinKeyboard;
