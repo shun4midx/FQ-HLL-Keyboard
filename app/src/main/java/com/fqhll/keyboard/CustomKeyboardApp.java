@@ -72,6 +72,7 @@ public class CustomKeyboardApp extends InputMethodService
     private Keyboard editorKeyboard;
     private Keyboard numpadKeyboard;
     private Keyboard zhuyinKeyboard;
+    private Keyboard pinyinKeyboard;
     private Keyboard engKeyboard;
 
     private Keyboard currentKeyboard;
@@ -79,10 +80,18 @@ public class CustomKeyboardApp extends InputMethodService
 
     private enum MainKeyboardMode {
         ENGLISH,
-        ZHUYIN
+        CHINESE
     }
 
     private MainKeyboardMode mainKeyboardMode = MainKeyboardMode.ENGLISH;
+
+    private enum ChineseInputType {
+        ZHUYIN,
+        PINYIN
+    }
+
+    private ChineseInputType chineseInputType = ChineseInputType.ZHUYIN;
+    private Keyboard chiKeyboard;
 
     private PopupWindow keyPreviewPopup;
     private TextView previewText;
@@ -187,6 +196,7 @@ public class CustomKeyboardApp extends InputMethodService
     private TextView zhuyinCompositionText;
 
     private ZhuyinTyper zhuyinTyper;
+    private PinyinTyper pinyinTyper;
 
     private boolean forceEmptySuggestions = false;
     private int selectionAnchor = -1;
@@ -274,7 +284,7 @@ public class CustomKeyboardApp extends InputMethodService
     }
 
     private void updateCompositionBarVisibility() {
-        if (kv != null && kv.getKeyboard() == zhuyinKeyboard) {
+        if (kv != null && kv.getKeyboard() == chiKeyboard) {
             zhuyinCompositionBar.setVisibility(View.VISIBLE);
         } else {
             zhuyinCompositionBar.setVisibility(View.GONE);
@@ -289,9 +299,9 @@ public class CustomKeyboardApp extends InputMethodService
         if (k == engKeyboard) {
             mainKeyboardMode = MainKeyboardMode.ENGLISH;
             lastNonPageKeyboard = engKeyboard;
-        } else if (k == zhuyinKeyboard) {
-            mainKeyboardMode = MainKeyboardMode.ZHUYIN;
-            lastNonPageKeyboard = zhuyinKeyboard;
+        } else if (k == chiKeyboard) {
+            mainKeyboardMode = MainKeyboardMode.CHINESE;
+            lastNonPageKeyboard = chiKeyboard;
         }
 
         updateSymbolLabels();
@@ -307,11 +317,11 @@ public class CustomKeyboardApp extends InputMethodService
     }
 
     private Keyboard getMainKeyboardForMode() {
-        return mainKeyboardMode == MainKeyboardMode.ZHUYIN ? zhuyinKeyboard : engKeyboard;
+        return mainKeyboardMode == MainKeyboardMode.CHINESE ? chiKeyboard : engKeyboard;
     }
 
     private boolean isPageKeyboard(Keyboard k) {
-        return k != engKeyboard && k != zhuyinKeyboard;
+        return k != engKeyboard && k != chiKeyboard;
     }
 
     private void returnToLastNonPageKeyboard() {
@@ -375,6 +385,7 @@ public class CustomKeyboardApp extends InputMethodService
         }
         copyAssetToInternal(getApplicationContext(), "test_files/user_contractions.txt");
         zhuyinTyper = new ZhuyinTyper(getApplicationContext());
+        pinyinTyper = new PinyinTyper(getApplicationContext());
 
         String absPath = getFilesDir().getAbsolutePath() + "/test_files/20k_texting.txt";
         ensureNative();
@@ -535,7 +546,7 @@ public class CustomKeyboardApp extends InputMethodService
     private void updatePagePunctuationLabels(Keyboard kb) {
         if (kb == null) return;
 
-        boolean chinese = (lastNonPageKeyboard == zhuyinKeyboard);
+        boolean chinese = (lastNonPageKeyboard == chiKeyboard);
 
         for (Keyboard.Key key : kb.getKeys()) {
             if (key.codes == null || key.codes.length == 0) continue;
@@ -598,7 +609,7 @@ public class CustomKeyboardApp extends InputMethodService
     private void updateEditorLabels() {
         if (editorKeyboard == null) return;
 
-        boolean chinese = (lastNonPageKeyboard == zhuyinKeyboard);
+        boolean chinese = (lastNonPageKeyboard == chiKeyboard);
 
         for (Keyboard.Key key : editorKeyboard.getKeys()) {
             if (key.codes == null || key.codes.length == 0) continue;
@@ -623,7 +634,7 @@ public class CustomKeyboardApp extends InputMethodService
     private void updateNumpadLabels() {
         if (numpadKeyboard == null) return;
 
-        boolean chinese = (lastNonPageKeyboard == zhuyinKeyboard);
+        boolean chinese = (lastNonPageKeyboard == chiKeyboard);
 
         for (Keyboard.Key key : numpadKeyboard.getKeys()) {
             if (key.codes == null || key.codes.length == 0) continue;
@@ -688,7 +699,7 @@ public class CustomKeyboardApp extends InputMethodService
             case -2: // symbols -> numpad for English or select all for Zhuyin
                 if (kv.getKeyboard() == engKeyboard) {
                     switchKeyboard(numpadKeyboard);
-                } else if (kv.getKeyboard() == zhuyinKeyboard) {
+                } else if (kv.getKeyboard() == chiKeyboard) {
                     handleSelectAll(ic);
                 }
                 break;
@@ -722,7 +733,7 @@ public class CustomKeyboardApp extends InputMethodService
 //                if (!maybeAutoReplace(ic, "\\")) {
 //                    commitTextAndShowLabel("\\");
 //                }
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
                     commitTextAndShowLabel("｜");
                 } else {
                     commitTextAndShowLabel("\\");
@@ -733,7 +744,7 @@ public class CustomKeyboardApp extends InputMethodService
                 commitTextAndShowLabel("。");
                 break;
             case -4: // zhuyin enter -> open settings, eng enter -> skip word, numpad enter = new line
-                if (kv.getKeyboard() == zhuyinKeyboard) {
+                if (kv.getKeyboard() == chiKeyboard) {
                     PackageManager manager = getPackageManager();
                     Intent launchIntent = manager.getLaunchIntentForPackage("com.fqhll.keyboard");
                     launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -783,7 +794,7 @@ public class CustomKeyboardApp extends InputMethodService
                 }
                 break;
             case '[':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
                     commitTextAndShowLabel("【");
                 } else {
                     commitTextAndShowLabel("{");
@@ -791,7 +802,7 @@ public class CustomKeyboardApp extends InputMethodService
                 updateSuggestion(ic);
                 break;
             case ']':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
                     commitTextAndShowLabel("】");
                 } else {
                     commitTextAndShowLabel("}");
@@ -799,7 +810,7 @@ public class CustomKeyboardApp extends InputMethodService
                 updateSuggestion(ic);
                 break;
             case '_':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
                     commitTextAndShowLabel("——");
                 } else {
                     commitTextAndShowLabel("|");
@@ -807,7 +818,7 @@ public class CustomKeyboardApp extends InputMethodService
                 updateSuggestion(ic);
                 break;
             case '!':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
                     commitTextAndShowLabel("!");
                 } else {
                     commitTextAndShowLabel("！");
@@ -815,7 +826,7 @@ public class CustomKeyboardApp extends InputMethodService
                 updateSuggestion(ic);
                 break;
             case '?':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
                     commitTextAndShowLabel("?");
                 } else {
                     commitTextAndShowLabel("？");
@@ -823,7 +834,7 @@ public class CustomKeyboardApp extends InputMethodService
                 updateSuggestion(ic);
                 break;
             case '~':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
                     commitTextAndShowLabel("⋯⋯");
                 } else {
                     commitTextAndShowLabel("～");
@@ -831,7 +842,7 @@ public class CustomKeyboardApp extends InputMethodService
                 updateSuggestion(ic);
                 break;
             case ':':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
                     commitTextAndShowLabel(":");
                 } else {
                     commitTextAndShowLabel("：");
@@ -842,7 +853,7 @@ public class CustomKeyboardApp extends InputMethodService
                 if (kv.getKeyboard() == numpadKeyboard) {
                     commitTextAndShowLabel("⁽");
                 } else {
-                    if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                    if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
                         commitTextAndShowLabel("《");
                     } else {
                         commitTextAndShowLabel("（");
@@ -854,7 +865,7 @@ public class CustomKeyboardApp extends InputMethodService
                 if (kv.getKeyboard() == numpadKeyboard) {
                     commitTextAndShowLabel("⁾");
                 } else {
-                    if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                    if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
                         commitTextAndShowLabel("》");
                     } else {
                         commitTextAndShowLabel("）");
@@ -871,7 +882,7 @@ public class CustomKeyboardApp extends InputMethodService
                 updateSuggestion(ic);
                 break;
             case '<':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
                     commitTextAndShowLabel("〈");
                 } else {
                     commitTextAndShowLabel("「");
@@ -879,7 +890,7 @@ public class CustomKeyboardApp extends InputMethodService
                 updateSuggestion(ic);
                 break;
             case '>':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
                     commitTextAndShowLabel("〉");
                 } else {
                     commitTextAndShowLabel("」");
@@ -895,7 +906,7 @@ public class CustomKeyboardApp extends InputMethodService
                 updateSuggestion(ic);
                 break;
             case ';':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == zhuyinKeyboard) {
+                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
                     commitTextAndShowLabel("・");
                 } else {
                     commitTextAndShowLabel("；");
@@ -1267,7 +1278,7 @@ public class CustomKeyboardApp extends InputMethodService
                 String[] longPressText = longPressSymbols;
                 String[] letterArray = engLetterArray;
 
-                if (kv.getKeyboard() == zhuyinKeyboard) {
+                if (kv.getKeyboard() == chiKeyboard && chineseInputType == ChineseInputType.ZHUYIN) {
                     longPressText = zhuyinLetterArray;
                     letterArray = zhuyinLetterArray;
                 }
@@ -1429,7 +1440,7 @@ public class CustomKeyboardApp extends InputMethodService
             return false;
         }
 
-        if (lastNonPageKeyboard != zhuyinKeyboard) return false;
+        if (lastNonPageKeyboard != chiKeyboard) return false;
 
         if (primaryCode == '\'') {
             ic.commitText("「", 1);
@@ -1880,7 +1891,7 @@ public class CustomKeyboardApp extends InputMethodService
                         isSkippedAutoreplace = false;
                     }
 
-                    if (kv.getKeyboard() == zhuyinKeyboard) {
+                    if (kv.getKeyboard() == chiKeyboard) {
                         commitChar(ic, primaryCode);
                         updateSuggestion(ic);
                     } else {
@@ -1906,7 +1917,7 @@ public class CustomKeyboardApp extends InputMethodService
 
         for (Keyboard.Key key : kv.getKeyboard().getKeys()) {
             if (key.codes[0] == -10) { // abc <-> symbols key
-                if (lastNonPageKeyboard == zhuyinKeyboard) {
+                if (lastNonPageKeyboard == chiKeyboard) {
                     key.label = "中文"; // show 中文 when on Zhuyin
                 } else {
                     key.label = "abc"; // default
@@ -2115,7 +2126,7 @@ public class CustomKeyboardApp extends InputMethodService
         InputConnection ic = getCurrentInputConnection();
         if (ic == null) return;
 
-        if (kv != null && kv.getKeyboard() == zhuyinKeyboard && zhuyinBuffer.length() > 0) {
+        if (kv != null && kv.getKeyboard() == chiKeyboard && zhuyinBuffer.length() > 0) {
             zhuyinBuffer.setLength(zhuyinBuffer.length() - 1);
             zhuyinCompositionText.setText(zhuyinBuffer.toString());
             return;
@@ -2192,7 +2203,7 @@ public class CustomKeyboardApp extends InputMethodService
         }
 
         // Zhuyin mode: keep in buffer instead of committing
-        if (kv != null && kv.getKeyboard() == zhuyinKeyboard) {
+        if (kv != null && kv.getKeyboard() == chiKeyboard) {
             if (c == ' ' && zhuyinBuffer.length() == 0) {
                 ic.commitText(" ", 1);
                 return;
@@ -2201,9 +2212,17 @@ public class CustomKeyboardApp extends InputMethodService
                 return;
             }
 
-            zhuyinBuffer.append(c);
+            if (chineseInputType == ChineseInputType.PINYIN) {
+                c = Character.toLowerCase(c);
 
-//            zhuyinCompositionBar.setVisibility(View.VISIBLE);
+                boolean validPinyinInput = (c >= 'a' && c <= 'z') || (c >= '0' && c <= '4') || c == ' ';
+
+                if (!validPinyinInput) {
+                    return;
+                }
+            }
+
+            zhuyinBuffer.append(c);
             zhuyinCompositionText.setText(zhuyinBuffer.toString());
             return;
         }
@@ -2236,7 +2255,7 @@ public class CustomKeyboardApp extends InputMethodService
         String before = (beforeCs == null ? "" : beforeCs.toString());
         before = before.trim();
 
-        if (kv != null && kv.getKeyboard() == zhuyinKeyboard) {
+        if (kv != null && kv.getKeyboard() == chiKeyboard) {
             String prefix = zhuyinBuffer.toString();
             showSuggestions(prefix);
             return;
@@ -2277,7 +2296,7 @@ public class CustomKeyboardApp extends InputMethodService
         TextView s2 = root.findViewById(R.id.suggestion_2);
         TextView s3 = root.findViewById(R.id.suggestion_3);
 
-        if (kv.getKeyboard() != zhuyinKeyboard) {
+        if (kv.getKeyboard() != chiKeyboard) {
             Suggestion s = nativeLoaded && !prefix.isEmpty()
                     ? nativeSuggest(prefix, defaultCaps, getContractionPath())
                     : new Suggestion(new String[]{"", "", ""}, new double[]{0,0,0});
@@ -2393,9 +2412,14 @@ public class CustomKeyboardApp extends InputMethodService
             return;
         }
 
-        String[] split = splitPrefix(prefix);
-        SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-        String[][] results = zhuyinTyper.suggest(split, prefs.getBoolean("etenToggle", false));
+        String[][] results;
+        if (chineseInputType == ChineseInputType.PINYIN) {
+            results = pinyinTyper.suggest(prefix);
+        } else {
+            String[] split = splitPrefix(prefix);
+            SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+            results = zhuyinTyper.suggest(split, prefs.getBoolean("etenToggle", false));
+        }
 
         for (String[] pair : results) {
             zhuyinSuggestions.add(pair[0]);
@@ -2547,7 +2571,7 @@ public class CustomKeyboardApp extends InputMethodService
         InputConnection ic = getCurrentInputConnection();
         if (ic == null || suggestion.equals(" ") || suggestion.isEmpty()) return;
 
-        if (kv != null && kv.getKeyboard() == zhuyinKeyboard) {
+        if (kv != null && kv.getKeyboard() == chiKeyboard) {
             ic.beginBatchEdit();
             ic.commitText(suggestion, 1);
             ic.endBatchEdit();
@@ -3126,8 +3150,23 @@ public class CustomKeyboardApp extends InputMethodService
 
         else if (keyboardLayout.equals("zhuyin")) {
             keyboard = zhuyinKeyboard;
+            chiKeyboard = zhuyinKeyboard;
             engKeyboard = new Keyboard(wrap, R.xml.custom_keypad_qwerty);
+
+            chineseInputType = ChineseInputType.ZHUYIN;
         }
+
+        /*
+        [UNCOMMENT THIS RIGHT HERE]
+        else if (keyboardLayout.equals("pinyin")) {
+            pinyinKeyboard = new Keyboard(wrap, R.xml.custom_keypad_pinyin);
+
+            keyboard = pinyinKeyboard;
+            chiKeyboard = pinyinKeyboard;
+            engKeyboard = new Keyboard(wrap, R.xml.custom_keypad_qwerty);
+
+            chineseInputType = ChineseInputType.PINYIN;
+        }*/
 
         else {
             String layoutName = "custom_keypad_" + keyboardLayout;
@@ -3137,7 +3176,7 @@ public class CustomKeyboardApp extends InputMethodService
         }
 
         if (currentKeyboard == null && lastNonPageKeyboard == null) {
-            mainKeyboardMode = keyboardLayout.equals("zhuyin") ? MainKeyboardMode.ZHUYIN : MainKeyboardMode.ENGLISH;
+            mainKeyboardMode = keyboardLayout.equals("zhuyin") || keyboardLayout.equals("pinyin") ? MainKeyboardMode.CHINESE : MainKeyboardMode.ENGLISH;
         }
 
         // Update layout
@@ -3170,7 +3209,7 @@ public class CustomKeyboardApp extends InputMethodService
 
         clipboard.setOnClickListener(v -> {
             try {
-                if (lastNonPageKeyboard == zhuyinKeyboard) {
+                if (lastNonPageKeyboard == chiKeyboard) {
                     regenerateZhuyinSuggestions(zhuyinBuffer.toString());
 
                     if (!zhuyinSuggestions.isEmpty() || zhuyinExpanded) {
@@ -3252,7 +3291,7 @@ public class CustomKeyboardApp extends InputMethodService
             if (kv.getKeyboard() == clipKeyboard && !zhuyinExpanded) {
                 clearClipboard();
                 return true;
-            } else if (lastNonPageKeyboard == zhuyinKeyboard || zhuyinExpanded) {
+            } else if (lastNonPageKeyboard == chiKeyboard || zhuyinExpanded) {
                 if (zhuyinExpanded) {
                     // Minimize
                     expanded.setVisibility(View.GONE);
@@ -3334,8 +3373,8 @@ public class CustomKeyboardApp extends InputMethodService
                 return true;
             } else {
                 if (lastNonPageKeyboard == engKeyboard) {
-                    switchKeyboard(zhuyinKeyboard);
-                } else if (lastNonPageKeyboard == zhuyinKeyboard) {
+                    switchKeyboard(chiKeyboard);
+                } else if (lastNonPageKeyboard == chiKeyboard) {
                     switchKeyboard(engKeyboard);
                 }
                 return true;
@@ -3353,10 +3392,10 @@ public class CustomKeyboardApp extends InputMethodService
         });
 
         textEditor.setOnLongClickListener(v -> {
-            if (lastNonPageKeyboard == zhuyinKeyboard) {
+            if (lastNonPageKeyboard == chiKeyboard) {
                 switchKeyboard(engKeyboard);
             } else {
-                switchKeyboard(zhuyinKeyboard);
+                switchKeyboard(chiKeyboard);
             }
 
             if (!forceEmptySuggestions && defaultCaps && shouldAutoCap()) {
