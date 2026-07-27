@@ -2819,9 +2819,9 @@ public class CustomKeyboardApp extends InputMethodService
             return;
         }
 
-        if (!forceEmptySuggestions && defaultCaps && isAtLineStart()) {
+        if (mainKeyboardMode == MainKeyboardMode.ENGLISH && !forceEmptySuggestions && defaultCaps && isAtLineStart()) {
             caps_state = 1;
-        } else if (!forceEmptySuggestions && shouldAutoCap() && defaultCaps) {
+        } else if (mainKeyboardMode == MainKeyboardMode.ENGLISH && !forceEmptySuggestions && shouldAutoCap() && defaultCaps) {
             caps_state = 1;
         } else {
             caps_state = 0;
@@ -2854,7 +2854,7 @@ public class CustomKeyboardApp extends InputMethodService
 
         if (caps_state == 2) {
             newCapsState = 2;
-        } else if (!forceEmptySuggestions && defaultCaps && shouldAutoCap()) {
+        } else if (mainKeyboardMode == MainKeyboardMode.ENGLISH && !forceEmptySuggestions && defaultCaps && shouldAutoCap()) {
             newCapsState = 1;
         } else {
             newCapsState = 0;
@@ -2869,15 +2869,19 @@ public class CustomKeyboardApp extends InputMethodService
     private void resetCaps() {
         if (caps_state == 2) return;  // Never reset caps lock
 
-        if (caps_state == 1 && !isAtLineStart()) {
+        if (mainKeyboardMode == MainKeyboardMode.ENGLISH && caps_state == 1 && !isAtLineStart()) {
             caps_state = 0;
-        } else if (!forceEmptySuggestions && defaultCaps && isAtLineStart()) {
+        } else if (mainKeyboardMode == MainKeyboardMode.ENGLISH && !forceEmptySuggestions && defaultCaps && isAtLineStart()) {
             caps_state = 1;
         }
         applyCapsState();
     }
 
     private void handleCapsPress() {
+        if (mainKeyboardMode == MainKeyboardMode.CHINESE && chineseInputType == ChineseInputType.PINYIN) {
+            return;
+        }
+
         long curr_time = System.currentTimeMillis();
         if (curr_time - last_caps_time < DOUBLE_TAP_TIMEOUT) {
             // Double tap detected -> toggle caps lock
@@ -2921,7 +2925,7 @@ public class CustomKeyboardApp extends InputMethodService
             return;
         }
 
-        if (k == mathKeyboard) {
+        if (k == mathKeyboard || k == chiKeyboard) {
             caps_state = 0;
             k.setShifted(false);
             updateCapsLabel();
@@ -3031,7 +3035,7 @@ public class CustomKeyboardApp extends InputMethodService
 
         showSuggestions("");
 //        if (caps_state != 2) {
-        caps_state = (defaultCaps && !forceEmptySuggestions && shouldAutoCap()) ? 1 : 0;
+        caps_state = (mainKeyboardMode == MainKeyboardMode.ENGLISH && defaultCaps && !forceEmptySuggestions && shouldAutoCap()) ? 1 : 0;
 //        }
         applyCapsState();
     }
@@ -3385,6 +3389,7 @@ public class CustomKeyboardApp extends InputMethodService
                 return true;
             } else {
                 if (lastNonPageKeyboard == engKeyboard) {
+                    caps_state = 0;
                     switchKeyboard(chiKeyboard);
                 } else if (lastNonPageKeyboard == chiKeyboard) {
                     switchKeyboard(engKeyboard);
@@ -3407,6 +3412,7 @@ public class CustomKeyboardApp extends InputMethodService
             if (lastNonPageKeyboard == chiKeyboard) {
                 switchKeyboard(engKeyboard);
             } else {
+                caps_state = 0;
                 switchKeyboard(chiKeyboard);
             }
 
