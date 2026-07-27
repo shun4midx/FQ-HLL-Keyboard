@@ -2155,7 +2155,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     private boolean isChordable(int code) {
         // Letters, digits, or space
-        return code >= 0 && isLetterOrDigit((char)code);
+        return currentKeyboard != chiKeyboard && code >= 0 && isLetterOrDigit((char)code);
     }
 
     private boolean isLetterOrDigit(char code) {
