@@ -74,13 +74,6 @@
                 android:text="@string/enable_editor_grid" />
 
             <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/etenToggle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:text="@string/use_eten_layout" />
-
-            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/altSymbolToggle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -93,6 +86,13 @@
                 android:layout_height="wrap_content"
                 android:checked="false"
                 android:text="Replace full stop delete word function with typing '//'"/>
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/chiKeyboardDefaultToggle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="false"
+                android:text="Use Chinese keyboard as default"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -122,7 +122,13 @@
                 android:text="@string/layout_switcher" />
 
             <Spinner
-                android:id="@+id/layout_options"
+                android:id="@+id/eng_layout_options"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown" />
+
+            <Spinner
+                android:id="@+id/chi_layout_options"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:spinnerMode="dropdown" />

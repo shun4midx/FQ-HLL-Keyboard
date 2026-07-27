@@ -3054,7 +3054,7 @@ public class CustomKeyboardApp extends InputMethodService
             return;
         }
 
-        Set<String> rebuild_prefs = new HashSet<>(Arrays.asList("key_color", "gridToggle", "keyboard_height", "keyboard_layout", "emoji_variation", "etenToggle", "keySoundToggle", "key_sound_effect", "altSymbolToggle", "fullStopCommentToggle"));
+        Set<String> rebuild_prefs = new HashSet<>(Arrays.asList("key_color", "gridToggle", "keyboard_height", "eng_keyboard_layout", "chi_keyboard_layout", "emoji_variation", "chiKeyboardDefaultToggle", "keySoundToggle", "key_sound_effect", "altSymbolToggle", "fullStopCommentToggle"));
         if (!rebuild_prefs.contains(key) && !key.startsWith("clipboard")) {
             return;
         }
@@ -3105,14 +3105,16 @@ public class CustomKeyboardApp extends InputMethodService
         clipKeyboard  = new Keyboard(wrap, R.xml.clipboard);
         numpadKeyboard= new Keyboard(wrap, R.xml.numpad);
         zhuyinKeyboard= new Keyboard(wrap, R.xml.custom_keypad_zhuyin);
+        pinyinKeyboard= new Keyboard(wrap, R.xml.custom_keypad_pinyin);
 
         zhuyinCompositionBar = root.findViewById(R.id.zhuyin_composition_bar);
         zhuyinCompositionText = root.findViewById(R.id.zhuyin_composition_text);
 
         String keyboardHeight = prefs.getString("keyboard_height", "Short");
-        String keyboardLayout = prefs.getString("keyboard_layout", "qwerty").toLowerCase();
-        boolean useEtenLayout = prefs.getBoolean("etenToggle", false);
+        String engKeyboardLayout = prefs.getString("eng_keyboard_layout", "qwerty").toLowerCase();
+        String chiKeyboardLayout = prefs.getString("chi_keyboard_layout", "zhuyin").toLowerCase();
         boolean useAltSymbolLayout = prefs.getBoolean("altSymbolToggle", false);
+        boolean useChineseDefault = prefs.getBoolean("chiKeyboardDefaultToggle", false);
         useFullStopComment = prefs.getBoolean("fullStopCommentToggle", false);
         isKeySoundEnabled = prefs.getBoolean("keySoundToggle", true);
 
@@ -3120,8 +3122,18 @@ public class CustomKeyboardApp extends InputMethodService
         updateEditorLabels();
         updateNumpadLabels();
 
-        if (useEtenLayout) {
+        if (chiKeyboardLayout.equals("zhuyineten")) {
             zhuyinKeyboard = new Keyboard(wrap, R.xml.custom_keypad_zhuyin_eten);
+            chineseInputType = ChineseInputType.ZHUYIN;
+            chiKeyboard = zhuyinKeyboard;
+        }
+        else if (chiKeyboardLayout.equals("pinyin")) {
+            chineseInputType = ChineseInputType.PINYIN;
+            chiKeyboard = pinyinKeyboard;
+        }
+        else {
+            chineseInputType = ChineseInputType.ZHUYIN;
+            chiKeyboard = zhuyinKeyboard;
         }
 
         longPressSymbols = longPressSymbolsMain;
@@ -3129,7 +3141,7 @@ public class CustomKeyboardApp extends InputMethodService
             longPressSymbols = longPressSymbolsAlt;
         }
 
-        if (keyboardLayout.equals("qwerty")) {
+        if (engKeyboardLayout.equals("qwerty")) {
             switch (keyboardHeight) {
                 case "Short":
                     keyboard = new Keyboard(wrap, R.xml.custom_keypad_short);
@@ -3148,12 +3160,9 @@ public class CustomKeyboardApp extends InputMethodService
             engKeyboard = keyboard;
         }
 
-        else if (keyboardLayout.equals("zhuyin")) {
+        else if (useChineseDefault) {
             keyboard = zhuyinKeyboard;
-            chiKeyboard = zhuyinKeyboard;
             engKeyboard = new Keyboard(wrap, R.xml.custom_keypad_qwerty);
-
-            chineseInputType = ChineseInputType.ZHUYIN;
         }
 
         /*
@@ -3169,20 +3178,21 @@ public class CustomKeyboardApp extends InputMethodService
         }*/
 
         else {
-            String layoutName = "custom_keypad_" + keyboardLayout;
+            String layoutName = "custom_keypad_" + engKeyboardLayout;
             int layoutXml = getResources().getIdentifier(layoutName, "xml", getPackageName());
             keyboard = new Keyboard(wrap, layoutXml);
             engKeyboard = keyboard;
         }
 
         if (currentKeyboard == null && lastNonPageKeyboard == null) {
-            mainKeyboardMode = keyboardLayout.equals("zhuyin") || keyboardLayout.equals("pinyin") ? MainKeyboardMode.CHINESE : MainKeyboardMode.ENGLISH;
+            mainKeyboardMode = useChineseDefault ? MainKeyboardMode.CHINESE : MainKeyboardMode.ENGLISH;
         }
 
         // Update layout
         String absPath = getFilesDir().getAbsolutePath() + "/test_files/20k_texting.txt";
         ensureNative();
-        nativeSetLayout(keyboardLayout, absPath);
+
+        nativeSetLayout(engKeyboardLayout, absPath);
 
         if (!prefs.getBoolean("gridToggle", false)) {
             editorKeyboard = new Keyboard(wrap, R.xml.editor_maximize);

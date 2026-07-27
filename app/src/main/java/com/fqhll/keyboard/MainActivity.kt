@@ -34,7 +34,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private var themes = arrayOf("Unselected", "Shun", "ShunV2", "ShunV3", "Ducky", "DuckyV2", "DuckyV3", "Cabbage", "Sage", "Jellyfish", "ThisIsFine", "ThisIsFinePremium", "ThisIsFinePremium2", "AntiThisIsFine", "AntiThisIsFinePremium", "AntiThisIsFinePremium2", "Black", "Stargaze", "StargazePremium", "Hammerhead", "CottonCandy", "DarkBlue", "Yellow", "Teal", "Purple", "Green", "Cyan", "ColorBlocks", "Nerdmortie")
     private var keyboardHeights = arrayOf("Unselected", "Short", "Medium", "Tall", "Custom")
-    private var keyboardLayouts = arrayOf("Unselected", "QWERTY", "QWERTZ", "AZERTY", "Dvorak", "Colemak", "Zhuyin")
+    private var engKeyboardLayouts = arrayOf("Unselected", "QWERTY", "QWERTZ", "AZERTY", "Dvorak", "Colemak")
+    private var chiKeyboardLayouts = arrayOf("Unselected", "Zhuyin", "ZhuyinEten", "Pinyin")
     private var emojiVariations = arrayOf("Unselected", "Masculine", "Feminine", "Neutral")
     private var keySound = arrayOf("Unselected", "click", "meow", "quack", "oiiai")
 
@@ -53,7 +54,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val capsToggle: SwitchCompat = findViewById(R.id.capsToggle)
         val autocorToggle: SwitchCompat = findViewById(R.id.autocorToggle)
         val gridToggle: SwitchCompat = findViewById(R.id.gridToggle)
-        val etenToggle: SwitchCompat = findViewById(R.id.etenToggle)
+        val chiKeyboardDefaultToggle: SwitchCompat = findViewById(R.id.chiKeyboardDefaultToggle)
+//        val etenToggle: SwitchCompat = findViewById(R.id.etenToggle)
         val keySoundToggle: SwitchCompat = findViewById(R.id.keySoundToggle)
         val altSymbolToggle: SwitchCompat = findViewById(R.id.altSymbolToggle)
         val fullStopCommentToggle: SwitchCompat = findViewById(R.id.fullStopCommentToggle)
@@ -69,8 +71,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         if (!prefs.contains("gridToggle")) {
             prefs.edit().putBoolean("gridToggle", false).commit()
         }
-        if (!prefs.contains("etenToggle")) {
-            prefs.edit().putBoolean("etenToggle", false).commit()
+        if (!prefs.contains("chiKeyboardDefaultToggle")) {
+            prefs.edit().putBoolean("chiKeyboardDefaultToggle", false).commit()
         }
         if (!prefs.contains("keySoundToggle")) {
             prefs.edit().putBoolean("keySoundToggle", true).commit()
@@ -86,7 +88,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         capsToggle.isChecked = prefs.getBoolean("capsToggle", true)
         autocorToggle.isChecked = prefs.getBoolean("autocorToggle", true)
         gridToggle.isChecked = prefs.getBoolean("gridToggle", false)
-        etenToggle.isChecked = prefs.getBoolean("etenToggle", false)
+        chiKeyboardDefaultToggle.isChecked = prefs.getBoolean("chiKeyboardDefaultToggle", false)
+//        etenToggle.isChecked = prefs.getBoolean("etenToggle", false)
         keySoundToggle.isChecked = prefs.getBoolean("keySoundToggle", true)
         altSymbolToggle.isChecked = prefs.getBoolean("altSymbolToggle", false)
         fullStopCommentToggle.isChecked = prefs.getBoolean("fullStopCommentToggle", false)
@@ -101,9 +104,12 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         gridToggle.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit(commit = true) { putBoolean("gridToggle", isChecked) }
         }
-        etenToggle.setOnCheckedChangeListener { _, isChecked ->
-            prefs.edit(commit = true) { putBoolean("etenToggle", isChecked) }
+        chiKeyboardDefaultToggle.setOnCheckedChangeListener { _, isChecked ->
+            prefs.edit(commit = true) { putBoolean("chiKeyboardDefaultToggle", isChecked) }
         }
+//        etenToggle.setOnCheckedChangeListener { _, isChecked ->
+//            prefs.edit(commit = true) { putBoolean("etenToggle", isChecked) }
+//        }
         keySoundToggle.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit(commit = true) { putBoolean("keySoundToggle", isChecked) }
         }
@@ -122,8 +128,11 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val keyboardHeight: Spinner = findViewById(R.id.height_options)
         val savedHeight = prefs.getString("keyboard_height", "Short")
 
-        val keyboardLayout: Spinner = findViewById(R.id.layout_options)
-        val savedLayout = prefs.getString("keyboard_layout", "qwerty")?.lowercase()
+        val engKeyboardLayout: Spinner = findViewById(R.id.eng_layout_options)
+        val engSavedLayout = prefs.getString("eng_keyboard_layout", "qwerty")?.lowercase()
+
+        val chiKeyboardLayout: Spinner = findViewById(R.id.chi_layout_options)
+        val chiSavedLayout = prefs.getString("chi_keyboard_layout", "zhuyin")?.lowercase()
 
         val emojiVariation: Spinner = findViewById(R.id.emoji_options)
         val savedEmoji = prefs.getString("emoji_variation", "neutral")?.lowercase()
@@ -134,7 +143,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         prefs.edit { putString("key_color", savedColor) }
         prefs.edit { putString("keyboard_height", savedHeight) }
-        prefs.edit { putString("keyboard_layout", savedLayout) }
+        prefs.edit { putString("eng_keyboard_layout", engSavedLayout) }
+        prefs.edit { putString("chi_keyboard_layout", chiSavedLayout) }
         prefs.edit { putString("emoji_variation", savedEmoji) }
         prefs.edit { putString("key_sound_effect", savedSoundEffect) }
 
@@ -145,8 +155,11 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val aa_height = ArrayAdapter(this, R.layout.spinner, keyboardHeights)
         aa_height.setDropDownViewResource(R.layout.spinner)
 
-        val aa_layout = ArrayAdapter(this, R.layout.spinner, keyboardLayouts)
-        aa_layout.setDropDownViewResource(R.layout.spinner)
+        val aa_engLayout = ArrayAdapter(this, R.layout.spinner, engKeyboardLayouts)
+        aa_engLayout.setDropDownViewResource(R.layout.spinner)
+
+        val aa_chiLayout = ArrayAdapter(this, R.layout.spinner, chiKeyboardLayouts)
+        aa_chiLayout.setDropDownViewResource(R.layout.spinner)
 
         val aa_emoji = ArrayAdapter(this, R.layout.spinner, emojiVariations)
         aa_emoji.setDropDownViewResource(R.layout.spinner)
@@ -170,9 +183,17 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             setPopupBackgroundResource(R.color.shun_blue)
         }
 
-        // the layout dropdown
-        with(keyboardLayout) {
-            adapter = aa_layout
+        // the eng layout dropdown
+        with(engKeyboardLayout) {
+            adapter = aa_engLayout
+            setSelection(0, false)
+            onItemSelectedListener = this@MainActivity
+            setPopupBackgroundResource(R.color.shun_blue)
+        }
+
+        // the chi layout dropdown
+        with(chiKeyboardLayout) {
+            adapter = aa_chiLayout
             setSelection(0, false)
             onItemSelectedListener = this@MainActivity
             setPopupBackgroundResource(R.color.shun_blue)
@@ -323,11 +344,19 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     }
                 }
 
-                R.id.layout_options -> {
-                    val selectedLayout = keyboardLayouts[position]
-                    if (!selectedLayout.equals("Unselected")) {
-                        prefs.edit { putString("keyboard_layout", selectedLayout) }
-                        showToast(message = "Selected layout: $selectedLayout")
+                R.id.eng_layout_options -> {
+                    val selectedEngLayout = engKeyboardLayouts[position]
+                    if (!selectedEngLayout.equals("Unselected")) {
+                        prefs.edit { putString("eng_keyboard_layout", selectedEngLayout) }
+                        showToast(message = "Selected layout: $selectedEngLayout")
+                    }
+                }
+
+                R.id.chi_layout_options -> {
+                    val selectedChiLayout = chiKeyboardLayouts[position]
+                    if (!selectedChiLayout.equals("Unselected")) {
+                        prefs.edit { putString("chi_keyboard_layout", selectedChiLayout) }
+                        showToast(message = "Selected layout: $selectedChiLayout")
                     }
                 }
 
