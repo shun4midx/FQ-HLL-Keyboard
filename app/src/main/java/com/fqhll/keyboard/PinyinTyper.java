@@ -235,7 +235,7 @@ public class PinyinTyper {
     );
 
     private String pinyinToZhuyin(String syllable) {
-        if (syllable == null || syllable.length() < 2) {
+        if (syllable == null || syllable.isEmpty()) {
             return "";
         }
 
