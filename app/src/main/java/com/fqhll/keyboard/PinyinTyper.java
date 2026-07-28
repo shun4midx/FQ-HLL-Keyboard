@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 public class PinyinTyper {
     private final Map<String, List<String>> dictionary = new HashMap<>();
+    private final Map<String, List<String>> tonelessDictionary = new HashMap<>();
 
     public PinyinTyper(Context context) {
         loadDictionary(context);
@@ -48,9 +50,71 @@ public class PinyinTyper {
 
                 dictionary.put(key, candidates);
             }
+
+            Map<String, Map<Character, List<String>>> grouped = new HashMap<>();
+
+            for (Map.Entry<String, List<String>> entry : dictionary.entrySet()) {
+                String toneless = removeTone(entry.getKey());
+
+                char tone = getTone(entry.getKey());
+
+                grouped.computeIfAbsent(toneless, k -> new HashMap<>())
+                        .put(tone, entry.getValue());
+            }
+
+            for (Map.Entry<String, Map<Character, List<String>>> entry : grouped.entrySet()) {
+                List<String> merged = new ArrayList<>();
+                HashSet<String> seen = new HashSet<>();
+
+                int depth = 0;
+
+                while (true) {
+                    boolean added = false;
+
+                    char[] order = {'1', '2', '3', '4', '0'};
+
+                    for (char tone : order) {
+                        List<String> list = entry.getValue().get(tone);
+
+                        if (list != null && depth < list.size()) {
+                            String word = list.get(depth);
+
+                            if (seen.add(word)) {
+                                merged.add(word);
+                            }
+
+                            added = true;
+                        }
+                    }
+
+                    if (!added) {
+                        break;
+                    }
+
+                    ++depth;
+                }
+
+                tonelessDictionary.put(entry.getKey(), merged);
+            }
         } catch (Exception ignored) {
 
         }
+    }
+
+    private String removeTone(String zhuyin) {
+        return zhuyin
+                .replace("ˊ", "")
+                .replace("ˇ", "")
+                .replace("ˋ", "")
+                .replace("˙", "");
+    }
+
+    private char getTone(String zhuyin) {
+        if (zhuyin.endsWith("ˊ")) return '2';
+        if (zhuyin.endsWith("ˇ")) return '3';
+        if (zhuyin.endsWith("ˋ")) return '4';
+        if (zhuyin.endsWith("˙")) return '0';
+        return '1';
     }
 
     private static final Map<String, String> PINYIN_INITIALS = Map.ofEntries(
@@ -177,14 +241,14 @@ public class PinyinTyper {
 
         String input = syllable.toLowerCase(Locale.ROOT);
 
-        char tone = input.charAt(input.length() - 1);
+        String toneSymbol = "";
+        String body = input;
 
-        if (!isTone(tone)) {
-            return "";
+        if (isTone(input.charAt(input.length() - 1))) {
+            char tone = input.charAt(input.length() - 1);
+            toneSymbol = TONE_SYMBOLS.get(tone);
+            body = input.substring(0, input.length() - 1);
         }
-
-        String toneSymbol = TONE_SYMBOLS.get(tone);
-        String body = input.substring(0, input.length() - 1);
 
         if (body.isEmpty()) {
             return "";
@@ -254,7 +318,7 @@ public class PinyinTyper {
     }
 
     private List<String> splitCompletedSyllables(String rawInput) {
-        String input = rawInput.toLowerCase(Locale.ROOT).replace(' ', '0');
+        String input = rawInput.toLowerCase(Locale.ROOT);
 
         List<String> syllables = new ArrayList<>();
         StringBuilder current = new StringBuilder();
@@ -264,6 +328,15 @@ public class PinyinTyper {
 
             if (c >= 'a' && c <= 'z') {
                 current.append(c);
+                continue;
+            }
+
+            if (c == ' ') {
+                if (current.length() > 0) {
+                    syllables.add(current.toString());
+                    current.setLength(0);
+                }
+
                 continue;
             }
 
@@ -283,6 +356,9 @@ public class PinyinTyper {
         }
 
         // Deliberately ignore an unfinished trailing syllable.
+        if (current.length() > 0) {
+            syllables.add(current.toString());
+        }
 
         return syllables;
     }
@@ -316,13 +392,20 @@ public class PinyinTyper {
 
                 zhuyinKey.append(converted);
                 rawCharsConsumed += pinyinSyllable.length();
+
+                if (i + 1 < count) {
+                    ++rawCharsConsumed;
+                }
             }
 
             if (!valid) {
                 continue;
             }
 
-            List<String> candidates = dictionary.get(zhuyinKey.toString());
+            String key = zhuyinKey.toString();
+
+            boolean hasTone = key.contains("ˊ") || key.contains("ˇ") || key.contains("ˋ") || key.contains("˙");
+            List<String> candidates = hasTone ? dictionary.get(key) : tonelessDictionary.get(key);
 
             if (candidates == null) {
                 continue;
