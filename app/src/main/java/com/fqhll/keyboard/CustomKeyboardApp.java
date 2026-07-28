@@ -924,6 +924,8 @@ public class CustomKeyboardApp extends InputMethodService
                     } else {
                         commitTextAndShowLabel(mathbbDigitArray[d]);
                     }
+                } else if (kv.getKeyboard() == chiKeyboard && chineseInputType == ChineseInputType.PINYIN) {
+                    commitTextAndShowLabel(Character.toString((char) (primaryCode)));
                 } else {
                     commitTextAndShowLabel(digitSuperArray[d]);
                 }
@@ -1283,6 +1285,9 @@ public class CustomKeyboardApp extends InputMethodService
                 if (kv.getKeyboard() == chiKeyboard && chineseInputType == ChineseInputType.ZHUYIN) {
                     longPressText = zhuyinLetterArray;
                     letterArray = zhuyinLetterArray;
+                } else if (kv.getKeyboard() == chiKeyboard && chineseInputType == ChineseInputType.PINYIN) {
+                    longPressText = engLetterArray;
+                    letterArray = engLetterArray;
                 }
 
                 for (int i=0; i<letterArray.length; i++) {
