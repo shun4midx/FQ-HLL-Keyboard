@@ -20,6 +20,7 @@ import java.util.Map;
 public class PinyinTyper {
     private final Map<String, List<String>> dictionary = new HashMap<>();
     private final Map<String, List<String>> tonelessDictionary = new HashMap<>();
+    private final Map<String, List<String>> tonelessPhraseDictionary = new HashMap<>();
 
     public PinyinTyper(Context context) {
         loadDictionary(context);
@@ -95,6 +96,20 @@ public class PinyinTyper {
                 }
 
                 tonelessDictionary.put(entry.getKey(), merged);
+            }
+
+            for (Map.Entry<String, List<String>> entry : dictionary.entrySet()) {
+                String toneless = removeTone(entry.getKey());
+
+                List<String> merged = tonelessPhraseDictionary.computeIfAbsent(toneless, k -> new ArrayList<>());
+
+                HashSet<String> seen = new HashSet<>(merged);
+
+                for (String word : entry.getValue()) {
+                    if (seen.add(word)) {
+                        merged.add(word);
+                    }
+                }
             }
         } catch (Exception ignored) {
 
@@ -405,7 +420,17 @@ public class PinyinTyper {
             String key = zhuyinKey.toString();
 
             boolean hasTone = key.contains("ˊ") || key.contains("ˇ") || key.contains("ˋ") || key.contains("˙");
-            List<String> candidates = hasTone ? dictionary.get(key) : tonelessDictionary.get(key);
+            List<String> candidates;
+
+            if (hasTone) {
+                candidates = dictionary.get(key);
+            } else {
+                if (count == 1) {
+                    candidates = tonelessDictionary.get(key);
+                } else {
+                    candidates = tonelessPhraseDictionary.get(key);
+                }
+            }
 
             if (candidates == null) {
                 continue;
