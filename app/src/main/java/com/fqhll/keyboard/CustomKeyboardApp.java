@@ -239,8 +239,6 @@ public class CustomKeyboardApp extends InputMethodService
             Map.entry((int) ';', "；"),
             Map.entry((int) '(', "（"),
             Map.entry((int) ')', "）"),
-            Map.entry((int) '<', "〈"),
-            Map.entry((int) '>', "〉"),
             Map.entry((int) '\'', "『"),
             Map.entry((int) '"', "』"),
             Map.entry((int) '~', "～")
