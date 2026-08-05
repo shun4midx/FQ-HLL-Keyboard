@@ -1844,6 +1844,7 @@ public class CustomKeyboardApp extends InputMethodService
                             ic.commitText("=" + resultStr, 1);
 
                             // Clear UI and mark bar inactive
+                            isSkippedAutoreplace = false;
                             showSuggestions("");
                             break;
                         } catch (Exception e) {
@@ -1892,7 +1893,7 @@ public class CustomKeyboardApp extends InputMethodService
                     break;
                 } else {
 
-                    if (isSkippedAutoreplace) {
+                    if (isSkippedAutoreplace && (primaryCode == ' ' || primaryCode == '\n' || primaryCode == '\r')) {
                         isSkippedAutoreplace = false;
                     }
 
