@@ -324,7 +324,7 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
     // Real logic: fill a vector of {text, confidence}
     pair<vector<string>, vector<double>> results;
 
-    unordered_map<string, string> autoreplace = {{"i", "i"}, {"im", "i'm"}, {"Im", "I'm"}, {"id", "i'd"}, {"Id", "I'd"}, {"youd", "you'd"}, {"Youd", "You'd"}, {"youll", "you'll"}, {"Youll", "You'll"}, {"isnt", "isn't"}, {"Isnt", "Isn't"},
+    unordered_map<string, string> autoreplace = {{"i", "i"}, {"im", "i'm"}, {"Im", "I'm"}, {"id", "i'd"}, {"Id", "I'd"}, {"imma", "i'mma"}, {"Imma", "I'mma"}, {"youd", "you'd"}, {"Youd", "You'd"}, {"youll", "you'll"}, {"Youll", "You'll"}, {"isnt", "isn't"}, {"Isnt", "Isn't"},
                                                  {"wasnt", "wasn't"}, {"Wasnt", "Wasn't"}, {"arent", "aren't"}, {"Arent", "Aren't"}, {"illl", "i'll"}, {"Illl", "I'll"}, {"doesnt", "doesn't"}, {"Doesnt", "Doesn't"}, {"dont", "don't"}, {"Dont", "Don't"},
                                                  {"wont", "won't"}, {"Wont", "Won't"}, {"hes", "he's"}, {"Hes", "He's"}, {"shes", "she's"}, {"Shes", "She's"}, {"its", "it's"}, {"Its",  "It's"}, {"itss", "its"}, {"Itss", "Its"}, {"letss", "let's"}, {"Letss", "Let's"},
                                                  {"hed", "he'd"}, {"Hed", "He'd"}, {"shedd", "she'd"}, {"Shedd", "She'd"}, {"aint", "ain't"}, {"Aint", "Ain't"}, {"cant", "can't"}, {"Cant", "Can't"}, {"shouldnt", "shouldn't"}, {"Shouldnt", "Shouldn't"},
@@ -334,9 +334,9 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
                                                  {"shouldve", "should've"}, {"Shouldve", "Should've"}, {"wouldve", "would've"}, {"Wouldve", "Would've"}, {"hows", "how's"}, {"Hows", "How's"}, {"theyd", "they'd"}, {"Theyd", "They'd"}, {"thatll", "that'll"}, {"Thatll", "That'll"}, {"werent", "weren't"}, {"Werent", "Weren't"}, {"whys", "why's"}, {"Whys", "Why's"}, {"theyve", "they've"}, {"Theyve", "They've"},
                                                  {"itll", "it'll"}, {"Itll", "It'll"}, {"howd", "how'd"}, {"Howd", "How'd"}, {"whod", "who'd"}, {"Whod", "Who'd"}, {"whos", "who's"}, {"Whos", "Who's"}, {"heres", "here's"}, {"Heres", "Here's"}, {"wheres", "where's"}, {"Wheres", "Where's"}, {"whens", "when's"}, {"Whens", "When's"}, {"hadnt", "hadn't"}, {"Hadnt", "Hadn't"},
                                                  {"itd", "it'd"}, {"Itd", "It'd"}, {"todays", "today's"}, {"Todays", "Today's"}, {"helll", "he'll"}, {"Helll", "He'll"}, {"shelll", "she'll"}, {"Shelll", "She'll"}, {"weree", "we're"}, {"Weree", "We're"}, {"weve", "we've"}, {"Weve", "We've"},
-                                                 {"studentss", "student's"}, {"Studentss", "Student's"}, {"whyd", "why'd"}, {"Whyd", "Why'd"}, {"alzheimers", "alzheimer's"}, {"Alzheimers", "Alzheimer's"}, {"cmon", "c'mon"}, {"Cmon", "C'mon"}, {"ll", "//"}, {"Ll", "//"}};
+                                                 {"studentss", "student's"}, {"Studentss", "Student's"}, {"whyd", "why'd"}, {"Whyd", "Why'd"}, {"alzheimers", "alzheimer's"}, {"Alzheimers", "Alzheimer's"}, {"cmon", "c'mon"}, {"Cmon", "C'mon"}, {"wedd", "we'd"}, {"Wedd", "We'd"}, {"ll", "//"}, {"Ll", "//"}};
 
-    unordered_set<string> cap_uppercase = {"i", "i'm", "i'd", "i'll", "i've", "alzheimer's"};
+    unordered_set<string> cap_uppercase = {"i", "i'm", "i'd", "i'll", "i've", "i'mma", "alzheimer's"};
 
     // Testing purposes only
     unordered_map<string, string> flags = {
