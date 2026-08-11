@@ -85,7 +85,17 @@ We now support traditional Chinese typing via Zhuyin, with both the normal Zhuyi
 
 Individual Zhuyin characters can be typed by long pressing the respective key.
 
-Chinese symbols can be typed by long pressing symbols in the symbol keyboard.
+Chinese symbols are available in the symbol keyboard when typing in Chinese, and can also be typed by long pressing symbols in the symbol keyboard in English mode.
+
+#### Pinyin
+
+We also support a preliminary version of Pinyin typing under the same traditional Chinese dictionary. It currently does not support fuzzy typing, and requires the user to **type a whitespace at the end of each syllable**, to be able to parse the corresponding characters correctly. After the syllable, the user can type a number (0~4) to indicate the tone of the character, before the whitespace. However, tones are optional for Pinyin.
+
+#### Pinyin Keyboard
+
+To type the characters as plain text (not in Chinese), long press the respective characters.
+
+Chinese symbols are available in the symbol keyboard when typing in Chinese, and can also be typed by long pressing symbols in the symbol keyboard in English mode.
 
 #### Clipboard
 
