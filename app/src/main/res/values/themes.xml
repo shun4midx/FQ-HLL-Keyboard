@@ -70,6 +70,21 @@
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
 
+    <style name="Theme.FQHLLKeyboard.ShunV4" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/shunv3_key</item>
+        <item name="keyTextColor">@color/shunv3_letter</item>
+        <item name="keyboardBackground">@drawable/shunv4</item>
+        <item name="keyBorderColor">@color/shunv3_key_border</item>
+        <item name="keyPressedColor">@color/shunv3_pressed</item>
+        <item name="keyPressedBorderColor">@color/shunv3_pressed_border</item>
+
+        <item name="suggestionBarColor">@color/shunv3_sugg_bar</item>
+        <item name="suggestionBarTextColor">@color/shunv3_sugg_text</item>:
+
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+    </style>
+
     <style name="Theme.FQHLLKeyboard.ShunV2" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/transparent</item>
         <item name="keyTextColor">@color/teal_200</item>
