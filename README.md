@@ -47,6 +47,8 @@ When there is a bolded suggestion, the first suggestion to the left is the user-
 
 If the suggestion is wrong, you can long press enter to skip the replacement.
 
+More suggestions can be accessed in Chinese keyboard layouts by tapping the clipboard button.
+
 When there are no suggestions, long pressing the enter key enters password mode, where your inputs are not displayed on the suggestion bar.
 
 You can long press the text editor button to change languages.
@@ -92,6 +94,8 @@ We now support traditional Chinese typing via Zhuyin, with both the normal Zhuyi
 
 Individual Zhuyin characters can be typed by long pressing the respective key.
 
+More suggestions can be accessed by tapping the clipboard button.
+
 Chinese symbols are available in the symbol keyboard when typing in Chinese, and can also be typed by long pressing symbols in the symbol keyboard in English mode.
 
 #### Pinyin
@@ -101,6 +105,8 @@ We also support a preliminary version of Pinyin typing under the same traditiona
 ##### Pinyin Keyboard
 
 Individual Pinyin (alphabetical) characters can be typed by long pressing the respective key.
+
+More suggestions can be accessed by tapping the clipboard button.
 
 Tones can be inputted at the end of a word by appending the tone (`0`, `1`, `2`, `3`, `4`) at the end of each word.
 
@@ -170,53 +176,66 @@ Install android studio and run the app. The usage after installation is the same
 
 ```
 app/src/main
-|-- AndroidManifest.xml
-|-- cpp
-|   |-- CMakeLists.txt
-|   |-- FQ-HyperLogLog-Autocorrect (repo)
-|   `-- native-lib.cpp
-|-- java.com.fqhll.keyboard
-|   |-- CustomKeyboardApp.java
-|   |-- CustomKeyboardView.java
-|   |-- MainActivity.kt
-|   `-- Suggestion.java
-`-- res
-    |-- drawable
-    |   |-- key_background.xml
-    |   |-- key_popup_background.xml
-    |   |-- key_popup_view.xml
-    |   |-- key_pressed_background.xml
-    |   `-- key_unpressed_background.xml
-    |-- layout
-    |   |-- activity_main.xml
-    |   |-- custom_keyboard_layout.xml
-    |   |-- custom_keyboard_preview.xml
-    |   `-- spinner.xml
-    `-- xml
-        |-- clipboard.xml
-        |-- custom_keypad_azerty.xml
-        |-- custom_keypad_colemak.xml
-        |-- custom_keypad_dvorak.xml
-        |-- custom_keypad_medium.xml
-        |-- custom_keypad_qwerty.xml
-        |-- custom_keypad_qwertz.xml
-        |-- custom_keypad_short.xml
-        |-- custom_keypad_tall.xml
-        |-- custom_keypad_zhuyin.xml
-        |-- custom_keypad_zhuyin_eten.xml
-        |-- custom_method.xml
-        |-- editor_grid.xml
-        |-- editor_maximize.xml
-        |-- emojis.xml
-        |-- numpad.xml
-        `-- symbols.xml
+├── AndroidManifest.xml
+├── cpp
+│   ├── CMakeLists.txt
+│   ├── FQ-HyperLogLog-Autocorrect
+│   └── native-lib.cpp
+├── ic_launcher-playstore.png
+├── java/com/fqhll/keyboard
+│   ├── CustomKeyboardApp.java
+│   ├── CustomKeyboardView.java
+│   ├── MainActivity.kt
+│   ├── PinyinTyper.java
+│   ├── Suggestion.java
+│   └── ZhuyinTyper.java
+└── res
+    ├── layout
+    │   ├── activity_main.xml
+    │   ├── custom_keyboard_layout.xml
+    │   ├── custom_keyboard_preview.xml
+    │   ├── item_candidate_chip.xml
+    │   └── spinner.xml
+    ├── raw
+    │   ├── click.mp3
+    │   ├── meow.mp3
+    │   ├── oiiai.mp3
+    │   └── quack.mp3
+    ├── values
+    │   ├── attrs.xml
+    │   ├── colors.xml
+    │   ├── dimens.xml
+    │   ├── strings.xml
+    │   └── themes.xml
+    └── xml
+        ├── backup_rules.xml
+        ├── clipboard.xml
+        ├── custom_keypad_azerty.xml
+        ├── custom_keypad_colemak.xml
+        ├── custom_keypad_dvorak.xml
+        ├── custom_keypad_medium.xml
+        ├── custom_keypad_pinyin.xml
+        ├── custom_keypad_qwerty.xml
+        ├── custom_keypad_qwertz.xml
+        ├── custom_keypad_short.xml
+        ├── custom_keypad_tall.xml
+        ├── custom_keypad_zhuyin_eten.xml
+        ├── custom_keypad_zhuyin.xml
+        ├── custom_method.xml
+        ├── data_extraction_rules.xml
+        ├── editor_grid.xml
+        ├── editor_maximize.xml
+        ├── emojis.xml
+        ├── math_symbols.xml
+        ├── numpad.xml
+        └── symbols.xml
 ```
 
 ### latest development apk
 
 They are not guaranteed to work, but you get the latest features. Feel free to open an issue if you found a bug that isn't listed in the todo below.
 
-https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/build/outputs/apk/debug/app-debug.apk
+https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/release/app-release.apk
 
 Prereleases are relatively more tested development versions of the app if you prefer a more stable app.
 
@@ -249,13 +268,13 @@ Prereleases are relatively more tested development versions of the app if you pr
 - [ ] changing non main keyboard height
 - [x] text editor symbols
 - [x] fully finish text editor
-- [ ] clipboard being able to access/use android copy key
+- [x] clipboard being able to access/use android copy key
 - [x] add different keyboard layouts
 - [x] hold down clipboard button to delete individual entries
 - [x] edit dictionary by holding down button
 - [x] edit dictionary in app
 - [x] custom keyboard layout autocorrection
-- [ ] export/import custom dictionary
+- [x] export/import custom dictionary
 - [x] check if word is null before adding/removing
 - [x] add key sound
 - [x] hold down . to delete word
