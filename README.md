@@ -30,9 +30,14 @@ Keyboard settings are saved across updates of the app.
 - Lots of themes and theme customisability (key colour, key text colour, key pressed colour, key border colour, keyboard background colour, suggestion bar (text) colour)
 - Height customisation (short, medium, tall)
 - Text editor mode customisation (maximize, grid)
+- Exporting/Importing English Dictionary from file
 - Multiple keyboard layouts with layout specific autocorrection (qwerty, azerty, qwertz, dvorak, colemak)
 
 ## Usage
+
+#### Importing and Exporting English Dictionary
+
+The import/export functions can be accessed through the FQ-HLL Keyboard App installed with the apk.
 
 #### Suggestion Bar
 
@@ -60,13 +65,15 @@ You can long press the text editor button to change languages.
 
 #### Super/Subscript Keyboard/Mathbb Keyboard
 
-Access the Super/Subscript keyboard by long pressing clipboard in the main keyboard. You can long press a superscripted character to type its subscripted version.
+Access the Super/Subscript keyboard by long pressing clipboard in the main keyboard. You can long press a superscripted character to type its subscripted version, and long press `.` to type a fancy fraction symbol.
 
 The Caps key toggles between the mathbb keyboard and the super/subscript keyboard when using one of them.
 
 #### Symbols
 
 There are two pages in the symbol keyboard, with the first being regular symbols, and the second being math symbols.
+
+Chinese symbols are available in the symbol keyboard when typing in Chinese, and can also be typed by long pressing symbols in the symbol keyboard in English mode.
 
 More symbols can be accessed by holding down a symbol on either page.
 
@@ -93,9 +100,11 @@ We also support a preliminary version of Pinyin typing under the same traditiona
 
 ##### Pinyin Keyboard
 
-To type the characters as plain text (not in Chinese), long press the respective characters.
+Individual Pinyin (alphabetical) characters can be typed by long pressing the respective key.
 
-Chinese symbols are available in the symbol keyboard when typing in Chinese, and can also be typed by long pressing symbols in the symbol keyboard in English mode.
+Tones can be inputted at the end of a word by appending the tone (`0`, `1`, `2`, `3`, `4`) at the end of each word.
+
+Multiple words can be typed at once if they are separated by spaces.
 
 #### Clipboard
 
