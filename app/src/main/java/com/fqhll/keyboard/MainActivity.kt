@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: ActivityMainBinding
 
-    private var themes = arrayOf("Unselected", "Shun", "ShunV2", "ShunV3", "ShunV4", "Ducky", "DuckyV2", "DuckyV3", "DuckyV4", "DuckyV5", "Cabbage", "Sage", "Jellyfish", "ThisIsFine", "ThisIsFinePremium", "ThisIsFinePremium2", "AntiThisIsFine", "AntiThisIsFinePremium", "AntiThisIsFinePremium2", "Black", "Stargaze", "StargazePremium", "Hammerhead", "CottonCandy", "DarkBlue", "Yellow", "Teal", "Purple", "Green", "Cyan", "ColorBlocks", "Nerdmortie")
+    private var themes = arrayOf("Unselected", "Shun", "ShunV2", "ShunV3", "ShunV4", "ShunV5", "Ducky", "DuckyV2", "DuckyV3", "DuckyV4", "DuckyV5", "Cabbage", "Sage", "Jellyfish", "ThisIsFine", "ThisIsFinePremium", "ThisIsFinePremium2", "AntiThisIsFine", "AntiThisIsFinePremium", "AntiThisIsFinePremium2", "Black", "Stargaze", "StargazePremium", "Hammerhead", "CottonCandy", "DarkBlue", "Yellow", "Teal", "Purple", "Green", "Cyan", "ColorBlocks", "Nerdmortie")
     private var keyboardHeights = arrayOf("Unselected", "Short", "Medium", "Tall", "Custom")
     private var engKeyboardLayouts = arrayOf("Unselected", "QWERTY", "QWERTZ", "AZERTY", "Dvorak", "Colemak")
     private var chiKeyboardLayouts = arrayOf("Unselected", "Zhuyin", "ZhuyinEten", "Pinyin")
