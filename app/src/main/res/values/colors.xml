@@ -16,6 +16,9 @@
     <color name="teal_gradient_5">#C8496683</color>
     <color name="teal_gradient_6">#A55049CC</color>
     <color name="teal_gradient_7">#B8161540</color>
+    <color name="teal_gradient_1_transparent">#5C003050</color>
+    <color name="teal_gradient_2_transparent">#4E01574C</color>
+    <color name="teal_gradient_2_transparent_2">#5901574C</color>
     <color name="teal_gradient_7_transparent">#9E161540</color>
     <color name="teal_gradient_7_transparent_2">#5F161540</color>
 
@@ -25,6 +28,7 @@
     <color name="cabbage_green">#A5F583</color>
     <color name="cabbage_blue">#89BEFD</color>
     <color name="cabbage_dark_green">#0D2002</color>
+    <color name="cabbage_dark_green_transparent">#450D2002</color>
 
     <color name="custom_dark_blue">#1A1F46</color>
     <color name="custom_blue">#255FAB</color>
@@ -48,6 +52,7 @@
     <color name="custom_fqhll_logo_pink">#ff1fa9</color>
     <color name="custom_fqhll_logo_purple">#bc3fde</color>
     <color name="custom_fqhll_logo_blue">#0025cc</color>
+    <color name="custom_fqhll_logo_blue_transparent">#430025CC</color>
     <color name="custom_fqhll_logo_wire_light_blue">#5ca3ff</color>
     <color name="custom_fqhll_banner_pink">#ff1fa9</color>
     <color name="custom_fqhll_banner_purple">#bc3fde</color>
@@ -55,6 +60,7 @@
 
     <color name="sage_letter">#78c7c7</color>
     <color name="sage_bg">#348781</color>
+    <color name="sage_bg_darker">#21756F</color>
     <color name="sage_keys">#11354f</color>
     <color name="sage_border">#bdf3ff</color>
 

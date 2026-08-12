@@ -115,6 +115,36 @@
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>
     </style>
 
+    <style name="Theme.FQHLLKeyboard.DuckyV5" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/teal_gradient_2_transparent_2</item>
+        <item name="keyTextColor">@color/custom_cyan</item>
+        <item name="keyboardBackground">@drawable/duckyv5</item>
+        <item name="keyBorderColor">@color/sage_bg_darker</item>
+        <item name="keyPressedColor">@color/custom_light_blue_transparent</item>
+        <item name="keyPressedBorderColor">@color/custom_light_blue_transparent</item>
+
+        <item name="suggestionBarColor">@color/custom_light_green</item>
+        <item name="suggestionBarTextColor">@color/custom_fqhll_logo_blue</item>
+
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+    </style>
+
+    <style name="Theme.FQHLLKeyboard.DuckyV4" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/teal_gradient_2_transparent_2</item>
+        <item name="keyTextColor">@color/custom_cyan</item>
+        <item name="keyboardBackground">@drawable/duckyv4</item>
+        <item name="keyBorderColor">@color/sage_bg_darker</item>
+        <item name="keyPressedColor">@color/custom_light_blue_transparent</item>
+        <item name="keyPressedBorderColor">@color/custom_light_blue_transparent</item>
+
+        <item name="suggestionBarColor">@color/custom_light_green</item>
+        <item name="suggestionBarTextColor">@color/custom_fqhll_logo_blue</item>
+
+        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
+        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+    </style>
+
     <style name="Theme.FQHLLKeyboard.DuckyV3" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/teal_gradient_7_transparent_2</item>
         <item name="keyTextColor">@color/custom_cyan</item>
