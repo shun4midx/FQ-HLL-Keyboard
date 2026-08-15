@@ -56,15 +56,15 @@
     </style>
 
     <style name="Theme.FQHLLKeyboard.ShunV5" parent="Theme.FQHLLKeyboard">
-        <item name="keyColor">@color/shunv3_key</item>
-        <item name="keyTextColor">@color/shunv3_letter</item>
+        <item name="keyColor">@color/shunv5_key</item>
+        <item name="keyTextColor">@color/shunv5_letter</item>
         <item name="keyboardBackground">@drawable/shunv5</item>
-        <item name="keyBorderColor">@color/shunv3_key_border</item>
-        <item name="keyPressedColor">@color/shunv3_pressed</item>
-        <item name="keyPressedBorderColor">@color/shunv3_pressed_border</item>
+        <item name="keyBorderColor">@color/shunv5_key_border</item>
+        <item name="keyPressedColor">@color/shunv5_pressed</item>
+        <item name="keyPressedBorderColor">@color/shunv5_pressed_border</item>
 
-        <item name="suggestionBarColor">@color/custom_cyan</item>
-        <item name="suggestionBarTextColor">@color/custom_dark_blue</item>
+        <item name="suggestionBarColor">@color/shunv5_sugg_bar</item>
+        <item name="suggestionBarTextColor">@color/shunv5_sugg_text</item>
 
         <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
         <item name="keyPopupTextColor">@color/custom_dark_blue</item>

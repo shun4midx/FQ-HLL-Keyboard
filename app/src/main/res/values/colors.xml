@@ -88,6 +88,14 @@
     <color name="shunv3_pressed">#80B120C1</color>
     <color name="shunv3_pressed_border">#A6156D</color>
 
+    <color name="shunv5_sugg_bar">#B0FFD0</color>
+    <color name="shunv5_sugg_text">#000D92</color>
+    <color name="shunv5_key_border">#0A6AB2</color>
+    <color name="shunv5_key">#800A6AB2</color>
+    <color name="shunv5_letter">#9AEDF8</color>
+    <color name="shunv5_pressed">#80E4249B</color>
+    <color name="shunv5_pressed_border">#E4249B</color>
+
     <color name="colorblocks_vowel">#03A9F4</color>
     <color name="colorblocks_symbols">#4CAF50</color>
     <color name="colorblocks_numbers">#F44336</color>
