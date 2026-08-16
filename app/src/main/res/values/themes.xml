@@ -66,8 +66,8 @@
         <item name="suggestionBarColor">@color/shunv5_sugg_bar</item>
         <item name="suggestionBarTextColor">@color/shunv5_sugg_text</item>
 
-        <item name="keyPopupBackgroundColor">@color/shunv5_pressed</item>
-        <item name="keyPopupTextColor">@color/this_is_fine_yellow</item>
+        <item name="keyPopupBackgroundColor">@color/shunv5_popup</item>
+        <item name="keyPopupTextColor">@color/shun_light_purple</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.ShunV4" parent="Theme.FQHLLKeyboard">
@@ -81,8 +81,8 @@
         <item name="suggestionBarColor">@color/shunv3_sugg_bar</item>
         <item name="suggestionBarTextColor">@color/shunv3_sugg_text</item>:
 
-        <item name="keyPopupBackgroundColor">?attr/suggestionBarTextColor</item>
-        <item name="keyPopupTextColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupBackgroundColor">@color/shunv5_popup</item>
+        <item name="keyPopupTextColor">@color/shun_light_purple</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.ShunV3" parent="Theme.FQHLLKeyboard">
@@ -96,8 +96,8 @@
         <item name="suggestionBarColor">@color/shunv3_sugg_bar</item>
         <item name="suggestionBarTextColor">@color/shunv3_sugg_text</item>
 
-        <item name="keyPopupBackgroundColor">?attr/suggestionBarTextColor</item>
-        <item name="keyPopupTextColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupBackgroundColor">@color/shunv5_popup</item>
+        <item name="keyPopupTextColor">@color/shun_light_purple</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.ShunV2" parent="Theme.FQHLLKeyboard">
@@ -501,7 +501,7 @@
         <item name="suggestionBarColor">@color/shunv3_sugg_bar</item>
         <item name="suggestionBarTextColor">@color/shunv3_sugg_text</item>
 
-        <item name="keyPopupBackgroundColor">?attr/suggestionBarTextColor</item>
-        <item name="keyPopupTextColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 </resources>
