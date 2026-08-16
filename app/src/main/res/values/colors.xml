@@ -27,8 +27,7 @@
 
     <color name="cabbage_green">#A5F583</color>
     <color name="cabbage_blue">#89BEFD</color>
-    <color name="cabbage_dark_green">#0D2002</color>
-    <color name="cabbage_dark_green_transparent">#450D2002</color>
+    <color name="cabbage_dark_green">#173904</color>
 
     <color name="custom_dark_blue">#1A1F46</color>
     <color name="custom_blue">#255FAB</color>
@@ -36,10 +35,12 @@
     <color name="shun_pressed_blue">#030B34</color>
     <color name="custom_cyan">#B0FFFF</color>
     <color name="custom_yellow">#ffd900</color>
+    <color name="custom_dark_yellow">#6F580D</color>
     <color name="custom_light_yellow">#FFF7B3</color>
     <color name="custom_dark_grey">#232323</color>
     <color name="custom_light_grey">#808080</color>
     <color name="custom_purple">#250040</color>
+    <color name="custom_dark_purple">#470674</color>
     <color name="custom_light_purple">#C787F8</color>
     <color name="custom_green">#004903</color>
     <color name="custom_light_green">#98FF91</color>
