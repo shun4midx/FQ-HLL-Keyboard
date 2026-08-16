@@ -3472,10 +3472,10 @@ public class CustomKeyboardApp extends InputMethodService
             scaleY = (float)kv.getHeight() / kv.getKeyboard().getHeight();
         });
 
-        // 5) Recreate your manual popup
+        // 5) Recreate manual popup
         previewText = new TextView(this);
-        previewText.setBackgroundColor(getResources().getColor(android.R.color.white));
-        previewText.setTextColor(getResources().getColor(android.R.color.black));
+        previewText.setBackgroundColor(getThemeColor(wrap, R.attr.keyPopupBackgroundColor));
+        previewText.setTextColor(getThemeColor(wrap, R.attr.keyPopupTextColor));
         previewText.setTextSize(26f);
         previewText.setGravity(Gravity.CENTER);
 

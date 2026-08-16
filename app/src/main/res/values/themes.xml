@@ -31,13 +31,13 @@
         <item name="keyboardBackground">@color/black</item>
         <item name="keyBorderColor">@color/custom_dark_grey</item>
         <item name="keyPressedColor">@color/black</item>
-        <item name="keyPressedBorderColor">?attr/keyBorderColor</item>
+        <item name="keyPressedBorderColor">@color/black</item>
 
-        <item name="suggestionBarColor">?attr/keyTextColor</item>
-        <item name="suggestionBarTextColor">?attr/keyColor</item>
+        <item name="suggestionBarColor">@color/custom_dark_grey</item>
+        <item name="suggestionBarTextColor">@color/white</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">@color/white</item>
+        <item name="keyPopupTextColor">@color/black</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.DarkBlue" parent="Theme.FQHLLKeyboard">
@@ -51,8 +51,8 @@
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.ShunV5" parent="Theme.FQHLLKeyboard">
@@ -66,8 +66,8 @@
         <item name="suggestionBarColor">@color/shunv5_sugg_bar</item>
         <item name="suggestionBarTextColor">@color/shunv5_sugg_text</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">@color/shunv5_pressed</item>
+        <item name="keyPopupTextColor">@color/this_is_fine_yellow</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.ShunV4" parent="Theme.FQHLLKeyboard">
@@ -81,8 +81,8 @@
         <item name="suggestionBarColor">@color/shunv3_sugg_bar</item>
         <item name="suggestionBarTextColor">@color/shunv3_sugg_text</item>:
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.ShunV3" parent="Theme.FQHLLKeyboard">
@@ -96,8 +96,8 @@
         <item name="suggestionBarColor">@color/shunv3_sugg_bar</item>
         <item name="suggestionBarTextColor">@color/shunv3_sugg_text</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.ShunV2" parent="Theme.FQHLLKeyboard">
@@ -111,8 +111,8 @@
         <item name="suggestionBarColor">@color/black</item>
         <item name="suggestionBarTextColor">?attr/keyTextColor</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarTextColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.Shun" parent="Theme.FQHLLKeyboard">
@@ -126,8 +126,8 @@
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.DuckyV5" parent="Theme.FQHLLKeyboard">
@@ -141,8 +141,8 @@
         <item name="suggestionBarColor">@color/custom_light_green</item>
         <item name="suggestionBarTextColor">@color/custom_fqhll_logo_blue</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.DuckyV4" parent="Theme.FQHLLKeyboard">
@@ -156,8 +156,8 @@
         <item name="suggestionBarColor">@color/custom_light_green</item>
         <item name="suggestionBarTextColor">@color/custom_fqhll_logo_blue</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.DuckyV3" parent="Theme.FQHLLKeyboard">
@@ -171,8 +171,8 @@
         <item name="suggestionBarColor">@color/custom_dark_blue</item>
         <item name="suggestionBarTextColor">?attr/keyTextColor</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.DuckyV2" parent="Theme.FQHLLKeyboard">
@@ -186,8 +186,8 @@
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">@color/teal_gradient_7</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.Ducky" parent="Theme.FQHLLKeyboard">
@@ -201,8 +201,8 @@
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.CottonCandy" parent="Theme.FQHLLKeyboard">
@@ -216,8 +216,8 @@
         <item name="suggestionBarColor">@color/white</item>
         <item name="suggestionBarTextColor">@color/custom_fqhll_banner_pink</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.Cabbage" parent="Theme.FQHLLKeyboard">
@@ -231,8 +231,8 @@
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.Yellow" parent="Theme.FQHLLKeyboard">
@@ -246,8 +246,8 @@
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.Teal" parent="Theme.FQHLLKeyboard">
@@ -261,8 +261,8 @@
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.Purple" parent="Theme.FQHLLKeyboard">
@@ -276,8 +276,8 @@
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.Green" parent="Theme.FQHLLKeyboard">
@@ -291,8 +291,8 @@
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.Hammerhead" parent="Theme.FQHLLKeyboard">
@@ -306,8 +306,8 @@
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.Cyan" parent="Theme.FQHLLKeyboard">
@@ -321,8 +321,8 @@
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.Stargaze" parent="Theme.FQHLLKeyboard">
@@ -336,8 +336,8 @@
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.StargazePremium" parent="Theme.FQHLLKeyboard">
@@ -351,8 +351,8 @@
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">@color/custom_hammerhead_blue</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.Sage" parent="Theme.FQHLLKeyboard">
@@ -366,8 +366,8 @@
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.Jellyfish" parent="Theme.FQHLLKeyboard">
@@ -381,8 +381,8 @@
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">@color/custom_jellyfish_suggestion</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.ThisIsFine" parent="Theme.FQHLLKeyboard">
@@ -396,8 +396,8 @@
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">?attr/keyColor</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.ThisIsFinePremium" parent="Theme.FQHLLKeyboard">
@@ -411,8 +411,8 @@
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">@color/this_is_fine_brown</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.ThisIsFinePremium2" parent="Theme.FQHLLKeyboard">
@@ -426,8 +426,8 @@
         <item name="suggestionBarColor">?attr/keyTextColor</item>
         <item name="suggestionBarTextColor">@color/this_is_fine_brown</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.AntiThisIsFine" parent="Theme.FQHLLKeyboard">
@@ -441,8 +441,8 @@
         <item name="suggestionBarColor">@color/this_is_fine_orange</item>
         <item name="suggestionBarTextColor">@color/custom_light_yellow</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.AntiThisIsFinePremium" parent="Theme.FQHLLKeyboard">
@@ -456,8 +456,8 @@
         <item name="suggestionBarColor">@color/this_is_fine_orange</item>
         <item name="suggestionBarTextColor">@color/custom_light_yellow</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.AntiThisIsFinePremium2" parent="Theme.FQHLLKeyboard">
@@ -471,8 +471,8 @@
         <item name="suggestionBarColor">@color/this_is_fine_orange</item>
         <item name="suggestionBarTextColor">@color/custom_light_yellow</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.ColorBlocks" parent="Theme.FQHLLKeyboard">
@@ -486,8 +486,8 @@
         <item name="suggestionBarColor">@color/custom_yellow</item>
         <item name="suggestionBarTextColor">@color/black</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
     <style name="Theme.FQHLLKeyboard.Nerdmortie" parent="Theme.FQHLLKeyboard">
@@ -501,7 +501,7 @@
         <item name="suggestionBarColor">@color/shunv3_sugg_bar</item>
         <item name="suggestionBarTextColor">@color/shunv3_sugg_text</item>
 
-        <item name="keyPopupBackgroundColor">@color/custom_cyan</item>
-        <item name="keyPopupTextColor">@color/custom_dark_blue</item>
+        <item name="keyPopupBackgroundColor">?attr/suggestionBarColor</item>
+        <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 </resources>
