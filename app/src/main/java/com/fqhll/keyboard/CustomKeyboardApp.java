@@ -1374,7 +1374,7 @@ public class CustomKeyboardApp extends InputMethodService
 
 
     public void showKeyPreview(Keyboard.Key key, int code) {
-        if (code == -11) { // don't show for emoji
+        if (code == -11) { // don't show for emoji switcher
             return;
         }
 
@@ -1397,21 +1397,18 @@ public class CustomKeyboardApp extends InputMethodService
         }
 
         previewText.setText(text);
-        previewText.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
 
-        // Match popup size to key size
-        keyPreviewPopup.setWidth(key.width);
-        keyPreviewPopup.setHeight(key.height);
-
-        // Calculate position: center horizontally, one key height above
         int popupX = key.x;
         int popupY = -((kv.getHeight() - key.y) + key.height);
+        popupY -= Math.round(4f * getResources().getDisplayMetrics().density);
 
-        // Small adjustment if needed (like Gboard's preview offset)
-        int adjustmentY = -4; // fine-tune upward offset (dp to px)
-        popupY += (int) (adjustmentY * getResources().getDisplayMetrics().density);
-
-        keyPreviewPopup.showAsDropDown(kv, popupX, popupY);
+        if (keyPreviewPopup.isShowing()) {
+            keyPreviewPopup.update(kv, popupX, popupY, key.width, key.height);
+        } else {
+            keyPreviewPopup.setWidth(key.width);
+            keyPreviewPopup.setHeight(key.height);
+            keyPreviewPopup.showAsDropDown(kv, popupX, popupY);
+        }
     }
 
     @Override
@@ -1578,7 +1575,6 @@ public class CustomKeyboardApp extends InputMethodService
                     adjustCapsAfterDeletion();
                 } else {
                     handleDelete();
-                    updateSuggestion(getCurrentInputConnection());
                     adjustCapsAfterDeletion();
                 }
                 updateSuggestion(ic);
@@ -3483,6 +3479,8 @@ public class CustomKeyboardApp extends InputMethodService
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         keyPreviewPopup.setAnimationStyle(0);
+        keyPreviewPopup.setTouchable(false);
+        keyPreviewPopup.setFocusable(false);
 
         init_emoji_symbols();
         updateCapsLabel();
