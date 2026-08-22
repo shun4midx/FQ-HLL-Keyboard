@@ -84,6 +84,7 @@
     <color name="shunv3_sugg_bar">#000456</color>
     <color name="shunv3_sugg_text">#A2CFFB</color>
     <color name="shunv3_key_border">#092A7F</color>
+    <color name="shunv3_key_border_transparent">#B3092A7F</color>
     <color name="shunv3_key">#80092A7F</color>
     <color name="shunv3_letter">#9AD6F8</color>
     <color name="shunv3_pressed">#80B120C1</color>

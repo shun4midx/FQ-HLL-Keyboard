@@ -55,6 +55,21 @@
         <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
+    <style name="Theme.FQHLLKeyboard.ShunV6" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/transparent</item>
+        <item name="keyTextColor">@color/white</item>
+        <item name="keyboardBackground">@drawable/shunv6</item>
+        <item name="keyBorderColor">@color/transparent</item>
+        <item name="keyPressedColor">@color/shunv3_key</item>
+        <item name="keyPressedBorderColor">@color/shunv3_key_border</item>
+
+        <item name="suggestionBarColor">@color/shunv3_sugg_bar</item>
+        <item name="suggestionBarTextColor">@color/white</item>:
+
+        <item name="keyPopupBackgroundColor">@color/shunv3_key_border_transparent</item>
+        <item name="keyPopupTextColor">@color/shunv5_letter</item>
+    </style>
+
     <style name="Theme.FQHLLKeyboard.ShunV5" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/shunv5_key</item>
         <item name="keyTextColor">@color/shunv5_letter</item>
