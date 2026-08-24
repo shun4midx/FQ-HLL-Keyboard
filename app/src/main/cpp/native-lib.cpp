@@ -169,39 +169,47 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeAddWord(JNIEnv* env, jclass, jst
     std::string cpath(c_cpath);
     env->ReleaseStringUTFChars(jcontractionpath, c_cpath);
 
-    std::string cleanedRaw = stripOuterNonLetters(raw);
-    std::string word = normalizeForAc(cleanedRaw);
+    std::string cleaned_raw = stripOuterNonLetters(raw);
+    std::string word = normalizeForAc(cleaned_raw);
 
     if (word.empty()) {
         return;
     }
 
-    // Only embedded special characters count, leading/trailing punctuation is ignored.
-    bool hasEmbeddedNonLetters = cleanedRaw.length() != word.length();
-
-    if (hasEmbeddedNonLetters) {
-        std::string key = normalizeForAc(cleanedRaw); // "shun4midx" or "rubiks"
-
-        // Strip LEADING non-alpha chars from raw to get display value
-        std::string displayRaw = cleanedRaw;
-
-        // Lowercase it
-        std::string lowerDisplay = displayRaw;
-        for (char& c : lowerDisplay) c = toLower(c);
-
-        std::ofstream create(cpath, std::ios::app);
-        create.close();
-        saveContraction(cpath, key, lowerDisplay);
-    }
-
-    g_ac->add_dictionary(word);
-    g_ac->save_dictionary();
-
-    // Append to dictionary file
     const char* c_path = env->GetStringUTFChars(jpath, nullptr);
     std::string path(c_path);
     env->ReleaseStringUTFChars(jpath, c_path);
 
+    std::vector<std::string> dict_words = getWords(path);
+    std::unordered_set<std::string> dict_set(dict_words.begin(), dict_words.end());
+
+    // Only embedded special characters count, leading/trailing punctuation is ignored.
+    bool hasEmbeddedNonLetters = cleaned_raw.length() != word.length();
+
+    if (hasEmbeddedNonLetters) {
+        std::string key = normalizeForAc(cleaned_raw); // "shun4midx" or "rubiks"
+
+        // Strip LEADING non-alpha chars from raw to get display value
+        std::string display_raw = cleaned_raw;
+
+        // If normalized form already exists as a normal dictionary word, repeat its final letter for the contraction shortcut.
+        if (dict_set.find(key) != dict_set.end() && !key.empty()) {
+            key.push_back(key.back());
+        }
+
+        // Lowercase it
+        std::string lower_display = display_raw;
+        for (char& c : lower_display) c = toLower(c);
+
+        std::ofstream create(cpath, std::ios::app);
+        create.close();
+        saveContraction(cpath, key, lower_display);
+    }
+
+    g_ac->add_dictionary(std::vector<std::string>{word});
+    g_ac->save_dictionary();
+
+    // Append to dictionary file
     std::ofstream file(path, std::ios::app);
     if (file.is_open()) {
         file << word << "\n";
@@ -240,7 +248,7 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeRemoveWord(JNIEnv* env, jclass, 
         return;
     }
 
-    g_ac->remove_dictionary(word);
+    g_ac->remove_dictionary(std::vector<std::string>{word});
     g_ac->save_dictionary();
 
     // Rewrite the file without this word
@@ -989,9 +997,9 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
                     autoreplaced[0] = toUpper(autoreplaced[0]);
                 }
                 results = {{prefixSymbols + key + suffixSymbols, prefixSymbols + autoreplaced + suffixSymbols, " "},
-                           {0.5,                 0.8,                          0.0}};
+                           {0.5,                                 0.8,                          0.0}};
             } else {
-                Results result = g_ac->top3(key);
+                Results result = g_ac->top3(std::vector<std::string>{key});
                 vector<string> suggestions = result.suggestions[key];
                 vector<double> confidences = result.scores[key];
 
@@ -999,8 +1007,7 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
 
                 if (case_state == 1) { // Capital beginning
                     for (int i = 0; i < 3; ++i) {
-                        if (strToLower(suggestions[i]) ==
-                            strToLower(key)) { // Don't autocorrect correct spelling
+                        if (strToLower(suggestions[i]) == strToLower(key)) { // Don't autocorrect correct spelling
                             suggestions[i] = key;
                         } else if (!suggestions[i].empty()) {
                             suggestions[i][0] = toUpper(suggestions[i][0]);
@@ -1014,14 +1021,13 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
                     }
                 } else if (case_state == 0) { // Any other/lower
                     for (int i = 0; i < 3; ++i) {
-                        if (strToLower(suggestions[i]) ==
-                            strToLower(key)) { // Don't autocorrect correct spelling
+                        if (strToLower(suggestions[i]) == strToLower(key)) { // Don't autocorrect correct spelling
                             suggestions[i] = key;
-                        } else {
+                        } /*else {
                             for (int j = 0; j < suggestions[i].length(); ++j) {
                                 suggestions[i][j] = toLower(suggestions[i][j]);
                             }
-                        }
+                        }*/
                     }
                 }
 
@@ -1044,8 +1050,7 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeSuggest(
                             for (char &c: autoreplaced) c = toUpper(c);
                         } else if (case_state == 1 && !autoreplaced.empty()) {
                             autoreplaced[0] = toUpper(autoreplaced[0]);
-                        } else if (autocap &&
-                                   cap_uppercase.find(autoreplaced) != cap_uppercase.end()) {
+                        } else if (autocap && cap_uppercase.find(autoreplaced) != cap_uppercase.end()) {
                             autoreplaced[0] = toUpper(autoreplaced[0]);
                         } else if (case_state == 0 && !autoreplaced.empty()) {
                             bool pureAlpha = true;

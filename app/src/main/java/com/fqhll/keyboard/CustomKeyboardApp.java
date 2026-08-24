@@ -2706,6 +2706,9 @@ public class CustomKeyboardApp extends InputMethodService
                     key.label = String.valueOf(caps_state > 0 ? Character.toUpperCase(c) : c);
                 } else if (c >= 'A' && c <= 'Z') {
                     key.label = String.valueOf(caps_state > 0 ? c : Character.toLowerCase(c));
+                } else if (c >= '0' && c <= '9') {
+                    // Reset superscript/mathbb visual back to normal digit
+                    key.label = String.valueOf(c);
                 }
             }
         }
