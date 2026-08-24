@@ -3476,19 +3476,21 @@ public class CustomKeyboardApp extends InputMethodService
 //        };
 //
 //        clipboard.setOnTouchListener((v, event) -> {
-//            switch (event.getAction()) {
-//                case MotionEvent.ACTION_DOWN:
-//                    isHeld = true;
-//                    holdHandler.removeCallbacks(holdRunnable);
-//                    holdHandler.postDelayed(holdRunnable, HOLD_MS);
-//                    return true;
+//            if (currentKeyboard == symbolKeyboard) {
+//                switch (event.getAction()) {
+//                    case MotionEvent.ACTION_DOWN:
+//                        isHeld = true;
+//                        holdHandler.removeCallbacks(holdRunnable);
+//                        holdHandler.postDelayed(holdRunnable, HOLD_MS);
+//                        return true;
 //
-//                case MotionEvent.ACTION_UP:
-//                case MotionEvent.ACTION_CANCEL:
-//                    isHeld = false;
-//                    holdHandler.removeCallbacks(holdRunnable);
-//                    holdHandler.post(holdRunnable);
-//                    return true;
+//                    case MotionEvent.ACTION_UP:
+//                    case MotionEvent.ACTION_CANCEL:
+//                        isHeld = false;
+//                        holdHandler.removeCallbacks(holdRunnable);
+//                        holdHandler.post(holdRunnable);
+//                        return true;
+//                }
 //            }
 //            return false;
 //        });
