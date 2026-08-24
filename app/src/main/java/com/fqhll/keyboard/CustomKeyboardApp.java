@@ -3130,7 +3130,7 @@ public class CustomKeyboardApp extends InputMethodService
             return;
         }
 
-        Set<String> rebuild_prefs = new HashSet<>(Arrays.asList("key_color", "gridToggle", "keyboard_height", "eng_keyboard_layout", "chi_keyboard_layout", "emoji_variation", "chiKeyboardDefaultToggle", "keySoundToggle", "key_sound_effect", "altSymbolToggle", "fullStopCommentToggle"));
+        Set<String> rebuild_prefs = new HashSet<>(Arrays.asList("key_color", "gridToggle", "keyboard_height", "eng_keyboard_layout", "chi_keyboard_layout", "emoji_variation", "chiKeyboardDefaultToggle", "keySoundToggle", "key_sound_effect", "symbol_hint_layout", "fullStopCommentToggle"));
         if (!rebuild_prefs.contains(key) && !key.startsWith("clipboard")) {
             return;
         }
@@ -3190,7 +3190,7 @@ public class CustomKeyboardApp extends InputMethodService
         String keyboardHeight = prefs.getString("keyboard_height", "Short");
         String engKeyboardLayout = prefs.getString("eng_keyboard_layout", "qwerty").toLowerCase();
         String chiKeyboardLayout = prefs.getString("chi_keyboard_layout", "zhuyin").toLowerCase();
-        boolean useAltSymbolLayout = prefs.getBoolean("altSymbolToggle", false);
+        String symbolHintLayout = prefs.getString("symbol_hint_layout", "default").toLowerCase();
         boolean useChineseDefault = prefs.getBoolean("chiKeyboardDefaultToggle", false);
         useFullStopComment = prefs.getBoolean("fullStopCommentToggle", false);
         isKeySoundEnabled = prefs.getBoolean("keySoundToggle", true);
@@ -3215,8 +3215,11 @@ public class CustomKeyboardApp extends InputMethodService
         }
 
         longPressSymbols = longPressSymbolsMain;
-        if (useAltSymbolLayout) {
+        if (symbolHintLayout.equals("alternative")) {
             longPressSymbols = longPressSymbolsAlt;
+        }
+        else if (symbolHintLayout.equals("math")) {
+            longPressSymbols = longPressSymbolsMath;
         }
 
         if (engKeyboardLayout.equals("qwerty")) {

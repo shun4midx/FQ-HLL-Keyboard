@@ -36,6 +36,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private var keyboardHeights = arrayOf("Unselected", "Short", "Medium", "Tall", "Custom")
     private var engKeyboardLayouts = arrayOf("Unselected", "QWERTY", "QWERTZ", "AZERTY", "Dvorak", "Colemak")
     private var chiKeyboardLayouts = arrayOf("Unselected", "Zhuyin", "ZhuyinEten", "Pinyin")
+    private var symbolHintLayouts = arrayOf("Unselected", "Default", "Alternative", "Math")
     private var emojiVariations = arrayOf("Unselected", "Masculine", "Feminine", "Neutral")
     private var keySound = arrayOf("Unselected", "click", "meow", "quack", "oiiai")
 
@@ -57,7 +58,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val chiKeyboardDefaultToggle: SwitchCompat = findViewById(R.id.chiKeyboardDefaultToggle)
 //        val etenToggle: SwitchCompat = findViewById(R.id.etenToggle)
         val keySoundToggle: SwitchCompat = findViewById(R.id.keySoundToggle)
-        val altSymbolToggle: SwitchCompat = findViewById(R.id.altSymbolToggle)
         val fullStopCommentToggle: SwitchCompat = findViewById(R.id.fullStopCommentToggle)
 
         val prefs = getSharedPreferences("keyboard_settings", Context.MODE_PRIVATE)
@@ -77,9 +77,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         if (!prefs.contains("keySoundToggle")) {
             prefs.edit().putBoolean("keySoundToggle", true).commit()
         }
-        if (!prefs.contains("altSymbolToggle")) {
-            prefs.edit().putBoolean("altSymbolToggle", false).commit()
-        }
         if (!prefs.contains("fullStopCommentToggle")) {
             prefs.edit().putBoolean("fullStopCommentToggle", false).commit()
         }
@@ -91,7 +88,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         chiKeyboardDefaultToggle.isChecked = prefs.getBoolean("chiKeyboardDefaultToggle", false)
 //        etenToggle.isChecked = prefs.getBoolean("etenToggle", false)
         keySoundToggle.isChecked = prefs.getBoolean("keySoundToggle", true)
-        altSymbolToggle.isChecked = prefs.getBoolean("altSymbolToggle", false)
         fullStopCommentToggle.isChecked = prefs.getBoolean("fullStopCommentToggle", false)
 
         // Save toggle changes
@@ -113,9 +109,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         keySoundToggle.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit(commit = true) { putBoolean("keySoundToggle", isChecked) }
         }
-        altSymbolToggle.setOnCheckedChangeListener { _, isChecked ->
-            prefs.edit(commit = true) { putBoolean("altSymbolToggle", isChecked) }
-        }
         fullStopCommentToggle.setOnCheckedChangeListener { _, isChecked ->
             prefs.edit(commit = true) { putBoolean("fullStopCommentToggle", isChecked) }
         }
@@ -134,6 +127,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val chiKeyboardLayout: Spinner = findViewById(R.id.chi_layout_options)
         val chiSavedLayout = prefs.getString("chi_keyboard_layout", "zhuyin")?.lowercase()
 
+        val symbolHintLayout: Spinner = findViewById(R.id.symbol_hint_layout_options)
+        val symbolHintSavedLayout = prefs.getString("symbol_hint_layout", "default")?.lowercase()
+
         val emojiVariation: Spinner = findViewById(R.id.emoji_options)
         val savedEmoji = prefs.getString("emoji_variation", "neutral")?.lowercase()
 
@@ -145,6 +141,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         prefs.edit { putString("keyboard_height", savedHeight) }
         prefs.edit { putString("eng_keyboard_layout", engSavedLayout) }
         prefs.edit { putString("chi_keyboard_layout", chiSavedLayout) }
+        prefs.edit { putString("symbol_hint_layout", symbolHintSavedLayout) }
         prefs.edit { putString("emoji_variation", savedEmoji) }
         prefs.edit { putString("key_sound_effect", savedSoundEffect) }
 
@@ -160,6 +157,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         val aa_chiLayout = ArrayAdapter(this, R.layout.spinner, chiKeyboardLayouts)
         aa_chiLayout.setDropDownViewResource(R.layout.spinner)
+
+        val aa_symbolHintLayout = ArrayAdapter(this, R.layout.spinner, symbolHintLayouts)
+        aa_symbolHintLayout.setDropDownViewResource(R.layout.spinner)
 
         val aa_emoji = ArrayAdapter(this, R.layout.spinner, emojiVariations)
         aa_emoji.setDropDownViewResource(R.layout.spinner)
@@ -194,6 +194,14 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         // the chi layout dropdown
         with(chiKeyboardLayout) {
             adapter = aa_chiLayout
+            setSelection(0, false)
+            onItemSelectedListener = this@MainActivity
+            setPopupBackgroundResource(R.color.shun_blue)
+        }
+
+        // the symbol hint layout dropdown
+        with(symbolHintLayout) {
+            adapter = aa_symbolHintLayout
             setSelection(0, false)
             onItemSelectedListener = this@MainActivity
             setPopupBackgroundResource(R.color.shun_blue)
@@ -357,6 +365,14 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     if (!selectedChiLayout.equals("Unselected")) {
                         prefs.edit { putString("chi_keyboard_layout", selectedChiLayout) }
                         showToast(message = "Selected layout: $selectedChiLayout")
+                    }
+                }
+
+                R.id.symbol_hint_layout_options -> {
+                    val selectedSymbolHintLayout = symbolHintLayouts[position]
+                    if (!selectedSymbolHintLayout.equals("Unselected")) {
+                        prefs.edit { putString("symbol_hint_layout", selectedSymbolHintLayout) }
+                        showToast(message = "Selected layout: $selectedSymbolHintLayout")
                     }
                 }
 

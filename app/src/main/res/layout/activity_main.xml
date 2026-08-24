@@ -74,25 +74,18 @@
                 android:text="@string/enable_editor_grid" />
 
             <androidx.appcompat.widget.SwitchCompat
-                android:id="@+id/altSymbolToggle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:checked="false"
-                android:text="@string/use_alt_symbol_layout" />
-
-            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/fullStopCommentToggle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:text="Replace full stop delete word function with typing '//'"/>
+                android:text="@string/replace_full_stop_function"/>
 
             <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/chiKeyboardDefaultToggle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="false"
-                android:text="Use Chinese keyboard as default"/>
+                android:text="@string/use_chi_default"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -134,14 +127,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="3sp"
                     android:textSize="12sp"
-                    android:text="English" />
+                    android:text="@string/english" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
-                    android:text="Chinese" />
+                    android:text="@string/chinese" />
 
             </LinearLayout>
 
@@ -167,6 +160,19 @@
                     android:spinnerMode="dropdown" />
 
             </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:text="@string/eng_keyboard_symbol_hint" />
+
+            <Spinner
+                android:id="@+id/symbol_hint_layout_options"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dropdown"
+                android:layout_marginBottom="10dp"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -218,6 +224,7 @@
                 android:id="@+id/edit_dict_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:autofillHints=""
                 android:ems="10"
                 android:hint="@string/edit_dict_word"
                 android:inputType="text" />
@@ -249,9 +256,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="English custom dictionary" />
+                android:text="@string/eng_custom_dict" />
 
             <LinearLayout
+                style="?android:attr/buttonBarStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -263,14 +271,14 @@
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="3sp"
-                    android:text="Export to file" />
+                    android:text="@string/export_to_file" />
 
                 <Button
                     android:id="@+id/import_dict_btn"
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:text="Import from file" />
+                    android:text="@string/import_from_file" />
 
             </LinearLayout>
 
@@ -278,20 +286,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
-                android:text="Files are in newline separated .txt format" />
+                android:text="@string/file_format" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 android:layout_marginBottom="10dp"
-                android:text="Note: Importing from file might cause black screens to appear and increase lag temporarily (~1 min)" />
+                android:text="@string/lag_warning" />
 
             <TextView
                 android:layout_marginTop="16sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Chinese Dictionary"
+                android:text="@string/chinese_dictionary"
                 android:textColor="@color/custom_fqhll_banner_pink"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -300,7 +308,7 @@
                 android:id="@+id/btn_remove_chinese_dict"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Remove full Chinese Dictionary" />
+                android:text="@string/remove_chi_dict" />
 
             <TextView
                 android:layout_marginTop="16sp"

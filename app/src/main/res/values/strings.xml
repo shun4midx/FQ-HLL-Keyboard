@@ -23,5 +23,16 @@
     <string name="audio">Audio</string>
     <string name="preferences">Preferences</string>
     <string name="text_correction">Text correction</string>
-    <string name="use_alt_symbol_layout">Use Alternative long press Symbol layout</string>
+    <string name="replace_full_stop_function">Replace full stop delete word function with typing \'//\'</string>
+    <string name="use_chi_default">Use Chinese keyboard as default</string>
+    <string name="eng_keyboard_symbol_hint">English Keyboard Symbols</string>
+    <string name="eng_custom_dict">English custom dictionary</string>
+    <string name="import_from_file">Import from file</string>
+    <string name="file_format">Files are in newline separated .txt format</string>
+    <string name="lag_warning">Note: Importing from file might cause black screens to appear and increase lag temporarily (~1 min)</string>
+    <string name="chinese_dictionary">Chinese Dictionary</string>
+    <string name="remove_chi_dict">Remove full Chinese Dictionary</string>
+    <string name="english">English</string>
+    <string name="chinese">Chinese</string>
+    <string name="export_to_file">Export to file</string>
 </resources>
