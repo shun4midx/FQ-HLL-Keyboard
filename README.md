@@ -1,6 +1,6 @@
-# <img src="FQ-HLL_App.png" width="30"/> FQ-HLL Keyboard 
+# <img src="./images/FQ-HLL_App.png" width="30"/> FQ-HLL Keyboard 
 
-<img src="FQ-HLL_Banner_Cropped.png"/>
+<img src="./images/FQ-HLL_Banner_Cropped.png"/>
 
 ## Description
 The FQ-HLL (Frequency-Quantized HyperLogLog) keyboard is an Android keyboard, that uses the efficient and minimal memory usage [FQ-HLL Autocorrection](https://github.com/shun4midx/FQ-HyperLogLog-Autocorrect) algorithm, which [Shun](https://github.com/shun4midx) took part in creating to become a reality. Its main data structure was the cardinality estimator "HLL". More specifically, it uses certain properties of HLL's bit registers to simulate different frequencies without needing additional storage.
@@ -27,7 +27,7 @@ Keyboard settings are saved across updates of the app.
 - Clipboard, text editor, symbols, and emojis
 - Coyote-time-like handling of simutaneous key presses
 - Autocorrect/autocapitalization toggle
-- Lots of themes and theme customisability (key colour, key text colour, key pressed colour, key border colour, keyboard background colour, suggestion bar (text) colour)
+- Lots of [themes](https://github.com/shun4midx/FQ-HLL-Keyboard/tree/main/themes#readme) and theme customisability (key colour, key text colour, key pressed colour, key border colour, keyboard background colour, suggestion bar (text) colour, key popup (text) colour)
 - Height customisation (short, medium, tall)
 - Text editor mode customisation (maximize, grid)
 - Exporting/Importing English Dictionary from file
@@ -83,9 +83,7 @@ More symbols can be accessed by holding down a symbol on either page.
 
 Default symbol layout (similar to Samsung keyboard layout, left), Alternative symbol layout (similar to Gboard layout, right)
 
-<img width="400" alt="symbol_layout_main" src="https://github.com/user-attachments/assets/ae5c1059-14b0-4d22-9d29-8c1d88cc4369" /> <img width="400" alt="symbol_layout_alternative" src="https://github.com/user-attachments/assets/854dce6d-9a4c-40b5-b1a6-ca5fc061eb1e" />
-
-These images are representations of long press symbol layouts of the keyboard recreated using Keys Cafe, and are not screenshots of the FQ-HLL Keyboard.
+<img width="400" alt="symbol_layout_main" src="./images/default_symbol.png" /> <img width="400" alt="symbol_layout_alternative" src="./images/alternative_symbol.png" />
 
 #### Zhuyin
 We now support traditional Chinese typing via Zhuyin, with both the normal Zhuyin layout and an alternate Eten layout! It supports fuzzy Zhuyin typing (i.e. there is no need for 100% accuracy with typing), and selection based on common phrases instead of word-by-word. However, as of right now, you would need to type the Zhuyin  **with the tone of the word**. The first tone is parsed as a "whitespace". We referenced `tsi.json` from [tobopomo.js](https://github.com/dylandy/tobopomo.js/tree/master/data/tsi.json), with the addition of the words 啲 (ㄉㄧ), 喺 (ㄒㄧˋ, ㄒㄧˊ), 佢 (ㄑㄩˊ), 㗎 (ㄐㄧㄚˋ), 嚟 (ㄌㄧˊ), 哋 (ㄉㄧˋ), 咗 (ㄗㄨㄛˇ), 俾 (ㄅㄟ), 嗰 (ㄍㄜˇ), 嘢 (ㄧㄝˇ), and many other words which are common in Cantonese speech. The addition of these words made us name it `tsi_custom.json`, which can be found [here](https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/src/main/assets/tsi_custom.json).
@@ -134,7 +132,7 @@ To enter a newline on the numpad, long press the enter key.
 
 - grid mode (left), maximize mode (right)
 
-<img src="grid.png" width="300"> <img src="maximize.png" width="300">
+<img src="./images/grid.png" width="300"> <img src="./images/maximize.png" width="300">
 
 ## Customisation
 
