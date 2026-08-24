@@ -648,24 +648,49 @@ public class CustomKeyboardApp extends InputMethodService
     }
 
     private void updateLongPressHints() {
-        if (engKeyboard == null) {
-            return;
-        }
+        if (engKeyboard == null) return;
 
         for (Keyboard.Key key : engKeyboard.getKeys()) {
-            if (key.codes == null || key.codes.length == 0) {
-                continue;
-            }
+            if (key.codes == null || key.codes.length == 0) continue;
 
-            char c = Character.toLowerCase((char) key.codes[0]);
+            int code = key.codes[0];
+            char c = Character.toLowerCase((char) code);
 
-            if (c >= 'a' && c <= 'z') {
-                int idx = c - 'a';
+            // Clear first so stale hints can't survive mode changes
+            key.popupCharacters = null;
 
-                if (idx < longPressSymbols.length) {
-                    key.popupCharacters = longPressSymbols[idx];
+            if (supersubMode) {
+                if (c >= 'a' && c <= 'z') { // Letters
+                    int idx = c - 'a';
+
+                    if (caps_state == 0) { // superscript mode
+                        key.popupCharacters = engSubArray[idx];
+                    } else { // mathbb mode
+                        key.popupCharacters = mathbbLowerEngArray[idx];
+                    }
+                } else if (c >= '0' && c <= '9') { // Numbers
+                    int d = c - '0';
+
+                    if (caps_state == 0) {
+                        key.popupCharacters = digitSubArray[d];
+                    }
+
+                    // In bold/mathbb mode, don't show a number hint
+                }
+            } else {
+                // Normal English mode: show symbol long-press hints on letters only
+                if (c >= 'a' && c <= 'z') {
+                    int idx = c - 'a';
+
+                    if (idx < longPressSymbols.length) {
+                        key.popupCharacters = longPressSymbols[idx];
+                    }
                 }
             }
+        }
+
+        if (kv != null) {
+            kv.invalidateAllKeys();
         }
     }
 
@@ -2968,6 +2993,8 @@ public class CustomKeyboardApp extends InputMethodService
             } else {
                 updateEnglishLabels();
             }
+
+            updateLongPressHints();
         }
 
         kv.invalidateAllKeys();
