@@ -1,5 +1,6 @@
 package com.fqhll.keyboard;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
@@ -126,6 +127,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     private static final String[] longPressSymbolsMain = new String[]{"\"", "}", "\\", "(", "/", ")", "*", "#", "&", "%", "+", "-", ">", "<", "^", "~", "?", "$", "'", "@", ";", "{", "!", "=", ":", "_"};
     private static final String[] longPressSymbolsAlt = new String[]{"@", ";", "'", "$", "|", "_", "&", "-", ">", "+", "(", ")", "?", "!", "{", "}", "%", "=", "#", "[", "<", ":", "\\", "\"", "]", "*"};
+    private static final String[] longPressSymbolsMath = new String[]{"⊥", "≡", "≠", "⊢", "∩", "⊣", "↑", "↓", "∞", "←", "→", "⟷", "≥", "≤", "∃", "∂", "∧", "∪", "⊤", "⊂", "∀", "≃", "∨", "⌈", "⊃", "⌊"};
     private float scaleX, scaleY;
     private int lastTouchX, lastTouchY;
 
@@ -163,8 +165,12 @@ public class CustomKeyboardApp extends InputMethodService
     private boolean nativeLoaded = false;
 
     private final Handler longPressHandler = new Handler(Looper.getMainLooper());
+    private final Handler holdHandler = new Handler(Looper.getMainLooper());
     private Runnable longPressRunnable;
+    private Runnable holdRunnable;
+    private boolean isHeld = false;
     private static final long LONG_PRESS_MS = 350;
+    private static final long HOLD_MS = 100;
     private boolean isLongPress = false;
 
     // Coyote‑time window for grouping near‑simultaneous presses
@@ -687,6 +693,19 @@ public class CustomKeyboardApp extends InputMethodService
                     }
                 }
             }
+        }
+
+        if (kv != null) {
+            kv.invalidateAllKeys();
+        }
+    }
+
+    private void setSymbolLongPressHints(boolean show) {
+        if (symbolKeyboard == null) return;
+
+        for (Keyboard.Key key : symbolKeyboard.getKeys()) {
+            if (key.codes == null || key.codes.length == 0) continue;
+            key.popupCharacters = show ? "t" : null;
         }
 
         if (kv != null) {
@@ -3129,6 +3148,7 @@ public class CustomKeyboardApp extends InputMethodService
         showSuggestions("");
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private View buildKeyboardView() {
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
         prefs.registerOnSharedPreferenceChangeListener(this);
@@ -3441,15 +3461,34 @@ public class CustomKeyboardApp extends InputMethodService
                 kv.invalidateAllKeys();
                 return true;
             } else {
-                if (lastNonPageKeyboard == engKeyboard) {
-                    caps_state = 0;
-                    switchKeyboard(chiKeyboard);
-                } else if (lastNonPageKeyboard == chiKeyboard) {
-                    switchKeyboard(engKeyboard);
-                }
                 return true;
             }
         });
+
+//        holdRunnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                setSymbolLongPressHints(isHeld);
+//            }
+//        };
+//
+//        clipboard.setOnTouchListener((v, event) -> {
+//            switch (event.getAction()) {
+//                case MotionEvent.ACTION_DOWN:
+//                    isHeld = true;
+//                    holdHandler.removeCallbacks(holdRunnable);
+//                    holdHandler.postDelayed(holdRunnable, HOLD_MS);
+//                    return true;
+//
+//                case MotionEvent.ACTION_UP:
+//                case MotionEvent.ACTION_CANCEL:
+//                    isHeld = false;
+//                    holdHandler.removeCallbacks(holdRunnable);
+//                    holdHandler.post(holdRunnable);
+//                    return true;
+//            }
+//            return false;
+//        });
 
         // toggle text editor and normal keyboard
         textEditor.setOnClickListener(v -> {

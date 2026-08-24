@@ -133,6 +133,38 @@ public class CustomKeyboardView extends KeyboardView {
         }
     }
 
+    public void drawHints(Keyboard keyboard, Canvas canvas) {
+        if (keyboard == null) return;
+
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setTextSize(9f * getResources().getDisplayMetrics().scaledDensity);
+        paint.setTextAlign(Paint.Align.RIGHT);
+        paint.setColor(keyTextColor);
+
+        float density = getResources().getDisplayMetrics().density;
+
+        float rightPad = 7f * density;
+        float topPad = 14f * density;
+
+        Paint.FontMetrics fm = paint.getFontMetrics();
+
+        for (Keyboard.Key key : keyboard.getKeys()) {
+            if (key.popupCharacters == null ||
+                    key.popupCharacters.length() == 0) {
+                continue;
+            }
+
+            String hint = key.popupCharacters.toString();
+
+            float keyTop = key.y;
+
+            float x = key.x + key.width - rightPad;
+            float y = keyTop + topPad - fm.ascent;
+
+            canvas.drawText(hint, x, y, paint);
+        }
+    }
+
      @SuppressLint("UseCompatLoadingForDrawables")
      @Override
      public void onDraw(Canvas canvas) {
@@ -143,34 +175,6 @@ public class CustomKeyboardView extends KeyboardView {
          super.onDraw(canvas);
 
          Keyboard keyboard = getKeyboard();
-         if (keyboard == null) return;
-
-         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-         paint.setTextSize(9f * getResources().getDisplayMetrics().scaledDensity);
-         paint.setTextAlign(Paint.Align.RIGHT);
-         paint.setColor(keyTextColor);
-
-         float density = getResources().getDisplayMetrics().density;
-
-         float rightPad = 7f * density;
-         float topPad = 14f * density;
-
-         Paint.FontMetrics fm = paint.getFontMetrics();
-
-         for (Keyboard.Key key : keyboard.getKeys()) {
-             if (key.popupCharacters == null ||
-                     key.popupCharacters.length() == 0) {
-                 continue;
-             }
-
-             String hint = key.popupCharacters.toString();
-
-             float keyTop = key.y;
-
-             float x = key.x + key.width - rightPad;
-             float y = keyTop + topPad - fm.ascent;
-
-             canvas.drawText(hint, x, y, paint);
-         }
+         drawHints(keyboard, canvas);
      }
 }
