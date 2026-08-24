@@ -3,6 +3,8 @@ package com.fqhll.keyboard;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
@@ -18,11 +20,22 @@ public class CustomKeyboardView extends KeyboardView {
     public CustomKeyboardView(Context c, AttributeSet attrs) {
         super(c, attrs);
         initColorBlocks();
+        initKeyTextColor(c, attrs);
     }
+
     public CustomKeyboardView(Context c, AttributeSet attrs, int defStyle) {
         super(c, attrs, defStyle);
         initColorBlocks();
+        initKeyTextColor(c, attrs);
     }
+
+    private void initKeyTextColor(Context context, AttributeSet attrs) {
+        TypedArray a = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.keyTextColor});
+
+        keyTextColor = a.getColor(0, 0xFFFFFFFF);
+        a.recycle();
+    }
+
     @Override
     public boolean performClick() {
         super.performClick();  // let the framework know we really clicked
@@ -50,6 +63,8 @@ public class CustomKeyboardView extends KeyboardView {
     private Drawable numbersBackground;
     private Drawable symbolsBackground;
     private Drawable modifierBackground;
+
+    private int keyTextColor;
 
     private int dpGapInPx;
 
@@ -121,9 +136,46 @@ public class CustomKeyboardView extends KeyboardView {
      @SuppressLint("UseCompatLoadingForDrawables")
      @Override
      public void onDraw(Canvas canvas) {
-        if (colorBlocksTheme) {
-            setColorBlocks(canvas);
-        }
-        super.onDraw(canvas); // make sure keycolor and keybordercolor are transparent for custom per-key color
+         if (colorBlocksTheme) {
+             setColorBlocks(canvas);
+         }
+
+         super.onDraw(canvas);
+
+         Keyboard keyboard = getKeyboard();
+         if (keyboard == null) return;
+
+         Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+         paint.setTextSize(9f * getResources().getDisplayMetrics().scaledDensity);
+         paint.setTextAlign(Paint.Align.RIGHT);
+         paint.setColor(keyTextColor);
+
+         float density = getResources().getDisplayMetrics().density;
+
+         float rightPad = 7f * density;
+         float topPad = 14f * density;
+
+         Paint.FontMetrics fm = paint.getFontMetrics();
+
+         for (Keyboard.Key key : keyboard.getKeys()) {
+             if (key.popupCharacters == null ||
+                     key.popupCharacters.length() == 0) {
+                 continue;
+             }
+
+             String hint = key.popupCharacters.toString();
+
+             float keyTop = key.y;
+
+             // Your ColorBlocks key background itself is shifted down 8dp
+             if (colorBlocksTheme) {
+                 keyTop += dpGapInPx;
+             }
+
+             float x = key.x + key.width - rightPad;
+             float y = keyTop + topPad - fm.ascent;
+
+             canvas.drawText(hint, x, y, paint);
+         }
      }
 }

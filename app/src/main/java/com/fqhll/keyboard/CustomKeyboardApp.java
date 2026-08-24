@@ -647,6 +647,28 @@ public class CustomKeyboardApp extends InputMethodService
         }
     }
 
+    private void updateLongPressHints() {
+        if (engKeyboard == null) {
+            return;
+        }
+
+        for (Keyboard.Key key : engKeyboard.getKeys()) {
+            if (key.codes == null || key.codes.length == 0) {
+                continue;
+            }
+
+            char c = Character.toLowerCase((char) key.codes[0]);
+
+            if (c >= 'a' && c <= 'z') {
+                int idx = c - 'a';
+
+                if (idx < longPressSymbols.length) {
+                    key.popupCharacters = longPressSymbols[idx];
+                }
+            }
+        }
+    }
+
     private void handleLongPress(int primaryCode) {
         if (primaryCode == -1 || (primaryCode == -14 && kv.getKeyboard() == symbolKeyboard) || (primaryCode == -2 && kv.getKeyboard() == mathKeyboard)) { // Long press CAPS = copy/paste or the symbols 1/2 button or math 2/2 button
             InputConnection ic = getCurrentInputConnection();
@@ -3167,6 +3189,7 @@ public class CustomKeyboardApp extends InputMethodService
             }
 
             engKeyboard = keyboard;
+            updateLongPressHints();
         }
 
         else if (useChineseDefault) {
@@ -3477,6 +3500,10 @@ public class CustomKeyboardApp extends InputMethodService
         previewText.setTextColor(getThemeColor(wrap, R.attr.keyPopupTextColor));
         previewText.setTextSize(26f);
         previewText.setGravity(Gravity.CENTER);
+        previewText.setIncludeFontPadding(false);
+
+        int textNudge = Math.round(2f * getResources().getDisplayMetrics().density);
+        previewText.setPadding(0, 0, 0, textNudge);
 
         keyPreviewPopup = new PopupWindow(previewText,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -3517,8 +3544,6 @@ public class CustomKeyboardApp extends InputMethodService
             char ch = (char) code;
 
             // Default reset
-            key.popupCharacters = null;
-
             if (!supersubMode) {
                 // Normal English keyboard (respect Caps normally)
                 if (Character.isLetter(ch)) {
