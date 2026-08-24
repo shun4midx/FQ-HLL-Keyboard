@@ -167,11 +167,6 @@ public class CustomKeyboardView extends KeyboardView {
 
              float keyTop = key.y;
 
-             // Your ColorBlocks key background itself is shifted down 8dp
-             if (colorBlocksTheme) {
-                 keyTop += dpGapInPx;
-             }
-
              float x = key.x + key.width - rightPad;
              float y = keyTop + topPad - fm.ascent;
 
