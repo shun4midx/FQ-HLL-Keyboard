@@ -83,7 +83,7 @@ More symbols can be accessed by holding down a symbol on either page.
 
 Default (similar to Samsung keyboard layout, left), Alternative (similar to Gboard layout, middle), Math ([Space Cadet](https://en.wikipedia.org/wiki/Space-cadet_keyboard) layout, right)
 
-<img width="300" alt="symbol_layout_main" src="./images/default_symbol.png" /> <img width="300" alt="symbol_layout_alternative" src="./images/alternative_symbol.png" /> <img width="300" alt="symbol_layout_math" src="./images/math_symbol.png" />
+<img width="250" alt="symbol_layout_main" src="./images/default_symbol.png" /> <img width="250" alt="symbol_layout_alternative" src="./images/alternative_symbol.png" /> <img width="250" alt="symbol_layout_math" src="./images/math_symbol.png" />
 
 #### Zhuyin
 We now support traditional Chinese typing via Zhuyin, with both the normal Zhuyin layout and an alternate Eten layout! It supports fuzzy Zhuyin typing (i.e. there is no need for 100% accuracy with typing), and selection based on common phrases instead of word-by-word. However, as of right now, you would need to type the Zhuyin  **with the tone of the word**. The first tone is parsed as a "whitespace". We referenced `tsi.json` from [tobopomo.js](https://github.com/dylandy/tobopomo.js/tree/master/data/tsi.json), with the addition of the words 啲 (ㄉㄧ), 喺 (ㄒㄧˋ, ㄒㄧˊ), 佢 (ㄑㄩˊ), 㗎 (ㄐㄧㄚˋ), 嚟 (ㄌㄧˊ), 哋 (ㄉㄧˋ), 咗 (ㄗㄨㄛˇ), 俾 (ㄅㄟ), 嗰 (ㄍㄜˇ), 嘢 (ㄧㄝˇ), and many other words which are common in Cantonese speech. The addition of these words made us name it `tsi_custom.json`, which can be found [here](https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/src/main/assets/tsi_custom.json).
