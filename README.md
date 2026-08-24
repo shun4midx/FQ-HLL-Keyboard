@@ -81,15 +81,15 @@ More symbols can be accessed by holding down a symbol on either page.
 
 ##### Symbol Layouts
 
-- Default (similar to Samsung keyboard layout)
+###### Default (similar to Samsung keyboard layout)
 
 <img width="400" alt="symbol_layout_main" src="./images/default_symbol.png" />
 
-- Alternative (similar to Gboard layout)
+###### Alternative (similar to Gboard layout)
 
 <img width="400" alt="symbol_layout_alternative" src="./images/alternative_symbol.png" />
 
-- Math ([Space Cadet](https://en.wikipedia.org/wiki/Space-cadet_keyboard) layout)
+###### Math ([Space Cadet](https://en.wikipedia.org/wiki/Space-cadet_keyboard) layout)
 
 <img width="400" alt="symbol_layout_math" src="./images/math_symbol.png" />
 
