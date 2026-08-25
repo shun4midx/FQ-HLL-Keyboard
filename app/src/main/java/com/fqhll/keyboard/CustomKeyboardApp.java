@@ -111,7 +111,7 @@ public class CustomKeyboardApp extends InputMethodService
 
     private static final Set<Character> LETTERS = new HashSet<>(Arrays.asList('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'));
     private static final String[] engLetterArray = new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
-    private static final String[] zhuyinLetterArray = new String[]{"ㄅ", "ㄆ", "ㄇ", "ㄈ", "ㄉ", "ㄊ", "ㄋ", "ㄌ", "ㄍ", "ㄎ", "ㄏ", "ㄐ", "ㄑ", "ㄒ", "ㄓ", "ㄔ", "ㄕ", "ㄖ", "ㄗ", "ㄘ", "ㄙ", "ㄚ", "ㄛ", "ㄜ", "ㄝ", "ㄞ", "ㄟ", "ㄠ", "ㄡ", "ㄢ", "ㄣ", "ㄤ", "ㄥ", "ㄦ", "ㄧ", "ㄨ", "ㄩ", "ˉ", "ˊ", "ˇ", "ˋ", "˙"};
+//    private static final String[] zhuyinLetterArray = new String[]{"ㄅ", "ㄆ", "ㄇ", "ㄈ", "ㄉ", "ㄊ", "ㄋ", "ㄌ", "ㄍ", "ㄎ", "ㄏ", "ㄐ", "ㄑ", "ㄒ", "ㄓ", "ㄔ", "ㄕ", "ㄖ", "ㄗ", "ㄘ", "ㄙ", "ㄚ", "ㄛ", "ㄜ", "ㄝ", "ㄞ", "ㄟ", "ㄠ", "ㄡ", "ㄢ", "ㄣ", "ㄤ", "ㄥ", "ㄦ", "ㄧ", "ㄨ", "ㄩ", "ˉ", "ˊ", "ˇ", "ˋ", "˙"};
     private static String[] longPressSymbols = new String[]{};
 
     private boolean supersubMode = false;
@@ -953,54 +953,6 @@ public class CustomKeyboardApp extends InputMethodService
         }
     }
 
-    private String getLongPressHint(Keyboard kb, int primaryCode) {
-        if (kb == null) {
-            return null;
-        }
-
-        if (kb == symbolKeyboard) {
-            Map<Integer, String> map = lastNonPageKeyboard == chiKeyboard ? SYMBOL_LONG_PRESS_ZH : SYMBOL_LONG_PRESS_EN;
-            return map.get(primaryCode);
-        }
-
-        if (kb == mathKeyboard) {
-            return MATH_LONG_PRESS.get(primaryCode);
-        }
-
-        if (kb == emojiKeyboard) {
-            // dynamic emoji variants
-            if (primaryCode == -105) {
-                SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-                String variation = prefs.getString("emoji_variation", "neutral").toLowerCase();
-
-                if (variation.equals("masculine")) {
-                    return "🤷‍♂️";
-                } else if (variation.equals("feminine")) {
-                    return "🤷‍♀️";
-                }
-
-                return "🤷";
-            }
-
-            if (primaryCode == -106) {
-                SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-                String variation = prefs.getString("emoji_variation", "neutral").toLowerCase();
-
-                if (variation.equals("masculine")) {
-                    return "🧍‍♂️";
-                } else if (variation.equals("feminine")) {
-                    return "🧍‍♀️";
-                }
-
-                return "🧍";
-            }
-
-            return EMOJI_LONG_PRESS.get(primaryCode);
-        }
-
-        return null;
-    }
-
     private void setSymbolLongPressHints(boolean show) {
         if (kv == null) {
             return;
@@ -1017,7 +969,7 @@ public class CustomKeyboardApp extends InputMethodService
                 }
 
                 if (show) {
-                    key.popupCharacters = getLongPressHint(kb, key.codes[0]);
+                    key.popupCharacters = getPageLongPressOutput(kb, key.codes[0]);
                 } else {
                     key.popupCharacters = null;
                 }
@@ -1025,6 +977,92 @@ public class CustomKeyboardApp extends InputMethodService
         }
 
         kv.invalidateAllKeys();
+    }
+
+    private boolean handleZhuyinLongPress(int primaryCode) {
+        if (kv.getKeyboard() != chiKeyboard || chineseInputType != ChineseInputType.ZHUYIN) {
+            return false;
+        }
+
+        if (primaryCode < 0) {
+            return false;
+        }
+
+        String pressed = String.valueOf((char) primaryCode);
+        if (!zhuyinLongPressQwerty) {
+            commitTextAndShowLabel(pressed);
+            return true;
+        }
+
+        if (primaryCode == 'ㄦ') {
+            zhuyinQwertyCaps = !zhuyinQwertyCaps;
+            updateZhuyinLongPressHints();
+            return true;
+        }
+
+        boolean wasCaps = zhuyinQwertyCaps;
+        String mapped = getZhuyinQwertyOutput(primaryCode);
+
+        if (mapped == null) {
+            commitTextAndShowLabel(pressed);
+            return true;
+        }
+
+        commitTextAndShowLabel(mapped);
+
+        if (wasCaps && ((mapped.length() == 1 && Character.isUpperCase(mapped.charAt(0))) || mapped.equals("、") || mapped.equals("；"))) {
+            zhuyinQwertyCaps = false;
+            updateZhuyinLongPressHints();
+        }
+
+        return true;
+    }
+
+    private String getPageLongPressOutput(Keyboard kb, int primaryCode) {
+        if (kb == null) {
+            return null;
+        }
+
+        if (kb == symbolKeyboard) {
+            Map<Integer, String> map = lastNonPageKeyboard == chiKeyboard ? SYMBOL_LONG_PRESS_ZH : SYMBOL_LONG_PRESS_EN;
+            return map.get(primaryCode);
+        }
+
+        if (kb == mathKeyboard) {
+            return MATH_LONG_PRESS.get(primaryCode);
+        }
+
+        if (kb == emojiKeyboard) {
+            if (primaryCode == -105) {
+                SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+                String variation = prefs.getString("emoji_variation", "neutral").toLowerCase();
+
+                if (variation.equals("masculine")) {
+                    return "🤷‍♂️";
+                } else if (variation.equals("feminine")) {
+                    return "🤷‍♀️";
+                } else {
+                    return "🤷";
+                }
+            }
+
+            if (primaryCode == -106) {
+                SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+                String variation = prefs.getString("emoji_variation", "neutral").toLowerCase();
+
+                if (variation.equals("masculine")) {
+                    return "🧍‍♂️";
+                } else if (variation.equals("feminine")) {
+                    return "🧍‍♀️";
+                } else {
+                    return "🧍";
+                }
+            }
+
+            return EMOJI_LONG_PRESS.get(primaryCode);
+        }
+
+        return null;
     }
 
     private void handleLongPress(int primaryCode) {
@@ -1074,6 +1112,24 @@ public class CustomKeyboardApp extends InputMethodService
         }
 
         InputConnection ic = getCurrentInputConnection();
+        Keyboard kb = kv.getKeyboard();
+
+        if (handleZhuyinLongPress(primaryCode)) {
+            return;
+        }
+
+        String pageOutput = getPageLongPressOutput(kb, primaryCode);
+        if (pageOutput != null) {
+            commitTextAndShowLabel(pageOutput);
+
+            if (kb == emojiKeyboard) {
+                showSuggestions("");
+            } else {
+                updateSuggestion(ic);
+            }
+
+            return;
+        }
 
         switch (primaryCode) {
             case -2: // symbols -> numpad for English or select all for Zhuyin
@@ -1093,12 +1149,6 @@ public class CustomKeyboardApp extends InputMethodService
                 if (kv.getKeyboard() == numpadKeyboard) {
                     commitTextAndShowLabel("˙");
                     updateSuggestion(ic);
-                } else if (kv.getKeyboard() == symbolKeyboard || kv.getKeyboard() == mathKeyboard) { // Long press "." to get a special fraction symbol (except for Chi keyboard)
-                    if (lastNonPageKeyboard != zhuyinKeyboard || kv.getKeyboard() == mathKeyboard) {
-                        commitTextAndShowLabel("⁄");
-                    } else {
-                        commitTextAndShowLabel(".");
-                    }
                 } else {
                     if (useFullStopComment) {
                         commitTextAndShowLabel("//");
@@ -1108,20 +1158,6 @@ public class CustomKeyboardApp extends InputMethodService
                         showSuggestions("");
                     }
                 }
-                break;
-            case 47: // slash -> backslash
-//                if (!maybeAutoReplace(ic, "\\")) {
-//                    commitTextAndShowLabel("\\");
-//                }
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
-                    commitTextAndShowLabel("｜");
-                } else {
-                    commitTextAndShowLabel("\\");
-                }
-                updateSuggestion(ic);
-                break;
-            case 65292: // chi comma -> chi full stop
-                commitTextAndShowLabel("。");
                 break;
             case -4: // zhuyin enter -> open settings, eng enter -> skip word, numpad enter = new line
                 if (kv.getKeyboard() == chiKeyboard) {
@@ -1173,126 +1209,6 @@ public class CustomKeyboardApp extends InputMethodService
                     }
                 }
                 break;
-            case '[':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
-                    commitTextAndShowLabel("【");
-                } else {
-                    commitTextAndShowLabel("{");
-                }
-                updateSuggestion(ic);
-                break;
-            case ']':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
-                    commitTextAndShowLabel("】");
-                } else {
-                    commitTextAndShowLabel("}");
-                }
-                updateSuggestion(ic);
-                break;
-            case '_':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
-                    commitTextAndShowLabel("——");
-                } else {
-                    commitTextAndShowLabel("|");
-                }
-                updateSuggestion(ic);
-                break;
-            case '!':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
-                    commitTextAndShowLabel("!");
-                } else {
-                    commitTextAndShowLabel("！");
-                }
-                updateSuggestion(ic);
-                break;
-            case '?':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
-                    commitTextAndShowLabel("?");
-                } else {
-                    commitTextAndShowLabel("？");
-                }
-                updateSuggestion(ic);
-                break;
-            case '~':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
-                    commitTextAndShowLabel("⋯⋯");
-                } else {
-                    commitTextAndShowLabel("～");
-                }
-                updateSuggestion(ic);
-                break;
-            case ':':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
-                    commitTextAndShowLabel(":");
-                } else {
-                    commitTextAndShowLabel("：");
-                }
-                updateSuggestion(ic);
-                break;
-            case '(':
-                if (kv.getKeyboard() == numpadKeyboard) {
-                    commitTextAndShowLabel("⁽");
-                } else {
-                    if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
-                        commitTextAndShowLabel("《");
-                    } else {
-                        commitTextAndShowLabel("（");
-                    }
-                }
-                updateSuggestion(ic);
-                break;
-            case ')':
-                if (kv.getKeyboard() == numpadKeyboard) {
-                    commitTextAndShowLabel("⁾");
-                } else {
-                    if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
-                        commitTextAndShowLabel("》");
-                    } else {
-                        commitTextAndShowLabel("）");
-                    }
-                }
-                updateSuggestion(ic);
-                break;
-            case '-':
-                if (kv.getKeyboard() == numpadKeyboard) {
-                    commitTextAndShowLabel("⁻");
-                } else {
-                    commitTextAndShowLabel("、");
-                }
-                updateSuggestion(ic);
-                break;
-            case '<':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
-                    commitTextAndShowLabel("〈");
-                } else {
-                    commitTextAndShowLabel("「");
-                }
-                updateSuggestion(ic);
-                break;
-            case '>':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
-                    commitTextAndShowLabel("〉");
-                } else {
-                    commitTextAndShowLabel("」");
-                }
-                updateSuggestion(ic);
-                break;
-            case '\'':
-                commitTextAndShowLabel("『");
-                updateSuggestion(ic);
-                break;
-            case '"':
-                commitTextAndShowLabel("』");
-                updateSuggestion(ic);
-                break;
-            case ';':
-                if (kv.getKeyboard() == symbolKeyboard && lastNonPageKeyboard == chiKeyboard) {
-                    commitTextAndShowLabel("・");
-                } else {
-                    commitTextAndShowLabel("；");
-                }
-                updateSuggestion(ic);
-                break;
             case '0': case '1': case '2': case '3': case '4':
             case '5': case '6': case '7': case '8': case '9': {
                 int d = primaryCode - '0';
@@ -1310,328 +1226,6 @@ public class CustomKeyboardApp extends InputMethodService
                 updateSuggestion(ic);
                 break;
             }
-            case -105: // shrug
-//                commitTextAndShowLabel("🤷‍♂️");
-                SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-                String emoji_variation = prefs.getString("emoji_variation", "neutral").toLowerCase();
-
-                if (emoji_variation.equals("masculine")) {
-                    commitTextAndShowLabel("🤷‍♂️");
-                } else if (emoji_variation.equals("feminine")) {
-                    commitTextAndShowLabel("️🤷‍♀️");
-                } else {
-                    commitTextAndShowLabel("🤷");
-                }
-                showSuggestions("");
-                break;
-            case -106: // bow-> stand
-                prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
-                emoji_variation = prefs.getString("emoji_variation", "neutral").toLowerCase();
-
-                if (emoji_variation.equals("masculine")) {
-                    commitTextAndShowLabel("🧍‍♂️");
-                } else if (emoji_variation.equals("feminine")) {
-                    commitTextAndShowLabel("🧍‍♀️");
-                } else {
-                    commitTextAndShowLabel("🧍");
-                }
-                showSuggestions("");
-                break;
-            case -107: // poo -> potato
-                commitTextAndShowLabel("🥔️");
-                showSuggestions("");
-                break;
-            case -114: // flying saucer -> jellyfish
-                commitTextAndShowLabel("\uD83E\uDEBC");
-                showSuggestions("");
-                break;
-            case -115: // eyes -> distorted face emoji
-                commitTextAndShowLabel("\uD83E\uDEEA");
-                showSuggestions("");
-                break;
-            case -117: // shep -> fish
-                commitTextAndShowLabel("🐟");
-                showSuggestions("");
-                break;
-            case -127: // 🥺
-                commitTextAndShowLabel("🥹");
-                showSuggestions("");
-                break;
-            case -120: // frog
-                commitTextAndShowLabel("🐢");
-                showSuggestions("");
-                break;
-            case -123: // clown -> egg
-                commitTextAndShowLabel("🥚");
-                showSuggestions("");
-                break;
-            case -104: // melt
-                commitTextAndShowLabel("🥲");
-                showSuggestions("");
-                break;
-            case -116: // sparkle -> lightning
-                commitTextAndShowLabel("⚡️");
-                showSuggestions("");
-                break;
-            case -125: // pray -> kneel
-                commitTextAndShowLabel("🛐");
-                showSuggestions("");
-                break;
-            case -100: // sob -> scared
-                commitTextAndShowLabel("😨");
-                showSuggestions("");
-                break;
-            case -101: // XD -> goofy
-                commitTextAndShowLabel("🤪");
-                showSuggestions("");
-                break;
-            case -102: // skull -> eyebag
-                commitTextAndShowLabel("\uD83E\uDEE9");
-                showSuggestions("");
-                break;
-            case -103: // pensive -> tear
-                commitTextAndShowLabel("😢");
-                showSuggestions("");
-                break;
-            case -110: // fire -> middle finger
-                commitTextAndShowLabel("🖕");
-                showSuggestions("");
-                break;
-            case -111: // clover -> heart
-                commitTextAndShowLabel("\uD83E\uDEF6");
-                showSuggestions("");
-                break;
-            case -119: // x -> !?
-                commitTextAndShowLabel("⁉️");
-                showSuggestions("");
-                break;
-            case -128: // :| -> salute
-                commitTextAndShowLabel("\uD83E\uDEE1");
-                showSuggestions("");
-                break;
-            case -129: // thumb -> double exclamation
-                commitTextAndShowLabel("‼️");
-                showSuggestions("");
-                break;
-            case -130: // inhale -> crown
-                commitTextAndShowLabel("👑");
-                showSuggestions("");
-                break;
-            case -131: // nerd -> salt
-                commitTextAndShowLabel("🧂");
-                showSuggestions("");
-                break;
-            case -132: // smile -> love eyes
-                commitTextAndShowLabel("😍");
-                showSuggestions("");
-                break;
-            case -133: // duck -> bird
-                commitTextAndShowLabel("🐦");
-                showSuggestions("");
-                break;
-            case -134: // vegetable -> garlic
-                commitTextAndShowLabel("🧄");
-                showSuggestions("");
-                break;
-            case -135: // monkey -> chicken
-                commitTextAndShowLabel("🐔");
-                showSuggestions("");
-                break;
-            case -136: // brain -> rock
-                commitTextAndShowLabel("🪨");
-                showSuggestions("");
-                break;
-            case -1000: // superscript 1
-                commitTextAndShowLabel("₁");
-                updateSuggestion(ic);
-                break;
-            case -1001:
-                commitTextAndShowLabel("₂");
-                updateSuggestion(ic);
-                break;
-            case -1002:
-                commitTextAndShowLabel("₃");
-                updateSuggestion(ic);
-                break;
-            case -1003:
-                commitTextAndShowLabel("₄");
-                updateSuggestion(ic);
-                break;
-            case -1004:
-                commitTextAndShowLabel("₅");
-                updateSuggestion(ic);
-                break;
-            case -1005:
-                commitTextAndShowLabel("₆");
-                updateSuggestion(ic);
-                break;
-            case -1006:
-                commitTextAndShowLabel("₇");
-                updateSuggestion(ic);
-                break;
-            case -1007:
-                commitTextAndShowLabel("₈");
-                updateSuggestion(ic);
-                break;
-            case -1008:
-                commitTextAndShowLabel("₉");
-                updateSuggestion(ic);
-                break;
-            case -1009:
-                commitTextAndShowLabel("₀");
-                updateSuggestion(ic);
-                break;
-            case -1010: // for all
-                commitTextAndShowLabel("∵");
-                updateSuggestion(ic);
-                break;
-            case -1011: // there exists
-                commitTextAndShowLabel("∴");
-                updateSuggestion(ic);
-                break;
-            case -1022: // approx
-                commitTextAndShowLabel("∂");
-                updateSuggestion(ic);
-                break;
-            case -1030: // subset
-                commitTextAndShowLabel("ㄥ");
-                updateSuggestion(ic);
-                break;
-            case -1031: // supset
-                commitTextAndShowLabel("⇌");
-                updateSuggestion(ic);
-                break;
-            case -1028: // in
-                commitTextAndShowLabel("→");
-                updateSuggestion(ic);
-                break;
-            case -1029: // ni
-                commitTextAndShowLabel("↦");
-                updateSuggestion(ic);
-                break;
-            case -1018: // alpha
-                commitTextAndShowLabel("∝");
-                updateSuggestion(ic);
-                break;
-            case -1019: // beta
-                commitTextAndShowLabel("μ");
-                updateSuggestion(ic);
-                break;
-            case -1024: // Summation
-                commitTextAndShowLabel("σ");
-                updateSuggestion(ic);
-                break;
-            case -1025: // sqrt
-                commitTextAndShowLabel("λ");
-                updateSuggestion(ic);
-                break;
-            case '+':
-                commitTextAndShowLabel("⁺");
-                updateSuggestion(ic);
-                break;
-            case '@':
-                commitTextAndShowLabel("⁻");
-                updateSuggestion(ic);
-                break;
-            case '×':
-                commitTextAndShowLabel("ˣ");
-                updateSuggestion(ic);
-                break;
-            case '÷':
-                commitTextAndShowLabel("ᐟ");
-                updateSuggestion(ic);
-                break;
-            case '=':
-                commitTextAndShowLabel("⁼");
-                updateSuggestion(ic);
-                break;
-            case '&':
-                commitTextAndShowLabel("⁽");
-                updateSuggestion(ic);
-                break;
-            case '*':
-                commitTextAndShowLabel("⁾");
-                updateSuggestion(ic);
-                break;
-            case '#':
-                commitTextAndShowLabel("₊");
-                updateSuggestion(ic);
-                break;
-            case '$':
-                commitTextAndShowLabel("₋");
-                updateSuggestion(ic);
-                break;
-            case '%':
-                if (kv.getKeyboard() != numpadKeyboard) {
-                    commitTextAndShowLabel("ₓ");
-                    updateSuggestion(ic);
-                }
-                break;
-            case '^':
-                commitTextAndShowLabel("₌");
-                updateSuggestion(ic);
-                break;
-            case -1023: // cong
-                commitTextAndShowLabel("≅");
-                updateSuggestion(ic);
-                break;
-            case -1026: // int
-                commitTextAndShowLabel("ⁿ");
-                updateSuggestion(ic);
-                break;
-            case -1027: // uni
-                commitTextAndShowLabel("ₙ");
-                updateSuggestion(ic);
-                break;
-            case -1015: // theta
-                commitTextAndShowLabel("ᶿ");
-                updateSuggestion(ic);
-                break;
-            case -1020: // pm
-                commitTextAndShowLabel("ε");
-                updateSuggestion(ic);
-                break;
-            case -1021: // neq
-                commitTextAndShowLabel("δ");
-                updateSuggestion(ic);
-                break;
-            case -1014: // delta
-                commitTextAndShowLabel("△");
-                updateSuggestion(ic);
-                break;
-            case -1016: // pi
-                commitTextAndShowLabel("Π");
-                updateSuggestion(ic);
-                break;
-            case -1017: // f
-                commitTextAndShowLabel("∫");
-                updateSuggestion(ic);
-                break;
-            case -1032: // subseteq
-                commitTextAndShowLabel("≤");
-                updateSuggestion(ic);
-                break;
-            case -1033: // supseteq
-                commitTextAndShowLabel("≥");
-                updateSuggestion(ic);
-                break;
-            case -1013: // =>
-                commitTextAndShowLabel("⇐");
-                updateSuggestion(ic);
-                break;
-            case -1034: // qed
-                commitTextAndShowLabel("⊕");
-                updateSuggestion(ic);
-                break;
-            case -1035: // nullset
-                commitTextAndShowLabel("⊗");
-                updateSuggestion(ic);
-                break;
-            case -1036: // infty
-                commitTextAndShowLabel("⊙");
-                updateSuggestion(ic);
-                break;
-
             default:
                 if (supersubMode) {
                     char c = (char) primaryCode;
@@ -1660,37 +1254,7 @@ public class CustomKeyboardApp extends InputMethodService
                 String[] longPressText = longPressSymbols;
                 String[] letterArray = engLetterArray;
 
-                if (kv.getKeyboard() == chiKeyboard && chineseInputType == ChineseInputType.ZHUYIN) {
-                    String pressed = String.valueOf((char) primaryCode);
-
-                    // QWERTY-position mode
-                    if (zhuyinLongPressQwerty) {
-                        if (primaryCode == 'ㄦ') {
-                            zhuyinQwertyCaps = !zhuyinQwertyCaps;
-                            updateZhuyinLongPressHints();
-                            return;
-                        }
-
-                        boolean was_caps = zhuyinQwertyCaps;
-                        String mapped = getZhuyinQwertyOutput(primaryCode);
-
-                        if (mapped != null) {
-                            commitTextAndShowLabel(mapped);
-
-                            if (was_caps && (mapped.length() == 1 && Character.isUpperCase(mapped.charAt(0)) || mapped.equals("、") || mapped.equals("；"))) {
-                                zhuyinQwertyCaps = false;
-                                updateZhuyinLongPressHints();
-                            }
-                        } else {
-                            commitTextAndShowLabel(pressed);
-                        }
-                    } else {
-                        // Original mode: long press simply commits the Zhuyin char
-                        commitTextAndShowLabel(pressed);
-                    }
-
-                    return;
-                } else if (kv.getKeyboard() == chiKeyboard && chineseInputType == ChineseInputType.PINYIN) {
+                if (kv.getKeyboard() == chiKeyboard && chineseInputType == ChineseInputType.PINYIN) {
                     longPressText = engLetterArray;
                     letterArray = engLetterArray;
                 }
