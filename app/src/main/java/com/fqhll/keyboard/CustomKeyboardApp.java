@@ -910,10 +910,12 @@ public class CustomKeyboardApp extends InputMethodService
         if (zhuyinQwertyCaps) {
             if (mapped.equals("⋯⋯")) {
                 return "、";
-            }
-
-            if (mapped.equals("：")) {
+            } else if (mapped.equals("：")) {
                 return "；";
+            } else if (mapped.equals("！")) {
+                return "（";
+            } else if (mapped.equals("？")) {
+                return "）";
             }
 
             if (mapped.length() == 1 && Character.isLetter(mapped.charAt(0))) {
@@ -1012,7 +1014,7 @@ public class CustomKeyboardApp extends InputMethodService
 
         commitTextAndShowLabel(mapped);
 
-        if (wasCaps && ((mapped.length() == 1 && Character.isUpperCase(mapped.charAt(0))) || mapped.equals("、") || mapped.equals("；"))) {
+        if (wasCaps && ((mapped.length() == 1 && Character.isUpperCase(mapped.charAt(0))) || mapped.equals("、") || mapped.equals("；") || mapped.equals("（") || mapped.equals("）"))) {
             zhuyinQwertyCaps = false;
             updateZhuyinLongPressHints();
         }
