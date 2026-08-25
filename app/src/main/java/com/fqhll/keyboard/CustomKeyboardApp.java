@@ -1508,11 +1508,16 @@ public class CustomKeyboardApp extends InputMethodService
         }
 
         if (isChordable(primaryCode)) {
-            synchronized (pendingKeys) {
-                pendingKeys.add(primaryCode);
+//            synchronized (pendingKeys) {
+//                pendingKeys.add(primaryCode);
+//            }
+//            coyoteHandler.removeCallbacks(flushRunnable);
+//            coyoteHandler.postDelayed(flushRunnable, COYOTE_WINDOW_MS);
+//            return;
+            InputConnection ic = getCurrentInputConnection();
+            if (ic != null) {
+                commitChar(ic, primaryCode);
             }
-            coyoteHandler.removeCallbacks(flushRunnable);
-            coyoteHandler.postDelayed(flushRunnable, COYOTE_WINDOW_MS);
             return;
         }
 
