@@ -3088,8 +3088,10 @@ public class CustomKeyboardApp extends InputMethodService
 
         box.setBackgroundColor(getThemeColor(ctx, R.attr.keyPopupBackgroundColor));
 
+        boolean chinese = (lastNonPageKeyboard == chiKeyboard);
+
         TextView message = new TextView(ctx);
-        message.setText("Clear all clipboard history?");
+        message.setText(chinese ? "要清除所有剪貼簿記錄嗎？" : "Clear all clipboard history?");
         message.setTextSize(18f);
         message.setTextColor(getThemeColor(ctx, R.attr.keyPopupTextColor));
         message.setGravity(Gravity.CENTER);
@@ -3103,12 +3105,12 @@ public class CustomKeyboardApp extends InputMethodService
         buttons.setGravity(Gravity.CENTER);
 
         TextView cancel = new TextView(ctx);
-        cancel.setText("Cancel");
+        cancel.setText(chinese ? "取消" : "Cancel");
         cancel.setTextSize(17f);
         cancel.setPadding(pad, pad, pad, pad);
 
         TextView clear = new TextView(ctx);
-        clear.setText("Clear");
+        clear.setText(chinese ? "清除" : "Clear");
         clear.setTextSize(17f);
         clear.setPadding(pad, pad, pad, pad);
 
