@@ -159,6 +159,100 @@ public class CustomKeyboardApp extends InputMethodService
         math_symbols = getMathCodes();
     }
 
+    private LinearLayout suggestionBar;
+    private View root;
+
+    private boolean nativeLoaded = false;
+
+    private final Handler longPressHandler = new Handler(Looper.getMainLooper());
+    private final Handler holdHandler = new Handler(Looper.getMainLooper());
+    private Runnable longPressRunnable;
+    private Runnable holdRunnable;
+    private boolean isHeld = false;
+    private static final long LONG_PRESS_MS = 350;
+    private static final long HOLD_MS = 100;
+    private boolean isLongPress = false;
+
+    // Coyote‑time window for grouping near‑simultaneous presses
+    private static final long COYOTE_WINDOW_MS = 1;
+    private final List<Integer> pendingKeys = new ArrayList<>();
+    private final Handler coyoteHandler = new Handler(Looper.getMainLooper());
+    private final Runnable flushRunnable = this::flushPendingKeys;
+
+    private static final double AUTO_REPLACE_THRESHOLD = 0.6;
+    private boolean defaultAutocor = true;
+
+    private static final int LOOKBACK = 64;
+    private final BreakIterator graphemeIter = BreakIterator.getCharacterInstance();
+
+    private boolean isSelectToggled = false;
+
+    private boolean isSkippedAutoreplace = false;
+
+    private SoundPool soundPool;
+    private int clickSoundId;
+    private boolean isKeySoundEnabled = true;
+
+    private android.widget.PopupWindow candidatesPopup;
+    private boolean zhuyinExpanded = false;
+
+    List<String> zhuyinSuggestions = new ArrayList<>();
+    List<Integer> zhuyinSuggestionDeleteCounts = new ArrayList<>();
+    private static final Set<Character> ZHUYIN_DELIMITERS = new HashSet<>(Arrays.asList('˙', 'ˊ', 'ˇ', 'ˋ', ' '));
+    private StringBuilder zhuyinBuffer = new StringBuilder();
+    private LinearLayout zhuyinCompositionBar;
+    private TextView zhuyinCompositionText;
+
+    private ZhuyinTyper zhuyinTyper;
+    private PinyinTyper pinyinTyper;
+
+    private boolean forceEmptySuggestions = false;
+    private int selectionAnchor = -1;
+
+    private boolean zhuyinLongPressQwerty = true;
+    private boolean zhuyinQwertyCaps = false;
+
+    // Map math Unicode symbols to ASCII equivalents
+    private static final Map<Character, String> mathNaturalize = Map.ofEntries(
+            Map.entry('×', "*"),
+            Map.entry('÷', "/")
+    );
+
+    // Map superscript Unicode chars to normal digits/operators
+    private static final Map<Character, String> superscripts = Map.ofEntries(
+            Map.entry('⁰', "0"),
+            Map.entry('¹', "1"),
+            Map.entry('²', "2"),
+            Map.entry('³', "3"),
+            Map.entry('⁴', "4"),
+            Map.entry('⁵', "5"),
+            Map.entry('⁶', "6"),
+            Map.entry('⁷', "7"),
+            Map.entry('⁸', "8"),
+            Map.entry('⁹', "9"),
+            Map.entry('⁺', "+"),
+            Map.entry('⁻', "-"),
+            Map.entry('⁽', "("),
+            Map.entry('⁾', ")"),
+            Map.entry('ˣ', "*"),
+            Map.entry('ᐟ', "/"),
+            Map.entry('˙', ".")
+    );
+
+    private static final Map<Integer, String> SYMBOL_TO_CHI = Map.ofEntries(
+            Map.entry((int) ',', "，"),
+            Map.entry((int) '.', "。"),
+            Map.entry((int) '!', "！"),
+            Map.entry((int) '?', "？"),
+            Map.entry((int) ':', "："),
+            Map.entry((int) ';', "；"),
+            Map.entry((int) '(', "（"),
+            Map.entry((int) ')', "）"),
+            Map.entry((int) '\'', "『"),
+            Map.entry((int) '"', "』"),
+            Map.entry((int) '~', "～")
+    );
+
     // Long press output maps
     private static final Map<Integer, String> SYMBOL_LONG_PRESS_EN = Map.ofEntries(
             Map.entry((int) '.', "⁄"),
@@ -302,95 +396,48 @@ public class CustomKeyboardApp extends InputMethodService
             Map.entry(-136, "🪨")     // 🧠
     );
 
-    private LinearLayout suggestionBar;
-    private View root;
-
-    private boolean nativeLoaded = false;
-
-    private final Handler longPressHandler = new Handler(Looper.getMainLooper());
-    private final Handler holdHandler = new Handler(Looper.getMainLooper());
-    private Runnable longPressRunnable;
-    private Runnable holdRunnable;
-    private boolean isHeld = false;
-    private static final long LONG_PRESS_MS = 350;
-    private static final long HOLD_MS = 100;
-    private boolean isLongPress = false;
-
-    // Coyote‑time window for grouping near‑simultaneous presses
-    private static final long COYOTE_WINDOW_MS = 1;
-    private final List<Integer> pendingKeys = new ArrayList<>();
-    private final Handler coyoteHandler = new Handler(Looper.getMainLooper());
-    private final Runnable flushRunnable = this::flushPendingKeys;
-
-    private static final double AUTO_REPLACE_THRESHOLD = 0.6;
-    private boolean defaultAutocor = true;
-
-    private static final int LOOKBACK = 64;
-    private final BreakIterator graphemeIter = BreakIterator.getCharacterInstance();
-
-    private boolean isSelectToggled = false;
-
-    private boolean isSkippedAutoreplace = false;
-
-    private SoundPool soundPool;
-    private int clickSoundId;
-    private boolean isKeySoundEnabled = true;
-
-    private android.widget.PopupWindow candidatesPopup;
-    private boolean zhuyinExpanded = false;
-
-    List<String> zhuyinSuggestions = new ArrayList<>();
-    List<Integer> zhuyinSuggestionDeleteCounts = new ArrayList<>();
-    private static final Set<Character> ZHUYIN_DELIMITERS = new HashSet<>(Arrays.asList('˙', 'ˊ', 'ˇ', 'ˋ', ' '));
-    private StringBuilder zhuyinBuffer = new StringBuilder();
-    private LinearLayout zhuyinCompositionBar;
-    private TextView zhuyinCompositionText;
-
-    private ZhuyinTyper zhuyinTyper;
-    private PinyinTyper pinyinTyper;
-
-    private boolean forceEmptySuggestions = false;
-    private int selectionAnchor = -1;
-
-    // Map math Unicode symbols to ASCII equivalents
-    private static final Map<Character, String> mathNaturalize = Map.ofEntries(
-            Map.entry('×', "*"),
-            Map.entry('÷', "/")
-    );
-
-    // Map superscript Unicode chars to normal digits/operators
-    private static final Map<Character, String> superscripts = Map.ofEntries(
-            Map.entry('⁰', "0"),
-            Map.entry('¹', "1"),
-            Map.entry('²', "2"),
-            Map.entry('³', "3"),
-            Map.entry('⁴', "4"),
-            Map.entry('⁵', "5"),
-            Map.entry('⁶', "6"),
-            Map.entry('⁷', "7"),
-            Map.entry('⁸', "8"),
-            Map.entry('⁹', "9"),
-            Map.entry('⁺', "+"),
-            Map.entry('⁻', "-"),
-            Map.entry('⁽', "("),
-            Map.entry('⁾', ")"),
-            Map.entry('ˣ', "*"),
-            Map.entry('ᐟ', "/"),
-            Map.entry('˙', ".")
-    );
-
-    private static final Map<Integer, String> SYMBOL_TO_CHI = Map.ofEntries(
-            Map.entry((int) ',', "，"),
-            Map.entry((int) '.', "。"),
-            Map.entry((int) '!', "！"),
-            Map.entry((int) '?', "？"),
-            Map.entry((int) ':', "："),
-            Map.entry((int) ';', "；"),
-            Map.entry((int) '(', "（"),
-            Map.entry((int) ')', "）"),
-            Map.entry((int) '\'', "『"),
-            Map.entry((int) '"', "』"),
-            Map.entry((int) '~', "～")
+    private static final Map<Integer, String> ZHUYIN_LONG_PRESS_QWERTY = Map.ofEntries(
+            Map.entry((int) 'ㄅ', "1"),
+            Map.entry((int) 'ㄆ', "q"),
+            Map.entry((int) 'ㄇ', "a"),
+            Map.entry((int) 'ㄈ', "z"),
+            Map.entry((int) 'ㄉ', "2"),
+            Map.entry((int) 'ㄊ', "w"),
+            Map.entry((int) 'ㄋ', "s"),
+            Map.entry((int) 'ㄌ', "x"),
+            Map.entry((int) 'ㄍ', "e"),
+            Map.entry((int) 'ㄎ', "d"),
+            Map.entry((int) 'ㄏ', "c"),
+            Map.entry((int) 'ㄐ', "r"),
+            Map.entry((int) 'ㄑ', "f"),
+            Map.entry((int) 'ㄒ', "v"),
+            Map.entry((int) 'ㄓ', "5"),
+            Map.entry((int) 'ㄔ', "t"),
+            Map.entry((int) 'ㄕ', "g"),
+            Map.entry((int) 'ㄖ', "b"),
+            Map.entry((int) 'ㄗ', "y"),
+            Map.entry((int) 'ㄘ', "h"),
+            Map.entry((int) 'ㄙ', "n"),
+            Map.entry((int) 'ㄧ', "u"),
+            Map.entry((int) 'ㄨ', "j"),
+            Map.entry((int) 'ㄩ', "m"),
+            Map.entry((int) 'ㄚ', "8"),
+            Map.entry((int) 'ㄛ', "i"),
+            Map.entry((int) 'ㄜ', "k"),
+            Map.entry((int) 'ㄝ', "⋯⋯"),
+            Map.entry((int) 'ㄞ', "9"),
+            Map.entry((int) 'ㄟ', "o"),
+            Map.entry((int) 'ㄠ', "l"),
+            Map.entry((int) 'ㄡ', "！"),
+            Map.entry((int) 'ㄢ', "0"),
+            Map.entry((int) 'ㄣ', "p"),
+            Map.entry((int) 'ㄤ', "："),
+            Map.entry((int) 'ㄥ', "？"),
+//            Map.entry((int) 'ㄦ', "、"),
+            Map.entry((int) 'ˇ', "3"),
+            Map.entry((int) 'ˋ', "4"),
+            Map.entry((int) 'ˊ', "6"),
+            Map.entry((int) '˙', "7")
     );
 
     private void ensureNative() {
@@ -457,6 +504,10 @@ public class CustomKeyboardApp extends InputMethodService
         updateEditorLabels();
         updateNumpadLabels();
 
+        if (k == chiKeyboard && chineseInputType == ChineseInputType.ZHUYIN) {
+            updateZhuyinLongPressHints();
+        }
+
         if (isHeld) {
             setSymbolLongPressHints(true);
         }
@@ -521,6 +572,7 @@ public class CustomKeyboardApp extends InputMethodService
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
         defaultCaps = prefs.getBoolean("capsToggle", true);
         defaultAutocor = prefs.getBoolean("autocorToggle", true);
+        zhuyinLongPressQwerty = prefs.getBoolean("zhuyinLongPressQwerty", true);
         caps_state = defaultCaps ? 1 : 0;
         init_emoji_variations();
         init_emoji_symbols();
@@ -838,6 +890,60 @@ public class CustomKeyboardApp extends InputMethodService
                     if (idx < longPressSymbols.length) {
                         key.popupCharacters = longPressSymbols[idx];
                     }
+                }
+            }
+        }
+
+        if (kv != null) {
+            kv.invalidateAllKeys();
+        }
+    }
+
+    private String getZhuyinQwertyOutput(int primaryCode) {
+        String mapped = ZHUYIN_LONG_PRESS_QWERTY.get(primaryCode);
+        if (mapped == null) {
+            return null;
+        }
+
+        if (zhuyinQwertyCaps) {
+            if (mapped.equals("⋯⋯")) {
+                return "、";
+            }
+
+            if (mapped.equals("：")) {
+                return "；";
+            }
+
+            if (mapped.length() == 1 && Character.isLetter(mapped.charAt(0))) {
+                return mapped.toUpperCase();
+            }
+        }
+
+        return mapped;
+    }
+
+    private void updateZhuyinLongPressHints() {
+        if (chiKeyboard == null) {
+            return;
+        }
+
+        if (chineseInputType != ChineseInputType.ZHUYIN) {
+            return;
+        }
+
+        for (Keyboard.Key key : chiKeyboard.getKeys()) {
+            if (key.codes == null || key.codes.length == 0) {
+                continue;
+            }
+
+            // Always clear first
+            key.popupCharacters = null;
+
+            if (zhuyinLongPressQwerty) {
+                if (key.codes[0] == 'ㄦ') {
+                    key.popupCharacters = "⇪";
+                } else {
+                    key.popupCharacters = getZhuyinQwertyOutput(key.codes[0]);
                 }
             }
         }
@@ -1555,8 +1661,35 @@ public class CustomKeyboardApp extends InputMethodService
                 String[] letterArray = engLetterArray;
 
                 if (kv.getKeyboard() == chiKeyboard && chineseInputType == ChineseInputType.ZHUYIN) {
-                    longPressText = zhuyinLetterArray;
-                    letterArray = zhuyinLetterArray;
+                    String pressed = String.valueOf((char) primaryCode);
+
+                    // QWERTY-position mode
+                    if (zhuyinLongPressQwerty) {
+                        if (primaryCode == 'ㄦ') {
+                            zhuyinQwertyCaps = !zhuyinQwertyCaps;
+                            updateZhuyinLongPressHints();
+                            return;
+                        }
+
+                        boolean was_caps = zhuyinQwertyCaps;
+                        String mapped = getZhuyinQwertyOutput(primaryCode);
+
+                        if (mapped != null) {
+                            commitTextAndShowLabel(mapped);
+
+                            if (was_caps && (mapped.length() == 1 && Character.isUpperCase(mapped.charAt(0)) || mapped.equals("、") || mapped.equals("；"))) {
+                                zhuyinQwertyCaps = false;
+                                updateZhuyinLongPressHints();
+                            }
+                        } else {
+                            commitTextAndShowLabel(pressed);
+                        }
+                    } else {
+                        // Original mode: long press simply commits the Zhuyin char
+                        commitTextAndShowLabel(pressed);
+                    }
+
+                    return;
                 } else if (kv.getKeyboard() == chiKeyboard && chineseInputType == ChineseInputType.PINYIN) {
                     longPressText = engLetterArray;
                     letterArray = engLetterArray;
@@ -3579,80 +3712,13 @@ public class CustomKeyboardApp extends InputMethodService
             if (kv.getKeyboard() == clipKeyboard && !zhuyinExpanded) {
                 clearClipboard();
                 return true;
-            } /*else if (lastNonPageKeyboard == chiKeyboard || zhuyinExpanded) {
-                if (zhuyinExpanded) {
-                    // Minimize
-                    expanded.setVisibility(View.GONE);
-                    keyboardView.setVisibility(View.VISIBLE);
-                    zhuyinExpanded = false;
-                } else {
-                    // expand panel
-                    expanded.setVisibility(View.VISIBLE);
-                    keyboardView.setVisibility(View.GONE);
-
-                    expanded.getLayoutParams().height = keyboardView.getHeight();
-                    expanded.requestLayout();
-                    zhuyinExpanded = true;
-
-                    FlexboxLayoutManager lm = new FlexboxLayoutManager(this);
-                    lm.setFlexDirection(FlexDirection.ROW);
-                    lm.setFlexWrap(FlexWrap.WRAP);
-                    expanded.setLayoutManager(lm);
-
-                    // In buildKeyboardView(), when expanding:
-                    zhuyinSuggestions.clear();
-
-                    // reuse the same prefix logic as updateSuggestion/showSuggestions
-                    InputConnection ic = getCurrentInputConnection();
-                    String prefix = zhuyinBuffer.toString();
-
-                    // generate Zhuyin candidates the same way as the top bar
-                    regenerateZhuyinSuggestions(prefix);
-
-                    expanded.setAdapter(new RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-                        @Override
-                        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-                            View v = LayoutInflater.from(parent.getContext())
-                                    .inflate(R.layout.item_candidate_chip, parent, false);
-                            return new RecyclerView.ViewHolder(v) {
-                            };
-                        }
-
-                        @Override
-                        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-                            TextView tv = holder.itemView.findViewById(R.id.txt);
-                            String s = zhuyinSuggestions.get(position);
-                            int dc = zhuyinSuggestionDeleteCounts.get(position);
-                            tv.setText(s);
-                            tv.setOnClickListener(v -> {
-                                InputConnection ic = getCurrentInputConnection();
-                                if (ic != null) {
-                                    replaceCurrentWord(s, dc);
-                                }
-
-                                if (zhuyinBuffer.length() == 0) {
-                                    // nothing left -> fully minimize
-                                    expanded.setVisibility(View.GONE);
-                                    keyboardView.setVisibility(View.VISIBLE);
-                                    zhuyinExpanded = false;
-                                } else {
-                                    // still stuff left -> go back to normal bar
-                                    expanded.setVisibility(View.GONE);
-                                    regenerateZhuyinSuggestions(zhuyinBuffer.toString());
-                                    keyboardView.setVisibility(View.VISIBLE);
-                                }
-                            });
-                        }
-
-                        @Override
-                        public int getItemCount() {
-                            return zhuyinSuggestions.size();
-                        }
-                    });
-                }
-
+            } else if (kv.getKeyboard() == chiKeyboard && chineseInputType == ChineseInputType.ZHUYIN) {
+                zhuyinLongPressQwerty = !zhuyinLongPressQwerty;
+                SharedPreferences zhuyinPrefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+                zhuyinPrefs.edit().putBoolean("zhuyinLongPressQwerty", zhuyinLongPressQwerty).apply();
+                updateZhuyinLongPressHints();
                 return true;
-            }*/ else if (kv.getKeyboard() == engKeyboard) {
+            } else if (kv.getKeyboard() == engKeyboard) {
                 supersubMode = !supersubMode;
                 caps_state = 0;
                 updateSupersubLabels();
