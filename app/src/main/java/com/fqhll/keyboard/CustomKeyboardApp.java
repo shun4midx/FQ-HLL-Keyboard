@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.inputmethodservice.InputMethodService;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
@@ -28,6 +29,7 @@ import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputContentInfo;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Space;
 import android.widget.TextView;
 import android.view.Gravity;
 import android.view.ViewGroup;
@@ -3058,6 +3060,100 @@ public class CustomKeyboardApp extends InputMethodService
         showSuggestions("");
     }
 
+    private GradientDrawable makeButtonBackground(int color) {
+        GradientDrawable bg = new GradientDrawable();
+        bg.setColor(color);
+
+        float radius = 10 * getResources().getDisplayMetrics().density;
+
+        bg.setCornerRadius(radius);
+
+        return bg;
+    }
+
+    private void showClearClipboardConfirm() {
+        if (root == null) {
+            return;
+        }
+
+        Context ctx = root.getContext();
+
+        LinearLayout box = new LinearLayout(ctx);
+        box.setOrientation(LinearLayout.VERTICAL);
+
+        int pad = Math.round(20 * getResources().getDisplayMetrics().density);
+        box.setPadding(pad, pad, pad, pad);
+
+        box.setBackgroundColor(getThemeColor(ctx, R.attr.keyPopupBackgroundColor));
+
+        TextView message = new TextView(ctx);
+        message.setText("Clear all clipboard history?");
+        message.setTextSize(18f);
+        message.setTextColor(getThemeColor(ctx, R.attr.keyPopupTextColor));
+        message.setGravity(Gravity.CENTER);
+
+        LinearLayout.LayoutParams messageLp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        messageLp.bottomMargin = Math.round(20 * getResources().getDisplayMetrics().density);
+        message.setLayoutParams(messageLp);
+
+        LinearLayout buttons = new LinearLayout(ctx);
+        buttons.setOrientation(LinearLayout.HORIZONTAL);
+        buttons.setGravity(Gravity.CENTER);
+
+        TextView cancel = new TextView(ctx);
+        cancel.setText("Cancel");
+        cancel.setTextSize(17f);
+        cancel.setPadding(pad, pad, pad, pad);
+
+        TextView clear = new TextView(ctx);
+        clear.setText("Clear");
+        clear.setTextSize(17f);
+        clear.setPadding(pad, pad, pad, pad);
+
+        int buttonPadH = Math.round(18 * getResources().getDisplayMetrics().density);
+        int buttonPadV = Math.round(7 * getResources().getDisplayMetrics().density);
+        int buttonGap = Math.round(30 * getResources().getDisplayMetrics().density);
+
+        cancel.setPadding(buttonPadH, buttonPadV, buttonPadH, buttonPadV);
+        clear.setPadding(buttonPadH, buttonPadV, buttonPadH, buttonPadV);
+
+        cancel.setBackground(makeButtonBackground(0xFF555555));
+        clear.setBackground(makeButtonBackground(0xFFB3261E));
+
+        cancel.setTextColor(0xFFFFFFFF);
+        clear.setTextColor(0xFFFFFFFF);
+
+        cancel.setBackgroundColor(0xFF555555);
+        clear.setBackgroundColor(0xFFB3261E);
+
+        buttons.addView(cancel);
+
+        Space gap = new Space(ctx);
+        gap.setLayoutParams(new LinearLayout.LayoutParams(buttonGap, 1));
+        buttons.addView(gap);
+
+        buttons.addView(clear);
+
+        box.addView(message);
+        box.addView(buttons);
+
+        PopupWindow popup = new PopupWindow(box, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, false);
+
+        popup.setTouchable(true);
+        popup.setOutsideTouchable(true);
+        popup.setFocusable(false);
+        popup.setInputMethodMode(PopupWindow.INPUT_METHOD_NOT_NEEDED);
+
+        cancel.setOnClickListener(v -> popup.dismiss());
+
+        clear.setOnClickListener(v -> {
+            popup.dismiss();
+            clearClipboard();
+        });
+
+        popup.showAtLocation(root, Gravity.CENTER, 0, 0);
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     private View buildKeyboardView() {
         SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
@@ -3279,7 +3375,7 @@ public class CustomKeyboardApp extends InputMethodService
         // long click to clear clipboard
         clipboard.setOnLongClickListener(v -> {
             if (kv.getKeyboard() == clipKeyboard && !zhuyinExpanded) {
-                clearClipboard();
+                showClearClipboardConfirm();
                 return true;
             } else if (kv.getKeyboard() == chiKeyboard && chineseInputType == ChineseInputType.ZHUYIN) {
                 zhuyinLongPressQwerty = !zhuyinLongPressQwerty;
