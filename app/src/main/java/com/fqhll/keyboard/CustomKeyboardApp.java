@@ -159,6 +159,149 @@ public class CustomKeyboardApp extends InputMethodService
         math_symbols = getMathCodes();
     }
 
+    // Long press output maps
+    private static final Map<Integer, String> SYMBOL_LONG_PRESS_EN = Map.ofEntries(
+            Map.entry((int) '.', "⁄"),
+            Map.entry((int) '/', "\\"),
+            Map.entry((int) '[', "{"),
+            Map.entry((int) ']', "}"),
+            Map.entry((int) '_', "|"),
+            Map.entry((int) '!', "！"),
+            Map.entry((int) '?', "？"),
+            Map.entry((int) '~', "～"),
+            Map.entry((int) ':', "："),
+            Map.entry((int) '(', "（"),
+            Map.entry((int) ')', "）"),
+            Map.entry((int) '-', "、"),
+            Map.entry((int) '<', "「"),
+            Map.entry((int) '>', "」"),
+            Map.entry((int) '\'', "『"),
+            Map.entry((int) '"', "』"),
+            Map.entry((int) ';', "；"),
+            Map.entry((int) '+', "⁺"),
+            Map.entry((int) '@', "⁻"),
+            Map.entry((int) '×', "ˣ"),
+            Map.entry((int) '÷', "ᐟ"),
+            Map.entry((int) '=', "⁼"),
+            Map.entry((int) '&', "⁽"),
+            Map.entry((int) '*', "⁾"),
+            Map.entry((int) '#', "₊"),
+            Map.entry((int) '$', "₋"),
+            Map.entry((int) '%', "ₓ"),
+            Map.entry((int) '^', "₌")
+    );
+
+    private static final Map<Integer, String> SYMBOL_LONG_PRESS_ZH = Map.ofEntries(
+            Map.entry((int) '.', "."),
+            Map.entry((int) '/', "｜"),
+            Map.entry((int) '[', "【"),
+            Map.entry((int) ']', "】"),
+            Map.entry((int) '_', "——"),
+            Map.entry((int) '!', "!"),
+            Map.entry((int) '?', "?"),
+            Map.entry((int) ':', ":"),
+            Map.entry((int) '~', "⋯⋯"),
+            Map.entry((int) '(', "《"),
+            Map.entry((int) ')', "》"),
+            Map.entry((int) '-', "、"),
+            Map.entry((int) '<', "〈"),
+            Map.entry((int) '>', "〉"),
+            Map.entry((int) '\'', "『"),
+            Map.entry((int) '"', "』"),
+            Map.entry((int) ';', "・"),
+            Map.entry((int) '+', "⁺"),
+            Map.entry((int) '@', "⁻"),
+            Map.entry((int) '×', "ˣ"),
+            Map.entry((int) '÷', "ᐟ"),
+            Map.entry((int) '=', "⁼"),
+            Map.entry((int) '&', "⁽"),
+            Map.entry((int) '*', "⁾"),
+            Map.entry((int) '#', "₊"),
+            Map.entry((int) '$', "₋"),
+            Map.entry((int) '%', "ₓ"),
+            Map.entry((int) '^', "₌")
+    );
+
+    private static final Map<Integer, String> MATH_LONG_PRESS = Map.ofEntries(
+            // Superscript digits -> subscript digits
+            Map.entry(-1000, "₁"),
+            Map.entry(-1001, "₂"),
+            Map.entry(-1002, "₃"),
+            Map.entry(-1003, "₄"),
+            Map.entry(-1004, "₅"),
+            Map.entry(-1005, "₆"),
+            Map.entry(-1006, "₇"),
+            Map.entry(-1007, "₈"),
+            Map.entry(-1008, "₉"),
+            Map.entry(-1009, "₀"),
+            Map.entry(-1010, "∵"),   // ∀
+            Map.entry(-1011, "∴"),   // ∃
+            // -1012 is empty
+            Map.entry(-1013, "⇐"),   // ⇒
+            Map.entry(-1014, "△"),   // Δ
+            Map.entry(-1015, "ᶿ"),   // θ
+            Map.entry(-1016, "Π"),   // π
+            Map.entry(-1017, "∫"),   // ƒ
+            Map.entry(-1018, "∝"),   // α
+            Map.entry(-1019, "μ"),   // β
+            Map.entry(-1020, "ε"),   // ±
+            Map.entry(-1021, "δ"),   // ≠
+            Map.entry(-1022, "∂"),   // ≈
+            Map.entry(-1023, "≅"),   // ≡
+            Map.entry(-1024, "σ"),   // Σ
+            Map.entry(-1025, "λ"),   // √
+            Map.entry(-1026, "ⁿ"),   // ∩
+            Map.entry(-1027, "ₙ"),   // ∪
+            Map.entry(-1028, "→"),   // ∈
+            Map.entry(-1029, "↦"),   // ∋
+            Map.entry(-1030, "ㄥ"),   // ⊂
+            Map.entry(-1031, "⇌"),   // ⊃
+            Map.entry(-1032, "≤"),   // ⊆
+            Map.entry(-1033, "≥"),   // ⊇
+            Map.entry(-1034, "⊕"),   // □
+            Map.entry(-1035, "⊗"),   // ∅
+            Map.entry(-1036, "⊙"),   // ∞
+            Map.entry((int) '.', "⁄")
+    );
+
+    private static final Map<Integer, String> EMOJI_LONG_PRESS = Map.ofEntries(
+            Map.entry(-100, "😨"),    // 😭
+            Map.entry(-101, "🤪"),    // 😂
+            Map.entry(-102, "🫩"),    // 💀
+            Map.entry(-103, "😢"),    // 😔
+            Map.entry(-104, "🥲"),    // 🫠
+
+            // -105 handled dynamically: shrug
+            // -106 handled dynamically: bowing person -> standing
+
+            Map.entry(-107, "🥔️"),   // 💩
+
+            Map.entry(-110, "🖕"),    // 🔥
+            Map.entry(-111, "🫶"),    // 🍀
+
+            Map.entry(-114, "🪼"),    // 🛸
+            Map.entry(-115, "🫪"),    // 👀
+            Map.entry(-116, "⚡️"),   // ✨
+            Map.entry(-117, "🐟"),    // 🐑
+
+            Map.entry(-119, "⁉️"),    // ❌
+            Map.entry(-120, "🐢"),    // 🐸
+
+            Map.entry(-123, "🥚"),    // 🤡
+            Map.entry(-125, "🛐"),    // 🙏
+
+            Map.entry(-127, "🥹"),    // 🥺
+            Map.entry(-128, "🫡"),    // 😐
+            Map.entry(-129, "‼️"),    // 👍
+            Map.entry(-130, "👑"),    // 😤
+            Map.entry(-131, "🧂"),    // 🤓
+            Map.entry(-132, "😍"),    // 😀
+            Map.entry(-133, "🐦"),    // 🦆
+            Map.entry(-134, "🧄"),    // 🥬
+            Map.entry(-135, "🐔"),    // 🐒
+            Map.entry(-136, "🪨")     // 🧠
+    );
+
     private LinearLayout suggestionBar;
     private View root;
 
@@ -700,17 +843,78 @@ public class CustomKeyboardApp extends InputMethodService
         }
     }
 
+    private String getLongPressHint(Keyboard kb, int primaryCode) {
+        if (kb == null) {
+            return null;
+        }
+
+        if (kb == symbolKeyboard) {
+            Map<Integer, String> map = lastNonPageKeyboard == chiKeyboard ? SYMBOL_LONG_PRESS_ZH : SYMBOL_LONG_PRESS_EN;
+            return map.get(primaryCode);
+        }
+
+        if (kb == mathKeyboard) {
+            return MATH_LONG_PRESS.get(primaryCode);
+        }
+
+        if (kb == emojiKeyboard) {
+            // dynamic emoji variants
+            if (primaryCode == -105) {
+                SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+                String variation = prefs.getString("emoji_variation", "neutral").toLowerCase();
+
+                if (variation.equals("masculine")) {
+                    return "🤷‍♂️";
+                } else if (variation.equals("feminine")) {
+                    return "🤷‍♀️";
+                }
+
+                return "🤷";
+            }
+
+            if (primaryCode == -106) {
+                SharedPreferences prefs = getSharedPreferences("keyboard_settings", MODE_PRIVATE);
+                String variation = prefs.getString("emoji_variation", "neutral").toLowerCase();
+
+                if (variation.equals("masculine")) {
+                    return "🧍‍♂️";
+                } else if (variation.equals("feminine")) {
+                    return "🧍‍♀️";
+                }
+
+                return "🧍";
+            }
+
+            return EMOJI_LONG_PRESS.get(primaryCode);
+        }
+
+        return null;
+    }
+
     private void setSymbolLongPressHints(boolean show) {
-        if (symbolKeyboard == null) return;
-
-        for (Keyboard.Key key : symbolKeyboard.getKeys()) {
-            if (key.codes == null || key.codes.length == 0) continue;
-            key.popupCharacters = show ? "t" : null;
+        if (kv == null) {
+            return;
         }
 
-        if (kv != null) {
-            kv.invalidateAllKeys();
+        for (Keyboard kb : Arrays.asList(symbolKeyboard, mathKeyboard, emojiKeyboard)) {
+            if (kb == null) {
+                continue;
+            }
+
+            for (Keyboard.Key key : kb.getKeys()) {
+                if (key.codes == null || key.codes.length == 0) {
+                    continue;
+                }
+
+                if (show) {
+                    key.popupCharacters = getLongPressHint(kb, key.codes[0]);
+                } else {
+                    key.popupCharacters = null;
+                }
+            }
         }
+
+        kv.invalidateAllKeys();
     }
 
     private void handleLongPress(int primaryCode) {
@@ -3247,18 +3451,6 @@ public class CustomKeyboardApp extends InputMethodService
             engKeyboard = new Keyboard(wrap, R.xml.custom_keypad_qwerty);
         }
 
-        /*
-        [UNCOMMENT THIS RIGHT HERE]
-        else if (keyboardLayout.equals("pinyin")) {
-            pinyinKeyboard = new Keyboard(wrap, R.xml.custom_keypad_pinyin);
-
-            keyboard = pinyinKeyboard;
-            chiKeyboard = pinyinKeyboard;
-            engKeyboard = new Keyboard(wrap, R.xml.custom_keypad_qwerty);
-
-            chineseInputType = ChineseInputType.PINYIN;
-        }*/
-
         else {
             String layoutName = "custom_keypad_" + engKeyboardLayout;
             int layoutXml = getResources().getIdentifier(layoutName, "xml", getPackageName());
@@ -3383,7 +3575,7 @@ public class CustomKeyboardApp extends InputMethodService
             if (kv.getKeyboard() == clipKeyboard && !zhuyinExpanded) {
                 clearClipboard();
                 return true;
-            } else if (lastNonPageKeyboard == chiKeyboard || zhuyinExpanded) {
+            } /*else if (lastNonPageKeyboard == chiKeyboard || zhuyinExpanded) {
                 if (zhuyinExpanded) {
                     // Minimize
                     expanded.setVisibility(View.GONE);
@@ -3456,7 +3648,7 @@ public class CustomKeyboardApp extends InputMethodService
                 }
 
                 return true;
-            } else if (kv.getKeyboard() == engKeyboard) {
+            }*/ else if (kv.getKeyboard() == engKeyboard) {
                 supersubMode = !supersubMode;
                 caps_state = 0;
                 updateSupersubLabels();
@@ -3468,32 +3660,32 @@ public class CustomKeyboardApp extends InputMethodService
             }
         });
 
-//        holdRunnable = new Runnable() {
-//            @Override
-//            public void run() {
-//                setSymbolLongPressHints(isHeld);
-//            }
-//        };
-//
-//        clipboard.setOnTouchListener((v, event) -> {
-//            if (currentKeyboard == symbolKeyboard) {
-//                switch (event.getAction()) {
-//                    case MotionEvent.ACTION_DOWN:
-//                        isHeld = true;
-//                        holdHandler.removeCallbacks(holdRunnable);
-//                        holdHandler.postDelayed(holdRunnable, HOLD_MS);
-//                        return true;
-//
-//                    case MotionEvent.ACTION_UP:
-//                    case MotionEvent.ACTION_CANCEL:
-//                        isHeld = false;
-//                        holdHandler.removeCallbacks(holdRunnable);
-//                        holdHandler.post(holdRunnable);
-//                        return true;
-//                }
-//            }
-//            return false;
-//        });
+        holdRunnable = new Runnable() {
+            @Override
+            public void run() {
+                setSymbolLongPressHints(isHeld);
+            }
+        };
+
+        clipboard.setOnTouchListener((v, event) -> {
+            if (currentKeyboard == symbolKeyboard || currentKeyboard == mathKeyboard || currentKeyboard == emojiKeyboard) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        isHeld = true;
+                        holdHandler.removeCallbacks(holdRunnable);
+                        holdHandler.postDelayed(holdRunnable, HOLD_MS);
+                        return true;
+
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        isHeld = false;
+                        holdHandler.removeCallbacks(holdRunnable);
+                        holdHandler.post(holdRunnable);
+                        return true;
+                }
+            }
+            return false;
+        });
 
         // toggle text editor and normal keyboard
         textEditor.setOnClickListener(v -> {
