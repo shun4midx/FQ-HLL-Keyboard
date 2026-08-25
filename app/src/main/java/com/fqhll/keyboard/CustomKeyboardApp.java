@@ -457,6 +457,10 @@ public class CustomKeyboardApp extends InputMethodService
         updateEditorLabels();
         updateNumpadLabels();
 
+        if (isHeld) {
+            setSymbolLongPressHints(true);
+        }
+
         kv.setKeyboard(k);
 
         updateCompositionBarVisibility();
