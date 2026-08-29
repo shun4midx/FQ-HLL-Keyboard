@@ -257,6 +257,16 @@ public class CustomKeyboardApp extends InputMethodService
 
     // Long press output maps
     private static final Map<Integer, String> SYMBOL_LONG_PRESS_EN = Map.ofEntries(
+            Map.entry((int) '0', "⁰"),
+            Map.entry((int) '1', "¹"),
+            Map.entry((int) '2', "²"),
+            Map.entry((int) '3', "³"),
+            Map.entry((int) '4', "⁴"),
+            Map.entry((int) '5', "⁵"),
+            Map.entry((int) '6', "⁶"),
+            Map.entry((int) '7', "⁷"),
+            Map.entry((int) '8', "⁸"),
+            Map.entry((int) '9', "⁹"),
             Map.entry((int) '.', "⁄"),
             Map.entry((int) '/', "\\"),
             Map.entry((int) '[', "{"),
@@ -288,6 +298,16 @@ public class CustomKeyboardApp extends InputMethodService
     );
 
     private static final Map<Integer, String> SYMBOL_LONG_PRESS_ZH = Map.ofEntries(
+            Map.entry((int) '0', "⁰"),
+            Map.entry((int) '1', "¹"),
+            Map.entry((int) '2', "²"),
+            Map.entry((int) '3', "³"),
+            Map.entry((int) '4', "⁴"),
+            Map.entry((int) '5', "⁵"),
+            Map.entry((int) '6', "⁶"),
+            Map.entry((int) '7', "⁷"),
+            Map.entry((int) '8', "⁸"),
+            Map.entry((int) '9', "⁹"),
             Map.entry((int) '.', "."),
             Map.entry((int) '/', "｜"),
             Map.entry((int) '[', "【"),
