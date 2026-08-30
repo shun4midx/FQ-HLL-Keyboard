@@ -1015,17 +1015,24 @@ public class CustomKeyboardApp extends InputMethodService
             return false;
         }
 
-        if (primaryCode < 0) {
+        if (primaryCode <= 0) {
+            return false;
+        }
+
+        int standardCode = getStandardZhuyinEquivalent(primaryCode);
+
+        if (standardCode != 'ㄦ' && !ZHUYIN_LONG_PRESS_QWERTY.containsKey(standardCode)) {
             return false;
         }
 
         String pressed = String.valueOf((char) primaryCode);
+
         if (!zhuyinLongPressQwerty) {
             commitTextAndShowLabel(pressed);
             return true;
         }
 
-        if (getStandardZhuyinEquivalent(primaryCode) == 'ㄦ') {
+        if (standardCode == 'ㄦ') {
             zhuyinQwertyCaps = !zhuyinQwertyCaps;
             updateZhuyinLongPressHints();
             return true;
@@ -1035,8 +1042,7 @@ public class CustomKeyboardApp extends InputMethodService
         String mapped = getZhuyinQwertyOutput(primaryCode);
 
         if (mapped == null) {
-            commitTextAndShowLabel(pressed);
-            return true;
+            return false;
         }
 
         commitTextAndShowLabel(mapped);
@@ -1048,7 +1054,6 @@ public class CustomKeyboardApp extends InputMethodService
 
         return true;
     }
-
     private String getPageLongPressOutput(Keyboard kb, int primaryCode) {
         if (kb == null) {
             return null;
@@ -1144,6 +1149,11 @@ public class CustomKeyboardApp extends InputMethodService
 
         InputConnection ic = getCurrentInputConnection();
         Keyboard kb = kv.getKeyboard();
+
+        if (kb == chiKeyboard && primaryCode == '，') {
+            commitTextAndShowLabel("。");
+            return;
+        }
 
         if (handleZhuyinLongPress(primaryCode)) {
             return;
@@ -1470,6 +1480,10 @@ public class CustomKeyboardApp extends InputMethodService
     }
     @Override
     public void onKey(int primaryCode, int[] keyCodes) {
+
+        if (primaryCode == 0) {
+            return;
+        }
 
         if (isLongPress) {
             return;
@@ -1802,7 +1816,7 @@ public class CustomKeyboardApp extends InputMethodService
                 }
                 return;
             default: {
-                if (isAlphabet(primaryCode) || (kv.getKeyboard() != engKeyboard && kv.getKeyboard() != symbolKeyboard && kv.getKeyboard() != mathKeyboard && kv.getKeyboard() != clipKeyboard && primaryCode != Keyboard.KEYCODE_DONE)) {
+                if (primaryCode > 0 && (isAlphabet(primaryCode) || (kv.getKeyboard() != engKeyboard && kv.getKeyboard() != symbolKeyboard && kv.getKeyboard() != mathKeyboard && kv.getKeyboard() != clipKeyboard && primaryCode != Keyboard.KEYCODE_DONE))) {
                     commitChar(ic, primaryCode);
                     updateSuggestion(ic);
                     return;
@@ -2190,6 +2204,10 @@ public class CustomKeyboardApp extends InputMethodService
         }
     }
     private void commitChar(InputConnection ic, int code) {
+        if (code <= 0) {
+            return;
+        }
+
         char c = (char) code;
 
         if (kv != null && kv.getKeyboard() == engKeyboard && supersubMode) {
