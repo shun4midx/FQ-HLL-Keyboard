@@ -1251,6 +1251,7 @@ public class CustomKeyboardApp extends InputMethodService
                     }
                 } else if (kv.getKeyboard() == chiKeyboard && chineseInputType == ChineseInputType.PINYIN) {
                     commitTextAndShowLabel(Character.toString((char) (primaryCode)));
+                    return;
                 } else {
                     commitTextAndShowLabel(digitSuperArray[d]);
                 }
@@ -1280,15 +1281,17 @@ public class CustomKeyboardApp extends InputMethodService
                     }
                 }
 
+                // Pinyin long press: literally commit the key, do not buffer it, suggest Chinese, or run English autocorrect.
+                if (kv.getKeyboard() == chiKeyboard && chineseInputType == ChineseInputType.PINYIN && primaryCode > 0 && Character.isLetter((char) primaryCode)) {
+                    String text = String.valueOf(Character.toLowerCase((char) primaryCode));
+                    commitTextAndShowLabel(text);
+                    return;
+                }
+
                 // hold down eng letters for symbols, zhuyin letters to commit the letter
                 String symbol = "";
                 String[] longPressText = longPressSymbols;
                 String[] letterArray = engLetterArray;
-
-                if (kv.getKeyboard() == chiKeyboard && chineseInputType == ChineseInputType.PINYIN) {
-                    longPressText = engLetterArray;
-                    letterArray = engLetterArray;
-                }
 
                 for (int i=0; i<letterArray.length; i++) {
                     if (String.valueOf((char) primaryCode).equals(letterArray[i])) {
