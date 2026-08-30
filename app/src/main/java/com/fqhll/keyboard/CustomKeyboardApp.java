@@ -3236,10 +3236,13 @@ public class CustomKeyboardApp extends InputMethodService
             chiKeyboard = zhuyinKeyboard;
         }
         else if (chiKeyboardLayout.equals("pinyin")) {
+            useEten = false;
             chineseInputType = ChineseInputType.PINYIN;
             chiKeyboard = pinyinKeyboard;
         }
         else {
+            useEten = false;
+            zhuyinKeyboard = new Keyboard(wrap, R.xml.custom_keypad_zhuyin);
             chineseInputType = ChineseInputType.ZHUYIN;
             chiKeyboard = zhuyinKeyboard;
         }
