@@ -921,8 +921,13 @@ public class CustomKeyboardApp extends InputMethodService
         }
     }
 
+    private int getStandardZhuyinEquivalent(int primaryCode) {
+        return useEten ? ZhuyinTyper.etenToStandardCode(primaryCode) : primaryCode;
+    }
+
     private String getZhuyinQwertyOutput(int primaryCode) {
-        String mapped = ZHUYIN_LONG_PRESS_QWERTY.get(primaryCode);
+        int standardCode = getStandardZhuyinEquivalent(primaryCode);
+        String mapped = ZHUYIN_LONG_PRESS_QWERTY.get(standardCode);
         if (mapped == null) {
             return null;
         }
@@ -964,7 +969,9 @@ public class CustomKeyboardApp extends InputMethodService
             key.popupCharacters = null;
 
             if (zhuyinLongPressQwerty) {
-                if (key.codes[0] == 'ㄦ') {
+                int standardCode = getStandardZhuyinEquivalent(key.codes[0]);
+
+                if (standardCode == 'ㄦ') {
                     key.popupCharacters = "⇪";
                 } else {
                     key.popupCharacters = getZhuyinQwertyOutput(key.codes[0]);
@@ -1018,7 +1025,7 @@ public class CustomKeyboardApp extends InputMethodService
             return true;
         }
 
-        if (primaryCode == 'ㄦ') {
+        if (getStandardZhuyinEquivalent(primaryCode) == 'ㄦ') {
             zhuyinQwertyCaps = !zhuyinQwertyCaps;
             updateZhuyinLongPressHints();
             return true;

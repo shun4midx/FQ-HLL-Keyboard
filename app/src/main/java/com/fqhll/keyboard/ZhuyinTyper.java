@@ -39,6 +39,20 @@ public class ZhuyinTyper {
             "       ㄦ"
     };
 
+    public static int etenToStandardCode(int eten_code) {
+        char eten_char = (char) eten_code;
+
+        for (int row = 0; row < ETEN_LAYOUT.length; ++row) {
+            int col = ETEN_LAYOUT[row].indexOf(eten_char);
+
+            if (col >= 0 && col < STANDARD_LAYOUT[row].length()) {
+                return STANDARD_LAYOUT[row].charAt(col);
+            }
+        }
+
+        return eten_code;
+    }
+
     private Map<Character,int[]> buildPosMap(String[] rows) {
         Map<Character,int[]> map = new HashMap<>();
         for (int r = 0; r < rows.length; r++) {
