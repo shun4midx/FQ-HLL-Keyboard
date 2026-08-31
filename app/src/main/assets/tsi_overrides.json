@@ -1,0 +1,2702 @@
+{
+  "ㄅㄚˋㄇㄚ": {
+    "moves": [
+      {
+        "value": "爸媽",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄅㄞˊㄙㄜˋ": {
+    "moves": [
+      {
+        "value": "⬜️",
+        "previous": "白色",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄅㄞˋㄊㄨㄛ": {
+    "moves": [
+      {
+        "value": "🙏",
+        "previous": "拜託",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄅㄤㄨㄛˇ": {
+    "moves": [
+      {
+        "value": "幫我",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄅㄧˇㄉㄧㄢˋ": {
+    "moves": [
+      {
+        "value": "筆電",
+        "previous": null,
+        "next": "💻",
+        "fallback_index": 0
+      },
+      {
+        "value": "💻",
+        "previous": "筆電",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄅㄧˇㄨㄛˇ": {
+    "moves": [
+      {
+        "value": "比我",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄅㄧㄢㄉㄨˋ": {
+    "moves": [
+      {
+        "value": "邊度",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄅㄨˊㄧㄡˋ": {
+    "moves": [
+      {
+        "value": "不又",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄅㄨˋㄎㄞㄒㄧㄣ": {
+    "moves": [
+      {
+        "value": "不開心",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄅㄨˋㄕㄨㄈㄨˊ": {
+    "moves": [
+      {
+        "value": "不舒服",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄆㄛˋㄈㄤˊ": {
+    "moves": [
+      {
+        "value": "破防",
+        "previous": null,
+        "next": "破房",
+        "fallback_index": 0
+      },
+      {
+        "value": "破房",
+        "previous": "破防",
+        "next": "🏚",
+        "fallback_index": 1
+      },
+      {
+        "value": "🏚",
+        "previous": "破房",
+        "next": null,
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄆㄛˋㄉㄚˋㄈㄤˊ": {
+    "moves": [
+      {
+        "value": "破大防",
+        "previous": null,
+        "next": "🏚",
+        "fallback_index": 0
+      },
+      {
+        "value": "🏚",
+        "previous": "破大防",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄆㄨㄐㄧㄝ": {
+    "moves": [
+      {
+        "value": "仆街",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄇㄚˋㄙˇ": {
+    "moves": [
+      {
+        "value": "罵死",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄇㄟˊㄌㄜ˙": {
+    "moves": [
+      {
+        "value": "沒了",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄇㄟˊㄌㄧˋ": {
+    "moves": [
+      {
+        "value": "沒力",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄇㄟˊㄔㄚ": {
+    "moves": [
+      {
+        "value": "沒差",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄇㄟˊㄨㄣˋㄊㄧˊ": {
+    "moves": [
+      {
+        "value": "沒問題",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄇㄢˇㄈㄣ": {
+    "moves": [
+      {
+        "value": "💯",
+        "previous": "滿分",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄇㄧˇㄈㄢˋ": {
+    "moves": [
+      {
+        "value": "🍚",
+        "previous": "米飯",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄈㄢˇㄉㄠˋ": {
+    "moves": [
+      {
+        "value": "返到",
+        "previous": "反到",
+        "next": null,
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄈㄢˇㄒㄩㄝˊ": {
+    "moves": [
+      {
+        "value": "返學",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄈㄥㄉㄧㄠˋ": {
+    "moves": [
+      {
+        "value": "瘋掉",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄉㄚˋㄅㄧㄢˋ": {
+    "moves": [
+      {
+        "value": "💩",
+        "previous": "大遍",
+        "next": null,
+        "fallback_index": 3
+      }
+    ]
+  },
+  "ㄉㄞˋㄎㄡˇㄓㄠˋ": {
+    "moves": [
+      {
+        "value": "戴口罩",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄉㄞˋㄦˇㄐㄧ": {
+    "moves": [
+      {
+        "value": "戴耳機",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄉㄞˋㄧㄢˇㄐㄧㄥˋ": {
+    "moves": [
+      {
+        "value": "戴眼鏡",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄉㄠˇ": {
+    "moves": [
+      {
+        "value": "🏝",
+        "previous": "導",
+        "next": "禱",
+        "fallback_index": 3
+      }
+    ]
+  },
+  "ㄉㄡㄒㄧˋ": {
+    "moves": [
+      {
+        "value": "都係",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄉㄢˋㄒㄧˋ": {
+    "moves": [
+      {
+        "value": "但係",
+        "previous": "旦夕",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄉㄧ": {
+    "moves": [
+      {
+        "value": "啲",
+        "previous": "低",
+        "next": "隄",
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄉㄧˋ": {
+    "moves": [
+      {
+        "value": "哋",
+        "previous": "蒂",
+        "next": "虳",
+        "fallback_index": 5
+      }
+    ]
+  },
+  "ㄉㄧㄠˇㄋㄧˇㄌㄠˇㄇㄨˇ": {
+    "moves": [
+      {
+        "value": "屌你老母",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄉㄧㄢˇㄐㄧㄝˇ": {
+    "moves": [
+      {
+        "value": "點解",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄉㄧㄢˋ": {
+    "moves": [
+      {
+        "value": "惦",
+        "after": "墊",
+        "before": "玷",
+        "fallback_index": 5
+      }
+    ]
+  },
+  "ㄉㄧㄢˋㄋㄠˇ": {
+    "moves": [
+      {
+        "value": "💻",
+        "previous": "電腦",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄉㄧㄢˋㄌㄢˋ": {
+    "moves": [
+      {
+        "value": "電爛",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄉㄧㄢˋㄨˊㄉㄧㄢˋ": {
+    "moves": [
+      {
+        "value": "惦唔惦",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄉㄧㄥˋㄒㄧˋ": {
+    "moves": [
+      {
+        "value": "定係",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄉㄨˋㄜˋ": {
+    "moves": [
+      {
+        "value": "肚餓",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄉㄨㄟˋㄅㄚ˙": {
+    "moves": [
+      {
+        "value": "對吧",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄉㄨㄟˋㄇㄚ˙": {
+    "moves": [
+      {
+        "value": "對嗎",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄉㄨㄟˋㄉㄜ˙": {
+    "moves": [
+      {
+        "value": "對的",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄉㄨㄟˋㄋㄧˇ": {
+    "moves": [
+      {
+        "value": "對你",
+        "previous": null,
+        "next": "對妳",
+        "fallback_index": 0
+      },
+      {
+        "value": "對妳",
+        "previous": "對你",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄉㄨㄟˋㄚ": {
+    "moves": [
+      {
+        "value": "對啊",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄉㄨㄟˋㄛ": {
+    "moves": [
+      {
+        "value": "對喔",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄉㄨㄟˋㄟˋ": {
+    "moves": [
+      {
+        "value": "對欸",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄉㄨㄟˋㄧㄚ": {
+    "moves": [
+      {
+        "value": "對呀",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄉㄨㄟˋㄨˊㄓㄨˋ": {
+    "moves": [
+      {
+        "value": "對唔住",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄉㄨㄟˋㄨㄛˇ": {
+    "moves": [
+      {
+        "value": "對我",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄊㄚㄇㄚ": {
+    "moves": [
+      {
+        "value": "他媽",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄊㄚㄌㄨˊ": {
+    "moves": [
+      {
+        "value": "他讀",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄊㄚㄕㄨㄛ": {
+    "moves": [
+      {
+        "value": "她說",
+        "previous": "他說",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄊㄚㄧㄝˇ": {
+    "moves": [
+      {
+        "value": "他也",
+        "previous": null,
+        "next": "她也",
+        "fallback_index": 0
+      },
+      {
+        "value": "她也",
+        "previous": "他也",
+        "next": "它也",
+        "fallback_index": 1
+      },
+      {
+        "value": "它也",
+        "previous": "她也",
+        "next": null,
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄊㄚㄧㄡˇ": {
+    "moves": [
+      {
+        "value": "她有",
+        "previous": "他有",
+        "next": "它有",
+        "fallback_index": 1
+      },
+      {
+        "value": "它有",
+        "previous": "她有",
+        "next": null,
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄊㄞˋㄌㄟˋ": {
+    "moves": [
+      {
+        "value": "太累",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄊㄡˊㄊㄧㄝ": {
+    "moves": [
+      {
+        "value": "頭貼",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄊㄧㄢㄕˇ": {
+    "moves": [
+      {
+        "value": "😇",
+        "previous": "天使",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄊㄨㄥˋㄅㄠˋ": {
+    "moves": [
+      {
+        "value": "痛爆",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄋㄚˇ": {
+    "moves": [
+      {
+        "value": "乸",
+        "previous": "㖠",
+        "next": null,
+        "fallback_index": 4
+      }
+    ]
+  },
+  "ㄋㄚˇㄊㄧˊ": {
+    "moves": [
+      {
+        "value": "哪題",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄋㄚˋㄊㄧˊ": {
+    "moves": [
+      {
+        "value": "那題",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄋㄢˊㄋㄧㄤˊ": {
+    "moves": [
+      {
+        "value": "男娘",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄋㄢˊㄧㄤˊ": {
+    "moves": [
+      {
+        "value": "男羊",
+        "previous": "南洋",
+        "next": null,
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄋㄧˇㄉㄧˋ": {
+    "moves": [
+      {
+        "value": "你哋",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄋㄧˇㄉㄨˊ": {
+    "moves": [
+      {
+        "value": "你讀",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄋㄧˇㄍㄣ": {
+    "moves": [
+      {
+        "value": "你跟",
+        "previous": null,
+        "next": "妳跟",
+        "fallback_index": 0
+      },
+      {
+        "value": "妳跟",
+        "previous": "你跟",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄋㄧˇㄧㄝˇ": {
+    "moves": [
+      {
+        "value": "你也",
+        "previous": null,
+        "next": "妳也",
+        "fallback_index": 0
+      },
+      {
+        "value": "妳也",
+        "previous": "你也",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄌㄢˊㄇㄟˊ": {
+    "moves": [
+      {
+        "value": "🫐",
+        "previous": "藍莓",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄌㄢˊㄙㄜˋ": {
+    "moves": [
+      {
+        "value": "🟦",
+        "previous": "藍色",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄌㄧˇㄨㄛˇ": {
+    "moves": [
+      {
+        "value": "理我",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄌㄧˊ": {
+    "moves": [
+      {
+        "value": "嚟",
+        "after": "黎",
+        "before": "蜊",
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄌㄧㄡˊㄒㄧㄥ": {
+    "moves": [
+      {
+        "value": "🌠",
+        "previous": "流星",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄌㄧㄡˊㄧㄡˇㄎㄢˋ": {
+    "moves": [
+      {
+        "value": "留友看",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄌㄨㄛˇㄐㄧ": {
+    "moves": [
+      {
+        "value": "裸雞",
+        "previous": null,
+        "next": "裸🐔",
+        "fallback_index": 0
+      },
+      {
+        "value": "裸🐔",
+        "previous": "裸雞",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄌㄨㄛˋㄌㄧˊ": {
+    "moves": [
+      {
+        "value": "🥑",
+        "previous": "酪梨",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄌㄨㄢˋㄅㄞ": {
+    "moves": [
+      {
+        "value": "亂掰",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄌㄨㄢˋㄏㄨㄟˊ": {
+    "moves": [
+      {
+        "value": "亂回",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄌㄩˋ": {
+    "moves": [
+      {
+        "value": "🟩",
+        "previous": "慮",
+        "next": "葎",
+        "fallback_index": 6
+      }
+    ]
+  },
+  "ㄌㄩˋㄙㄜˋ": {
+    "moves": [
+      {
+        "value": "🟩",
+        "previous": "綠色",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄍㄜˇ": {
+    "moves": [
+      {
+        "value": "嗰",
+        "previous": "葛",
+        "next": "哿",
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄍㄜˇㄉㄧ": {
+    "moves": [
+      {
+        "value": "嗰啲",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄍㄠˇㄉㄧㄢˋ": {
+    "moves": [
+      {
+        "value": "搞惦",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄍㄠˇㄨˊㄉㄧㄢˋ": {
+    "moves": [
+      {
+        "value": "搞唔惦",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄍㄢˋㄇㄚˊ": {
+    "moves": [
+      {
+        "value": "幹嘛",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄍㄢˋㄋㄧˇㄋㄧㄤˊ": {
+    "moves": [
+      {
+        "value": "幹你娘",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄍㄢㄧㄤˋ": {
+    "moves": [
+      {
+        "value": "咁樣",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄍㄨㄛˋㄌㄧˊ": {
+    "moves": [
+      {
+        "value": "過嚟",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄍㄨㄟˋ": {
+    "moves": [
+      {
+        "value": "攰",
+        "after": "跪",
+        "before": "匱",
+        "fallback_index": 4
+      }
+    ]
+  },
+  "ㄍㄨㄥㄒㄧˇ": {
+    "moves": [
+      {
+        "value": "🎉",
+        "previous": "恭喜",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄎㄚㄈㄟㄙㄜˋ": {
+    "moves": [
+      {
+        "value": "🟫",
+        "previous": "咖啡色",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄎㄜˇㄧㄢˊ": {
+    "moves": [
+      {
+        "value": "可言",
+        "previous": "可沿",
+        "next": null,
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄎㄨˋ": {
+    "moves": [
+      {
+        "value": "😎",
+        "previous": "庫",
+        "next": "瘔",
+        "fallback_index": 3
+      }
+    ]
+  },
+  "ㄏㄟㄙㄜˋ": {
+    "moves": [
+      {
+        "value": "⬛️",
+        "previous": "黑色",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄏㄠˇㄊㄨㄥˋ": {
+    "moves": [
+      {
+        "value": "好痛",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄏㄠˇㄍㄨㄟˋ": {
+    "moves": [
+      {
+        "value": "好貴",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄏㄠˇㄏㄣˇ": {
+    "moves": [
+      {
+        "value": "好狠",
+        "previous": null,
+        "next": "好很",
+        "fallback_index": 0
+      },
+      {
+        "value": "好很",
+        "previous": "好狠",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄏㄠˇㄟˋ": {
+    "moves": [
+      {
+        "value": "好欸",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄏㄣˇㄊㄨㄥˋ": {
+    "moves": [
+      {
+        "value": "很痛",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄏㄣˇㄌㄢˋ": {
+    "moves": [
+      {
+        "value": "很爛",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄏㄨㄛˇㄐㄧㄢˋ": {
+    "moves": [
+      {
+        "value": "🚀",
+        "previous": "火箭",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄏㄨㄟˊㄊㄚ": {
+    "moves": [
+      {
+        "value": "回他",
+        "previous": null,
+        "next": "回她",
+        "fallback_index": 0
+      },
+      {
+        "value": "回她",
+        "previous": "回他",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄏㄨㄟˊㄋㄧˇ": {
+    "moves": [
+      {
+        "value": "回你",
+        "previous": null,
+        "next": "回妳",
+        "fallback_index": 0
+      },
+      {
+        "value": "回妳",
+        "previous": "回你",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄏㄨㄟˊㄨㄛˇ": {
+    "moves": [
+      {
+        "value": "回我",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄏㄨㄟˋㄒㄧㄥ": {
+    "moves": [
+      {
+        "value": "☄️",
+        "previous": "慧星",
+        "next": null,
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄏㄨㄟˋㄨˊㄏㄨㄟˋ": {
+    "moves": [
+      {
+        "value": "會唔會",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄏㄨㄤˊㄙㄜˋ": {
+    "moves": [
+      {
+        "value": "🟨",
+        "previous": "黃色",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄏㄨㄥˊㄙㄜˋ": {
+    "moves": [
+      {
+        "value": "🟥",
+        "previous": "紅色",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄐㄧ": {
+    "moves": [
+      {
+        "value": "🐔",
+        "previous": "雞",
+        "next": "奇",
+        "fallback_index": 5
+      }
+    ]
+  },
+  "ㄐㄧㄉㄢˋ": {
+    "moves": [
+      {
+        "value": "🥚",
+        "previous": "雞蛋",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄐㄧㄚˋ": {
+    "moves": [
+      {
+        "value": "㗎",
+        "previous": "价",
+        "next": "賈",
+        "fallback_index": 6
+      }
+    ]
+  },
+  "ㄐㄧㄚㄧㄡˊ": {
+    "moves": [
+      {
+        "value": "💪",
+        "previous": "加油",
+        "next": "⛽️",
+        "fallback_index": 1
+      },
+      {
+        "value": "⛽️",
+        "previous": "💪",
+        "next": null,
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄐㄧㄠㄊㄚ": {
+    "moves": [
+      {
+        "value": "教他",
+        "previous": null,
+        "next": "教她",
+        "fallback_index": 0
+      },
+      {
+        "value": "教她",
+        "previous": "教他",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄐㄧㄠㄋㄧˇ": {
+    "moves": [
+      {
+        "value": "教你",
+        "previous": null,
+        "next": "教妳",
+        "fallback_index": 0
+      },
+      {
+        "value": "教妳",
+        "previous": "教你",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄐㄧㄠㄖㄣˊ": {
+    "moves": [
+      {
+        "value": "教人",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄐㄧㄠㄨㄛˇ": {
+    "moves": [
+      {
+        "value": "教我",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄐㄧㄡˋㄒㄧˋ": {
+    "moves": [
+      {
+        "value": "就係",
+        "previous": "舊戲",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄐㄧㄤˇㄨㄢˊ": {
+    "moves": [
+      {
+        "value": "講完",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄐㄧㄥˋㄒㄧˋ": {
+    "moves": [
+      {
+        "value": "淨係",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄐㄩˊㄙㄜˋ": {
+    "moves": [
+      {
+        "value": "🟧",
+        "previous": "橘色",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄑㄧˊㄍㄨㄞˋ": {
+    "moves": [
+      {
+        "value": "🤨",
+        "previous": "奇怪",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄑㄧㄝˊㄗ˙": {
+    "moves": [
+      {
+        "value": "🍆",
+        "previous": "茄子",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄑㄧㄠˇㄏㄨˇ": {
+    "moves": [
+      {
+        "value": "巧虎",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄑㄧㄥˋㄓㄨˋ": {
+    "moves": [
+      {
+        "value": "🥳",
+        "previous": "慶祝",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄑㄧㄥㄏㄨㄚㄘㄞˋ": {
+    "moves": [
+      {
+        "value": "青花菜",
+        "previous": null,
+        "next": "🥦",
+        "fallback_index": 0
+      },
+      {
+        "value": "🥦",
+        "previous": "青花菜",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄑㄧㄥㄨㄚ": {
+    "moves": [
+      {
+        "value": "🐸",
+        "previous": "青蛙",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄑㄩˊ": {
+    "moves": [
+      {
+        "value": "佢",
+        "previous": null,
+        "next": "磲",
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄑㄩˊㄉㄧˋ": {
+    "moves": [
+      {
+        "value": "佢哋",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄑㄩˊㄒㄧˋ": {
+    "moves": [
+      {
+        "value": "佢係",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄑㄩˋㄇㄞˇ": {
+    "moves": [
+      {
+        "value": "去買",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄑㄩˋㄇㄞˋ": {
+    "moves": [
+      {
+        "value": "去賣",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄑㄩㄝˋㄕˊ": {
+    "moves": [
+      {
+        "value": "🐦🪨",
+        "previous": "確實",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄒㄧˊ": {
+    "moves": [
+      {
+        "value": "喺",
+        "previous": "襲",
+        "next": "昔",
+        "fallback_index": 6
+      }
+    ]
+  },
+  "ㄒㄧˋ": {
+    "moves": [
+      {
+        "value": "喺",
+        "previous": "係",
+        "next": "細",
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄒㄧˋㄉㄨˋ": {
+    "moves": [
+      {
+        "value": "喺度",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄒㄧㄚˋㄍㄜ˙": {
+    "moves": [
+      {
+        "value": "下個",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄒㄧㄠˇㄔㄡˇ": {
+    "moves": [
+      {
+        "value": "🤡",
+        "previous": "小醜",
+        "next": null,
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄒㄧㄠˋㄅㄠˋ": {
+    "moves": [
+      {
+        "value": "笑爆",
+        "previous": null,
+        "next": "🤣",
+        "fallback_index": 0
+      },
+      {
+        "value": "🤣",
+        "previous": "笑爆",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄒㄧㄠˋㄎㄨ": {
+    "moves": [
+      {
+        "value": "笑哭",
+        "previous": null,
+        "next": "😂",
+        "fallback_index": 0
+      },
+      {
+        "value": "😂",
+        "previous": "笑哭",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄒㄧㄠˋㄙˇ": {
+    "moves": [
+      {
+        "value": "😂",
+        "previous": "效死",
+        "next": "😆",
+        "fallback_index": 2
+      },
+      {
+        "value": "😆",
+        "previous": "😂",
+        "next": null,
+        "fallback_index": 3
+      }
+    ]
+  },
+  "ㄒㄧㄡㄏㄞˇ": {
+    "moves": [
+      {
+        "value": "修海",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄒㄧㄤˇㄐㄧㄚ": {
+    "moves": [
+      {
+        "value": "想加",
+        "previous": "想家",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄒㄧㄤˊㄏㄞˇ": {
+    "moves": [
+      {
+        "value": "翔海",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄒㄧㄥㄒㄧㄥ": {
+    "moves": [
+      {
+        "value": "⭐️",
+        "previous": "腥腥",
+        "next": "✨",
+        "fallback_index": 4
+      },
+      {
+        "value": "✨",
+        "previous": "⭐️",
+        "next": null,
+        "fallback_index": 5
+      }
+    ]
+  },
+  "ㄒㄩㄝˇ": {
+    "moves": [
+      {
+        "value": "❄️",
+        "previous": "鱈",
+        "next": null,
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄒㄩㄝˇㄖㄣˊ": {
+    "moves": [
+      {
+        "value": "⛄️",
+        "previous": "雪人",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄒㄩㄝˊㄊㄚ": {
+    "moves": [
+      {
+        "value": "學他",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄒㄩㄝˊㄋㄧˇ": {
+    "moves": [
+      {
+        "value": "學你",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄒㄩㄝˊㄨㄛˇ": {
+    "moves": [
+      {
+        "value": "學我",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄓㄜˋㄧㄡˇ": {
+    "moves": [
+      {
+        "value": "這有",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄓㄜˋㄨㄛˇ": {
+    "moves": [
+      {
+        "value": "這我",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄓㄣㄋㄞˇ": {
+    "moves": [
+      {
+        "value": "珍奶",
+        "previous": null,
+        "next": "🧋",
+        "fallback_index": 0
+      },
+      {
+        "value": "🧋",
+        "previous": "珍奶",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄓㄣㄒㄧˋ": {
+    "moves": [
+      {
+        "value": "真係",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄓㄣㄓㄨㄋㄞˇㄔㄚˊ": {
+    "moves": [
+      {
+        "value": "🧋",
+        "previous": "珍珠奶茶",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄓㄥˋㄒㄧˋ": {
+    "moves": [
+      {
+        "value": "正係",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄓㄨㄥㄧˋ": {
+    "moves": [
+      {
+        "value": "鍾意",
+        "previous": "中義",
+        "next": null,
+        "fallback_index": 3
+      }
+    ]
+  },
+  "ㄔㄋㄧㄢˇㄒㄧㄢˋ": {
+    "moves": [
+      {
+        "value": "痴撚線",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄔㄍㄨㄛˋ": {
+    "moves": [
+      {
+        "value": "吃過",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄔㄒㄧㄢˋ": {
+    "moves": [
+      {
+        "value": "痴線",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄔㄠㄉㄠˋ": {
+    "moves": [
+      {
+        "value": "抄到",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄔㄥˊㄙㄜˋ": {
+    "moves": [
+      {
+        "value": "🟧",
+        "previous": "成色",
+        "next": null,
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄔㄥㄨㄢˊ": {
+    "moves": [
+      {
+        "value": "撐完",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄔㄨㄤˋㄕㄤ": {
+    "moves": [
+      {
+        "value": "創傷",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄕˇ": {
+    "moves": [
+      {
+        "value": "💩",
+        "previous": "史",
+        "next": "矢",
+        "fallback_index": 5
+      }
+    ]
+  },
+  "ㄕˇㄏㄨ": {
+    "moves": [
+      {
+        "value": "屎忽",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄕˊㄈㄢˋ": {
+    "moves": [
+      {
+        "value": "食飯",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄕˊㄍㄨㄛˋ": {
+    "moves": [
+      {
+        "value": "食過",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄕˋㄨㄛˇ": {
+    "moves": [
+      {
+        "value": "是我",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄕㄚˊㄒㄧㄠˇ": {
+    "moves": [
+      {
+        "value": "啥小",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄕㄚㄒㄧㄠˇ": {
+    "moves": [
+      {
+        "value": "殺小",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄕㄚㄩˊ": {
+    "moves": [
+      {
+        "value": "🦈",
+        "previous": "鯊魚",
+        "next": "沙魚",
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄕㄠㄐㄧ": {
+    "moves": [
+      {
+        "value": "燒雞",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄕㄤˋㄗㄨㄛˇ": {
+    "moves": [
+      {
+        "value": "上咗",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄕㄤˋㄨㄢˊ": {
+    "moves": [
+      {
+        "value": "上完",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄕㄥㄅㄧㄥˋ": {
+    "moves": [
+      {
+        "value": "🤒",
+        "previous": "生病",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄕㄥㄒㄧㄢˋ": {
+    "removed": [
+      "升限"
+    ],
+    "moves": [
+      {
+        "value": "聲線",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄖˋㄅㄣˇ": {
+    "moves": [
+      {
+        "value": "🇯🇵",
+        "previous": "日本",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄖㄜˋㄙˇ": {
+    "moves": [
+      {
+        "value": "熱死",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄗˇㄙㄜˋ": {
+    "moves": [
+      {
+        "value": "🟪",
+        "previous": "紫色",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄗㄍㄨㄥㄒㄧˋ": {
+    "moves": [
+      {
+        "value": "資工系",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄗㄠˋㄩˋ": {
+    "moves": [
+      {
+        "value": "躁鬱",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄗㄨㄛˇ": {
+    "moves": [
+      {
+        "value": "咗",
+        "previous": "佐",
+        "next": "繓",
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄗㄨㄛˋㄇㄧㄝ": {
+    "moves": [
+      {
+        "value": "做咩",
+        "previous": null,
+        "next": "做乜",
+        "fallback_index": 0
+      },
+      {
+        "value": "做乜",
+        "previous": "做咩",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄗㄨㄛˋㄕㄚˊ": {
+    "moves": [
+      {
+        "value": "做啥",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄗㄨㄛˋㄗˋㄐㄧˇ": {
+    "moves": [
+      {
+        "value": "做自己",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄗㄨㄥㄙㄜˋ": {
+    "moves": [
+      {
+        "value": "🟫",
+        "previous": "棕色",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄘㄞˇㄏㄨㄥˊ": {
+    "moves": [
+      {
+        "value": "🌈",
+        "previous": "彩虹",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄘㄨㄛˋㄉㄜ˙": {
+    "moves": [
+      {
+        "value": "錯的",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄙㄉㄧˇ": {
+    "moves": [
+      {
+        "value": "私底",
+        "previous": "私邸",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄙㄎㄠˇ": {
+    "moves": [
+      {
+        "value": "🤔",
+        "previous": "思考",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄙㄒㄩㄣˋ": {
+    "moves": [
+      {
+        "value": "私訊",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄙㄜ": {
+    "moves": [
+      {
+        "value": "閪",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄙㄨㄢˋ": {
+    "moves": [
+      {
+        "value": "🧄",
+        "previous": "蒜",
+        "next": "筭",
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄙㄨㄢˋㄅㄨˊㄙㄨㄢˋ": {
+    "moves": [
+      {
+        "value": "算不算",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄙㄨㄢˋㄊㄡˊ": {
+    "moves": [
+      {
+        "value": "🧄",
+        "previous": "蒜頭",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄙㄨㄢˋㄨˊㄙㄨㄢˋ": {
+    "moves": [
+      {
+        "value": "算唔算",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄙㄨㄥˋㄈㄣ": {
+    "moves": [
+      {
+        "value": "送分",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄙㄨㄥˋㄈㄣㄊㄧˊ": {
+    "moves": [
+      {
+        "value": "送分題",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄜˇㄒㄧㄣ": {
+    "moves": [
+      {
+        "value": "🤮",
+        "previous": "惡心",
+        "next": null,
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄜˋㄇㄛˊ": {
+    "moves": [
+      {
+        "value": "😈",
+        "previous": "惡魔",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄞˊㄓㄥˋ": {
+    "moves": [
+      {
+        "value": "癌症",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄡˇㄊㄨˋ": {
+    "moves": [
+      {
+        "value": "🤮",
+        "previous": "嘔吐",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄦˇㄐㄧ": {
+    "moves": [
+      {
+        "value": "🎧",
+        "previous": "耳機",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄦˊㄐㄧㄚ": {
+    "moves": [
+      {
+        "value": "而家",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄧˇㄉㄨˊ": {
+    "moves": [
+      {
+        "value": "已讀",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄧㄅㄞˇㄈㄣ": {
+    "moves": [
+      {
+        "value": "一百分",
+        "previous": null,
+        "next": "💯",
+        "fallback_index": 0
+      },
+      {
+        "value": "💯",
+        "previous": "一百分",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄧㄉㄧㄢˇㄉㄧㄢˇ": {
+    "moves": [
+      {
+        "value": "一點點",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄧㄊㄨㄛˊ": {
+    "moves": [
+      {
+        "value": "一坨",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄧㄐㄧㄚ": {
+    "removed": [
+      "一家"
+    ],
+    "moves": [
+      {
+        "value": "依家",
+        "previous": null,
+        "next": "一加",
+        "fallback_index": 0
+      },
+      {
+        "value": "一加",
+        "previous": "依家",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄧㄚㄗ˙": {
+    "moves": [
+      {
+        "value": "🦆",
+        "previous": "丫子",
+        "next": null,
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄧㄝˇ": {
+    "moves": [
+      {
+        "value": "嘢",
+        "previous": "野",
+        "next": "冶",
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄧㄝˋㄗ˙": {
+    "moves": [
+      {
+        "value": "🌱",
+        "previous": "葉子",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄧㄠˋ": {
+    "moves": [
+      {
+        "value": "💊",
+        "previous": "曜",
+        "next": "艞",
+        "fallback_index": 4
+      }
+    ]
+  },
+  "ㄧㄠˋㄌㄞˊ": {
+    "moves": [
+      {
+        "value": "要來",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄧㄠˋㄨㄛˇ": {
+    "moves": [
+      {
+        "value": "要我",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄧㄠˋㄨㄢˊ": {
+    "moves": [
+      {
+        "value": "💊",
+        "previous": "藥丸",
+        "next": null,
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄧㄡˇㄔㄚ": {
+    "moves": [
+      {
+        "value": "有差",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄧㄡˇㄚ": {
+    "moves": [
+      {
+        "value": "有啊",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄧㄡˇㄛ": {
+    "moves": [
+      {
+        "value": "有喔",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄧㄡˇㄟˋ": {
+    "moves": [
+      {
+        "value": "有欸",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄧㄢˇㄐㄧㄥ": {
+    "moves": [
+      {
+        "value": "👀",
+        "previous": "眼睛",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄧㄢˊ": {
+    "moves": [
+      {
+        "value": "啱",
+        "previous": "鹽",
+        "next": "妍",
+        "fallback_index": 10
+      }
+    ]
+  },
+  "ㄧㄢˊㄧㄢˊ": {
+    "moves": [
+      {
+        "value": "啱啱",
+        "previous": null,
+        "next": "炎炎",
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄧㄣㄩㄝˋ": {
+    "moves": [
+      {
+        "value": "🎵",
+        "previous": "陰月",
+        "next": null,
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄨˊㄇㄧㄥˊ": {
+    "moves": [
+      {
+        "value": "唔明",
+        "previous": "無明",
+        "next": null,
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄨˊㄉㄠˋ": {
+    "moves": [
+      {
+        "value": "唔到",
+        "previous": "無道",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄨˊㄉㄧㄢˋ": {
+    "moves": [
+      {
+        "value": "唔惦",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄨˊㄏㄨㄟˋ": {
+    "moves": [
+      {
+        "value": "唔會",
+        "previous": null,
+        "next": "蕪穢",
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄨˊㄒㄧˋ": {
+    "moves": [
+      {
+        "value": "唔係",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄨˊㄒㄧㄤˇ": {
+    "moves": [
+      {
+        "value": "唔想",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄨˊㄓ": {
+    "moves": [
+      {
+        "value": "唔知",
+        "previous": "無知",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄨˊㄕˋ": {
+    "moves": [
+      {
+        "value": "唔識",
+        "previous": "無視",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄨˊㄕㄨㄈㄨˊ": {
+    "moves": [
+      {
+        "value": "唔舒服",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄨˊㄙㄨㄢˋ": {
+    "moves": [
+      {
+        "value": "唔算",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄨㄍㄨㄟ": {
+    "moves": [
+      {
+        "value": "🐢",
+        "previous": "烏龜",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄨㄑㄧˋ": {
+    "moves": [
+      {
+        "value": "屋企",
+        "previous": "污氣",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄨㄛˇㄉㄧˋ": {
+    "moves": [
+      {
+        "value": "我哋",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄨㄛˇㄉㄨˊ": {
+    "moves": [
+      {
+        "value": "我讀",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄨㄛˇㄊㄚㄇㄚ": {
+    "moves": [
+      {
+        "value": "我他媽",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄨㄢˊㄉㄢˋ": {
+    "moves": [
+      {
+        "value": "完🥚",
+        "previous": "完蛋",
+        "next": "玩🥚",
+        "fallback_index": 1
+      },
+      {
+        "value": "玩🥚",
+        "previous": "完🥚",
+        "next": null,
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄨㄣˊㄑㄧㄥ": {
+    "moves": [
+      {
+        "value": "文青",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄨㄣˋㄅㄨˊㄉㄠˋ": {
+    "moves": [
+      {
+        "value": "問不到",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄨㄣˋㄉㄠˋ": {
+    "moves": [
+      {
+        "value": "搵到",
+        "previous": "問道",
+        "next": null,
+        "fallback_index": 2
+      }
+    ]
+  },
+  "ㄨㄣˋㄊㄚ": {
+    "moves": [
+      {
+        "value": "問他",
+        "previous": null,
+        "next": "問她",
+        "fallback_index": 0
+      },
+      {
+        "value": "問她",
+        "previous": "問他",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄨㄣˋㄋㄧˇ": {
+    "moves": [
+      {
+        "value": "問你",
+        "previous": null,
+        "next": "問妳",
+        "fallback_index": 0
+      },
+      {
+        "value": "問妳",
+        "previous": "問你",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄨㄣˋㄨˊㄉㄠˋ": {
+    "moves": [
+      {
+        "value": "搵唔到",
+        "previous": null,
+        "next": "問唔到",
+        "fallback_index": 0
+      },
+      {
+        "value": "問唔到",
+        "previous": "搵唔到",
+        "next": null,
+        "fallback_index": 1
+      }
+    ]
+  },
+  "ㄨㄣˋㄨㄛˇ": {
+    "moves": [
+      {
+        "value": "問我",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  },
+  "ㄩㄝˋㄌㄧㄤˋ": {
+    "moves": [
+      {
+        "value": "越亮",
+        "previous": "月亮",
+        "next": "🌙",
+        "fallback_index": 1
+      },
+      {
+        "value": "🌙",
+        "previous": "越亮",
+        "next": "🌕",
+        "fallback_index": 2
+      },
+      {
+        "value": "🌕",
+        "previous": "🌙",
+        "next": "🌝",
+        "fallback_index": 3
+      },
+      {
+        "value": "🌝",
+        "previous": "🌕",
+        "next": "🌚",
+        "fallback_index": 4
+      },
+      {
+        "value": "🌚",
+        "previous": "🌝",
+        "next": null,
+        "fallback_index": 5
+      }
+    ]
+  },
+  "ㄩㄝˋㄎㄢˋ": {
+    "moves": [
+      {
+        "value": "越看",
+        "previous": null,
+        "next": null,
+        "fallback_index": 0
+      }
+    ]
+  }
+}
