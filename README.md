@@ -94,9 +94,9 @@ More symbols can be accessed by holding down a symbol on either page.
 <img width="400" alt="symbol_layout_math" src="./images/math_symbol.png" />
 
 #### Zhuyin
-We now support traditional Chinese typing via Zhuyin, with both the normal Zhuyin layout and an alternate Eten layout! It supports fuzzy Zhuyin typing (i.e. there is no need for 100% accuracy with typing), and selection based on common phrases instead of word-by-word. However, as of right now, you would need to type the Zhuyin  **with the tone of the word**. The first tone is parsed as a "whitespace". We referenced `tsi.json` from [`dylandy/tobopomo.js`](https://github.com/dylandy/tobopomo.js/tree/master/data/tsi.json), with the addition of the words 啲 (ㄉㄧ), 喺 (ㄒㄧˋ, ㄒㄧˊ), 佢 (ㄑㄩˊ), 㗎 (ㄐㄧㄚˋ), 嚟 (ㄌㄧˊ), 哋 (ㄉㄧˋ), 咗 (ㄗㄨㄛˇ), 俾 (ㄅㄟ), 嗰 (ㄍㄜˇ), 嘢 (ㄧㄝˇ), and many other words which are common in Cantonese speech. The addition of these words made us name it `tsi_custom.json`, which can be found [here](https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/src/main/assets/tsi_custom.json). 
+We now support traditional Chinese typing via Zhuyin, with both the normal Zhuyin layout and an alternate Eten layout! It supports fuzzy Zhuyin typing (i.e. there is no need for 100% accuracy with typing), and selection based on common phrases instead of word-by-word. However, as of right now, you would need to type the Zhuyin  **with the tone of the word**. The first tone is parsed as a "whitespace". We referenced `tsi.json` from [`dylandy/tobopomo.js`](https://github.com/dylandy/tobopomo.js/tree/master/data/tsi.json), with the addition of the words 啲 (ㄉㄧ), 喺 (ㄒㄧˋ, ㄒㄧˊ), 佢 (ㄑㄩˊ), 㗎 (ㄐㄧㄚˋ), 嚟 (ㄌㄧˊ), 哋 (ㄉㄧˋ), 咗 (ㄗㄨㄛˇ), 俾 (ㄅㄟ), 嗰 (ㄍㄜˇ), 嘢 (ㄧㄝˇ), and many other words which are common in Cantonese speech. The addition of these words made us name it `tsi_custom.json`, which can be found [here](https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/src/main/data/tsi_custom.json). 
 
-We also rank fuzzy suggestions, displayed after all correct suggestions, with single-character Chinese suggestions using character frequency as one of the ranking signals, based on a [source](https://teric.naer.edu.tw/wSite/ct?ctNode=645&mp=teric_b&xItem=2068770&resCtNode=453) from the Taiwan Education Resources Information Center, detailing Chinese character frequency in Taiwan in 2023. It is downloaded from `附件下載1` on the linked page, and the raw file can be accessed [here](https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/src/main/assets/附錄1、民國112年語料字頻表.xlsx). 
+We also rank fuzzy suggestions, displayed after all correct suggestions, with single-character Chinese suggestions using character frequency as one of the ranking signals, based on a [source](https://teric.naer.edu.tw/wSite/ct?ctNode=645&mp=teric_b&xItem=2068770&resCtNode=453) from the Taiwan Education Resources Information Center, detailing Chinese character frequency in Taiwan in 2023. It is downloaded from `附件下載1` on the linked page, and the raw file can be accessed [here](https://github.com/shun4midx/FQ-HLL-Keyboard/blob/main/app/src/main/data/附錄1、民國112年語料字頻表.xlsx). From the same website, we also download `附件下載2`, but the raw file is too large to push (roughly 1.0GB). It is a file detailing Chinese word (詞語) frequency, and we use it to rank Chinese words according to frequency.
 
 ##### Zhuyin Keyboard
 
@@ -110,7 +110,7 @@ Chinese symbols are available in the symbol keyboard when typing in Chinese, and
 
 We also support a preliminary version of Pinyin typing under the same traditional Chinese dictionary. It currently does not support fuzzy typing, and requires the user to **type a whitespace at the end of each syllable**, to be able to parse the corresponding characters correctly. After the syllable, the user can type a number (0~4) to indicate the tone of the character, before the whitespace. However, tones are optional for Pinyin.
 
-Similar to Zhuyin, for toneless Pinyin input, single-character Chinese suggestions from different tone variants are interleaved and ranked using the same character-frequency source.
+Similar to Zhuyin, for toneless Pinyin input, single-character Chinese suggestions from different tone variants are interleaved and ranked using the same character-frequency source. We also rank Chinese words according to frequency like in Zhuyin.
 
 ##### Pinyin Keyboard
 
@@ -298,6 +298,6 @@ You can contact Shun via [Email](mailto:shun4midx@gmail.com) or Discord at @shun
 
 Most of FQ-HLL-Keyboard is licensed under the MIT License.
 
-`app/src/main/assets/tsi_custom.json` is derived from `tobopomo.js/data/tsi.json` from the [`dylandy/tobopomo.js`](https://github.com/dylandy/tobopomo.js) project and is distributed under the GNU Lesser General Public License v3.0 (LGPL-3.0).
+`app/src/main/data/tsi_custom.json` is derived from `tobopomo.js/data/tsi.json` from the [`dylandy/tobopomo.js`](https://github.com/dylandy/tobopomo.js) project and is distributed under the GNU Lesser General Public License v3.0 (LGPL-3.0).
 
 See [`THIRD_PARTY_LICENSES.md`](THIRD_PARTY_LICENSES.md) and [`licenses/LGPL-3.0.md`](licenses/LGPL-3.0.md) for details.

@@ -2,6 +2,8 @@ package com.fqhll.keyboard;
 
 import android.content.Context;
 
+import android.util.JsonReader;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -15,6 +17,7 @@ public class PinyinTyper {
     private final Map<String, List<String>> dictionary = new HashMap<>();
     private final HashSet<String> dictionaryPrefixes = new HashSet<>();
     private final Map<String, Long> charFreq = new HashMap<>();
+    private final Map<String, Integer> wordFreq = new HashMap<>();
 
     private static final Map<String, String> PINYIN_INITIALS = Map.ofEntries(
             Map.entry("b", "ㄅ"), Map.entry("p", "ㄆ"), Map.entry("m", "ㄇ"), Map.entry("f", "ㄈ"),
@@ -70,6 +73,7 @@ public class PinyinTyper {
     public PinyinTyper(Context context) {
         loadDictionary(context);
         loadCharFreq(context);
+        loadWordFreq(context);
     }
 
     private void loadDictionary(Context context) {
@@ -125,6 +129,26 @@ public class PinyinTyper {
         }
     }
 
+    private void loadWordFreq(Context context) {
+        try (
+                InputStream input = context.getAssets().open("taiwan_word_freq.json");
+                InputStreamReader inputReader = new InputStreamReader(input, StandardCharsets.UTF_8);
+                JsonReader reader = new JsonReader(inputReader)
+        ) {
+            reader.beginObject();
+
+            while (reader.hasNext()) {
+                String word = reader.nextName();
+                int freq = reader.nextInt();
+                wordFreq.put(word, freq);
+            }
+
+            reader.endObject();
+        } catch (Exception e) {
+
+        }
+    }
+
     private boolean isTone(char c) {
         return c == '0' || c == '1' || c == '2' || c == '3' || c == '4';
     }
@@ -132,6 +156,22 @@ public class PinyinTyper {
     private boolean isSingleHanCharacter(String s) {
         if (s == null || s.codePointCount(0, s.length()) != 1) return false;
         return Character.UnicodeScript.of(s.codePointAt(0)) == Character.UnicodeScript.HAN;
+    }
+
+    private boolean isMultiHanWord(String s) {
+        if (s == null || s.codePointCount(0, s.length()) <= 1) {
+            return false;
+        }
+
+        for (int i = 0; i < s.length();) {
+            int cp = s.codePointAt(i);
+            if (Character.UnicodeScript.of(cp) != Character.UnicodeScript.HAN) {
+                return false;
+            }
+            i += Character.charCount(cp);
+        }
+
+        return true;
     }
 
     private boolean isJqxy(String initial) {
@@ -304,7 +344,9 @@ public class PinyinTyper {
 
             for (String key : keys) {
                 List<String> words = dictionary.get(key);
-                if (words == null || depth >= words.size()) continue;
+                if (words == null || depth >= words.size()) {
+                    continue;
+                }
 
                 addedAtDepth = true;
                 String word = words.get(depth);
@@ -314,17 +356,17 @@ public class PinyinTyper {
                 }
             }
 
-            if (!addedAtDepth) break;
+            if (!addedAtDepth) {
+                break;
+            }
             ++depth;
         }
 
-        /*
-         * Pinyin is NOT fuzzy. All generated tone keys are exact possibilities.
-         * We preserve the round-robin slots for words/emoji, then frequency-sort
-         * only the single-Han subsequence across all generated tone buckets.
-         */
         List<Integer> charSlots = new ArrayList<>();
         List<Candidate> chars = new ArrayList<>();
+
+        List<Integer> wordSlots = new ArrayList<>();
+        List<Candidate> words = new ArrayList<>();
 
         for (int i = 0; i < merged.size(); ++i) {
             Candidate candidate = merged.get(i);
@@ -332,6 +374,9 @@ public class PinyinTyper {
             if (isSingleHanCharacter(candidate.word)) {
                 charSlots.add(i);
                 chars.add(candidate);
+            } else if (isMultiHanWord(candidate.word)) {
+                wordSlots.add(i);
+                words.add(candidate);
             }
         }
 
@@ -339,12 +384,28 @@ public class PinyinTyper {
             long freqA = charFreq.getOrDefault(a.word, 0L);
             long freqB = charFreq.getOrDefault(b.word, 0L);
 
-            if (freqA != freqB) return Long.compare(freqB, freqA);
+            if (freqA != freqB) {
+                return Long.compare(freqB, freqA);
+            }
+            return Integer.compare(a.baseSlot, b.baseSlot);
+        });
+
+        words.sort((a, b) -> {
+            int freqA = wordFreq.getOrDefault(a.word, 0);
+            int freqB = wordFreq.getOrDefault(b.word, 0);
+
+            if (freqA != freqB) {
+                return Integer.compare(freqB, freqA);
+            }
             return Integer.compare(a.baseSlot, b.baseSlot);
         });
 
         for (int i = 0; i < charSlots.size(); ++i) {
             merged.set(charSlots.get(i), chars.get(i));
+        }
+
+        for (int i = 0; i < wordSlots.size(); ++i) {
+            merged.set(wordSlots.get(i), words.get(i));
         }
 
         return merged;
@@ -364,10 +425,6 @@ public class PinyinTyper {
 
             int consumed = rawCharsConsumed(syllables, count);
 
-            /*
-             * Fully tone-specified full input is 100% exact: preserve its dictionary
-             * bucket untouched. Toneless syllables never enter this branch.
-             */
             if (count == syllables.size() && allExplicitTone(syllables, count) && possibleKeys.size() == 1) {
                 List<String> exact = dictionary.get(possibleKeys.get(0));
 

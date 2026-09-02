@@ -2,6 +2,8 @@ package com.fqhll.keyboard;
 
 import android.content.Context;
 
+import android.util.JsonReader;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -15,12 +17,15 @@ import java.util.*;
 
 public class ZhuyinTyper {
     private final Map<String, List<String>> dict = new HashMap<>();
+    private final Map<String, List<String>> fuzzyDict = new HashMap<>();
     private final Map<String, Integer> bestWordLen = new HashMap<>();
     private final Map<Character, Map<Integer, List<String>>> indexByHeadAndLength = new HashMap<>();
     private final Set<String> keysWithSingleHanChar = new HashSet<>();
 
     private final Map<String, Long> charFreq = new HashMap<>();
     private long maxCharFreq = 1;
+
+    private final Map<String, Integer> wordFreq = new HashMap<>();
 
     private final Map<Character, List<Character>> near2Standard = new HashMap<>();
     private final Map<Character, List<Character>> near2Eten = new HashMap<>();
@@ -90,6 +95,8 @@ public class ZhuyinTyper {
         if (file.exists()) loadJson(file);
 
         loadCharFreq(ctx);
+        loadWordFreq(ctx);
+        buildFuzzyDict();
     }
 
     public static int etenToStandardCode(int etenCode) {
@@ -362,6 +369,45 @@ public class ZhuyinTyper {
         }
     }
 
+    private void loadWordFreq(Context ctx) {
+        try (
+                InputStream in = ctx.getAssets().open("taiwan_word_freq.json");
+                InputStreamReader inputReader = new InputStreamReader(in, StandardCharsets.UTF_8);
+                JsonReader reader = new JsonReader(inputReader)
+        ) {
+            reader.beginObject();
+
+            while (reader.hasNext()) {
+                String word = reader.nextName();
+                int freq = reader.nextInt();
+                wordFreq.put(word, freq);
+            }
+
+            reader.endObject();
+        } catch (Exception e) {
+
+        }
+    }
+
+    private void buildFuzzyDict() {
+        for (Map.Entry<String, List<String>> entry : dict.entrySet()) {
+            List<String> ranked = new ArrayList<>(entry.getValue());
+
+            ranked.sort((a, b) -> {
+                int lenA = realCharLength(a);
+                int lenB = realCharLength(b);
+
+                if (lenA != lenB) return Integer.compare(lenB, lenA);
+
+                int freqA = wordFreq.getOrDefault(a, 0);
+                int freqB = wordFreq.getOrDefault(b, 0);
+                return Integer.compare(freqB, freqA);
+            });
+
+            fuzzyDict.put(entry.getKey(), ranked);
+        }
+    }
+
     private int leftWeightedExactMatches(String a, String b) {
         int n = Math.min(a.length(), b.length());
         int score = 0;
@@ -478,8 +524,8 @@ public class ZhuyinTyper {
     private Comparator<SoundBucket> soundBucketComparator() {
         return (a, b) -> {
             if (a.cutOnly != b.cutOnly) return a.cutOnly ? 1 : -1;
-            if (a.distance != b.distance) return Integer.compare(a.distance, b.distance);
             if (a.inputLen != b.inputLen) return Integer.compare(b.inputLen, a.inputLen);
+            if (a.distance != b.distance) return Integer.compare(a.distance, b.distance);
 
             int lenA = bestWordLen.getOrDefault(a.key, 0);
             int lenB = bestWordLen.getOrDefault(b.key, 0);
@@ -505,7 +551,7 @@ public class ZhuyinTyper {
         List<Candidate> flattened = new ArrayList<>();
 
         for (SoundBucket bucket : buckets) {
-            List<String> words = dict.getOrDefault(bucket.key, Collections.emptyList());
+            List<String> words = fuzzyDict.getOrDefault(bucket.key, Collections.emptyList());
 
             for (int localIndex = 0; localIndex < words.size(); ++localIndex) {
                 String word = words.get(localIndex);

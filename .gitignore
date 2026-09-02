@@ -16,3 +16,7 @@ local.properties
 keystore.properties
 releaseKey.jks
 app/src/main/res/drawable/shunv3.png
+tsi.json
+tsi_extract.py
+.venv
+附錄2、民國112年語料詞頻表.xlsx
