@@ -16,6 +16,7 @@ import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Looper;
 import android.os.Handler;
+import android.text.InputType;
 import android.util.TypedValue;
 import android.view.ContextThemeWrapper;
 import android.view.KeyEvent;
@@ -102,6 +103,7 @@ public class CustomKeyboardApp extends InputMethodService
     private int caps_state = 1; // 0 = off, 1 = single shift, 2 = double shift
     private long last_caps_time = 0;
     private boolean defaultCaps = true;
+    private boolean disableAutoCaps = false;
     private boolean useFullStopComment = false;
 
     private boolean useEten = false;
@@ -1580,7 +1582,7 @@ public class CustomKeyboardApp extends InputMethodService
 
         flushPendingKeys();
 
-        if (defaultCaps && isAtLineStart() && caps_state == 1) {
+        if (defaultCaps && isAtLineStart() && !disableAutoCaps && caps_state == 1) {
             applyCapsState();
         }
 
@@ -1925,7 +1927,7 @@ public class CustomKeyboardApp extends InputMethodService
                     }
 
                     // Auto-cap if punctuation (e.g., after ". ") ans space
-                    if (primaryCode == 32 && shouldAutoCap() && defaultCaps && caps_state != 2) {
+                    if (primaryCode == 32 && shouldAutoCap() && defaultCaps && !disableAutoCaps && caps_state != 2) {
                         caps_state = 1;
                         applyCapsState();
                     }
@@ -2850,9 +2852,9 @@ public class CustomKeyboardApp extends InputMethodService
             return;
         }
 
-        if (mainKeyboardMode == MainKeyboardMode.ENGLISH && !forceEmptySuggestions && defaultCaps && isAtLineStart()) {
+        if (mainKeyboardMode == MainKeyboardMode.ENGLISH && !disableAutoCaps && !forceEmptySuggestions && defaultCaps && isAtLineStart()) {
             caps_state = 1;
-        } else if (mainKeyboardMode == MainKeyboardMode.ENGLISH && !forceEmptySuggestions && shouldAutoCap() && defaultCaps) {
+        } else if (mainKeyboardMode == MainKeyboardMode.ENGLISH && !disableAutoCaps && !forceEmptySuggestions && shouldAutoCap() && defaultCaps) {
             caps_state = 1;
         } else {
             caps_state = 0;
@@ -2885,7 +2887,7 @@ public class CustomKeyboardApp extends InputMethodService
 
         if (caps_state == 2) {
             newCapsState = 2;
-        } else if (mainKeyboardMode == MainKeyboardMode.ENGLISH && !forceEmptySuggestions && defaultCaps && shouldAutoCap()) {
+        } else if (mainKeyboardMode == MainKeyboardMode.ENGLISH && !disableAutoCaps && !forceEmptySuggestions && defaultCaps && shouldAutoCap()) {
             newCapsState = 1;
         } else {
             newCapsState = 0;
@@ -2902,7 +2904,7 @@ public class CustomKeyboardApp extends InputMethodService
 
         if (mainKeyboardMode == MainKeyboardMode.ENGLISH && caps_state == 1 && !isAtLineStart()) {
             caps_state = 0;
-        } else if (mainKeyboardMode == MainKeyboardMode.ENGLISH && !forceEmptySuggestions && defaultCaps && isAtLineStart()) {
+        } else if (mainKeyboardMode == MainKeyboardMode.ENGLISH && !disableAutoCaps && !forceEmptySuggestions && defaultCaps && isAtLineStart()) {
             caps_state = 1;
         }
         applyCapsState();
@@ -3056,20 +3058,62 @@ public class CustomKeyboardApp extends InputMethodService
             zhuyinCompositionText.setText("");
         }
 
-        // Always restore a current Keyboard object, never reuse a Keyboard instance from an older rebuilt view.
-        Keyboard startKeyboard = getMainKeyboardForMode();
-        if (startKeyboard == null) {
-            startKeyboard = keyboard;
+
+        Keyboard startKeyboard;
+
+        int inputClass = info.inputType & InputType.TYPE_MASK_CLASS;
+        int variation = info.inputType & InputType.TYPE_MASK_VARIATION;
+
+        boolean isTextPassword = inputClass == InputType.TYPE_CLASS_TEXT && (variation == InputType.TYPE_TEXT_VARIATION_PASSWORD || variation == InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD || variation == InputType.TYPE_TEXT_VARIATION_WEB_PASSWORD);
+        disableAutoCaps = inputClass == InputType.TYPE_CLASS_TEXT && (variation == InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS || variation == InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS || variation == InputType.TYPE_TEXT_VARIATION_URI || variation == InputType.TYPE_TEXT_VARIATION_WEB_EDIT_TEXT);
+
+        if (isTextPassword || disableAutoCaps) {
+            caps_state = 0;
         }
 
-        if (startKeyboard != null && kv != null) {
-            switchKeyboard(startKeyboard);
+        if (isTextPassword) { // pw
+            forceEmptySuggestions = true;
+
+            if (root != null) {
+                TextView s1 = root.findViewById(R.id.suggestion_1);
+                TextView s2 = root.findViewById(R.id.suggestion_2);
+                TextView s3 = root.findViewById(R.id.suggestion_3);
+                View scrollView = root.findViewById(R.id.suggestion_scroll);
+
+                if (s1 != null) s1.setText("");
+                if (s2 != null) s2.setText("");
+                if (s3 != null) s3.setText("");
+                if (scrollView != null) scrollView.setVisibility(View.GONE);
+            }
+
+            if (kv != null && engKeyboard != null) {
+                currentKeyboard = engKeyboard;
+                kv.setKeyboard(engKeyboard);
+
+                updateCompositionBarVisibility();
+                updateModeSwitchLabel();
+                applyCapsState();
+                kv.invalidateAllKeys();
+            }
+
+        } else {
+            if (inputClass == InputType.TYPE_CLASS_NUMBER) { // numpad
+                startKeyboard = numpadKeyboard;
+            } else {
+                startKeyboard = getMainKeyboardForMode();
+
+                if (startKeyboard == null) {
+                    startKeyboard = keyboard;
+                }
+            }
+
+            if (startKeyboard != null && kv != null) {
+                switchKeyboard(startKeyboard);
+            }
         }
 
         showSuggestions("");
-//        if (caps_state != 2) {
-        caps_state = (mainKeyboardMode == MainKeyboardMode.ENGLISH && defaultCaps && !forceEmptySuggestions && shouldAutoCap()) ? 1 : 0;
-//        }
+        caps_state = (mainKeyboardMode == MainKeyboardMode.ENGLISH && defaultCaps && !disableAutoCaps && !forceEmptySuggestions && shouldAutoCap()) ? 1 : 0;
         applyCapsState();
     }
 
