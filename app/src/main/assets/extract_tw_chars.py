@@ -1,9 +1,9 @@
-#*###########################################*
+############################################
 # Copyright (c) 2026 Shun/修海 (@shun4midx) #
-# Project: FQ-HLL-Keyboard                  #
-# File Type: Python file                    #
-# File: extract_tw_chars.py                 #
-#*###########################################*
+# Project: FQ-HLL-Keyboard                 #
+# File Type: Python file                   #
+# File: extract_tw_chars.py                #
+############################################
 
 import json
 from collections import defaultdict
