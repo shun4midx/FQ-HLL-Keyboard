@@ -472,15 +472,21 @@ public class ZhuyinTyper {
         }
     }
 
-    private void collectCutSingleHanHits(
-            String fuzzyTarget,
-            int rawLen,
-            boolean useEten,
-            int threshold,
-            int firstKeyLimit,
-            Map<String, Integer> cutHits,
-            Map<String, Integer> cutInputLength
-    ) {
+    private boolean allSubstitutionsAdjacent(String input, String key, boolean useEten) {
+        if (input.length() != key.length()) return false;
+
+        for (int i = 0; i < input.length(); ++i) {
+            char a = input.charAt(i);
+            char b = key.charAt(i);
+
+            if (a == b) continue;
+            if (keyDistance(a, b, useEten) > 1) return false;
+        }
+
+        return true;
+    }
+
+    private void collectCutSingleHanHits(String fuzzyTarget, int rawLen, boolean useEten, int threshold, int firstKeyLimit, Map<String, Integer> cutHits, Map<String, Integer> cutInputLength) {
         if (fuzzyTarget == null || fuzzyTarget.isEmpty()) return;
 
         char firstInput = fuzzyTarget.charAt(0);
@@ -502,9 +508,14 @@ public class ZhuyinTyper {
                     if (!keysWithSingleHanChar.contains(key)) continue;
 
                     int matchScore = leftWeightedExactMatches(fuzzyTarget, key);
-                    if (matchScore < Math.max(1, fuzzyTarget.length())) continue;
-
                     int dist = fuzzyZhuyinDistanceSmart(fuzzyTarget, key, useEten, threshold);
+
+                    if (dist <= 0 || dist > threshold) continue;
+
+                    boolean hasEnoughExactOverlap = matchScore >= Math.max(1, fuzzyTarget.length());
+                    boolean plausibleTwoKeyTypo = fuzzyTarget.length() == 2 && key.length() == 2 && dist == 2 && allSubstitutionsAdjacent(fuzzyTarget, key, useEten);
+
+                    if (!hasEnoughExactOverlap && !plausibleTwoKeyTypo) continue;
                     if (dist <= 0 || dist > threshold) continue;
 
                     Integer oldDist = cutHits.get(key);
@@ -514,7 +525,7 @@ public class ZhuyinTyper {
                         cutInputLength.put(key, rawLen);
                     } else if (dist == oldDist) {
                         int oldLen = cutInputLength.getOrDefault(key, rawLen);
-                        cutInputLength.put(key, Math.min(oldLen, rawLen));
+                        cutInputLength.put(key, Math.max(oldLen, rawLen));
                     }
                 }
             }
@@ -523,13 +534,21 @@ public class ZhuyinTyper {
 
     private Comparator<SoundBucket> soundBucketComparator() {
         return (a, b) -> {
-            if (a.cutOnly != b.cutOnly) return a.cutOnly ? 1 : -1;
-            if (a.inputLen != b.inputLen) return Integer.compare(b.inputLen, a.inputLen);
-            if (a.distance != b.distance) return Integer.compare(a.distance, b.distance);
+            int effectiveA = a.distance + (a.cutOnly ? 1 : 0);
+            int effectiveB = b.distance + (b.cutOnly ? 1 : 0);
+
+            // Better phonetic match first
+            if (effectiveA != effectiveB)
+                return Integer.compare(effectiveA, effectiveB);
+
+            // Among equally good matches, prefer explaining more input
+            if (a.inputLen != b.inputLen)
+                return Integer.compare(b.inputLen, a.inputLen);
 
             int lenA = bestWordLen.getOrDefault(a.key, 0);
             int lenB = bestWordLen.getOrDefault(b.key, 0);
-            if (lenA != lenB) return Integer.compare(lenB, lenA);
+            if (lenA != lenB)
+                return Integer.compare(lenB, lenA);
 
             return Integer.compare(b.key.length(), a.key.length());
         };
