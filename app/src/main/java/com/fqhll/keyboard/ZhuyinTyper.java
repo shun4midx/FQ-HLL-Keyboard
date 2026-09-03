@@ -537,13 +537,11 @@ public class ZhuyinTyper {
             int effectiveA = a.distance + (a.cutOnly ? 1 : 0);
             int effectiveB = b.distance + (b.cutOnly ? 1 : 0);
 
-            // Better phonetic match first
-            if (effectiveA != effectiveB)
-                return Integer.compare(effectiveA, effectiveB);
-
-            // Among equally good matches, prefer explaining more input
             if (a.inputLen != b.inputLen)
                 return Integer.compare(b.inputLen, a.inputLen);
+
+            if (effectiveA != effectiveB)
+                return Integer.compare(effectiveA, effectiveB);
 
             int lenA = bestWordLen.getOrDefault(a.key, 0);
             int lenB = bestWordLen.getOrDefault(b.key, 0);
