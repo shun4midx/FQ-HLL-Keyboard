@@ -561,7 +561,7 @@ public class ZhuyinTyper {
         }
 
         int effectiveDistance = candidate.bucket.distance + (candidate.bucket.cutOnly ? 1 : 0);
-        return freqScore - 0.75 * effectiveDistance;
+        return freqScore - 0.25 * effectiveDistance;
     }
 
     private List<Candidate> interleaveCandidates(List<SoundBucket> buckets, Set<String> alreadyAdded) {
@@ -734,7 +734,7 @@ public class ZhuyinTyper {
 
         Set<String> alreadyAdded = new HashSet<>();
         List<String[]> results = new ArrayList<>();
-        final int maxResults = 150;
+        final int maxResults = 500;
 
         if (dict.containsKey(fullInput)) {
             int inputLen = hitInputLength.getOrDefault(fullInput, fullInput.length());
