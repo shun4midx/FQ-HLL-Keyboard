@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -347,31 +348,36 @@ public class ZhuyinTyper {
     }
 
     private void loadCharFreq(Context ctx) {
+        File file = new File(ctx.getFilesDir(), "taiwan_char_freq.json");
+        if (!file.exists()) return;
+
         try (
-                InputStream in = ctx.getAssets().open("taiwan_char_freq.json");
-                BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))
+                InputStream in = new FileInputStream(file);
+                InputStreamReader inputReader = new InputStreamReader(in, StandardCharsets.UTF_8);
+                JsonReader reader = new JsonReader(inputReader)
         ) {
-            StringBuilder sb = new StringBuilder();
-            String line;
+            reader.beginObject();
 
-            while ((line = reader.readLine()) != null) sb.append(line);
+            while (reader.hasNext()) {
+                String ch = reader.nextName();
+                long freq = reader.nextLong();
 
-            JSONObject root = new JSONObject(sb.toString());
-            Iterator<String> it = root.keys();
-
-            while (it.hasNext()) {
-                String ch = it.next();
-                long freq = root.getLong(ch);
                 charFreq.put(ch, freq);
                 maxCharFreq = Math.max(maxCharFreq, freq);
             }
+
+            reader.endObject();
         } catch (Exception ignored) {
+
         }
     }
 
     private void loadWordFreq(Context ctx) {
+        File file = new File(ctx.getFilesDir(), "taiwan_word_freq.json");
+        if (!file.exists()) return;
+
         try (
-                InputStream in = ctx.getAssets().open("taiwan_word_freq.json");
+                InputStream in = new FileInputStream(file);
                 InputStreamReader inputReader = new InputStreamReader(in, StandardCharsets.UTF_8);
                 JsonReader reader = new JsonReader(inputReader)
         ) {
@@ -384,7 +390,7 @@ public class ZhuyinTyper {
             }
 
             reader.endObject();
-        } catch (Exception e) {
+        } catch (Exception ignored) {
 
         }
     }

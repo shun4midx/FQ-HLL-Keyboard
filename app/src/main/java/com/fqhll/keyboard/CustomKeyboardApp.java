@@ -607,14 +607,21 @@ public class CustomKeyboardApp extends InputMethodService
         applyCapsState();
         copyAssetToInternal(getApplicationContext(), "test_files/20k_texting.txt");
         copyAssetToInternal(getApplicationContext(), "tsi_custom.json");
+        copyAssetToInternal(getApplicationContext(), "taiwan_char_freq.json");
+        copyAssetToInternal(getApplicationContext(), "taiwan_word_freq.json");
         // Create contractions file if needed
         File contractionFile = new File(getFilesDir(), "test_files/user_contractions.txt");
         if (!contractionFile.exists()) {
             try { contractionFile.createNewFile(); } catch (IOException e) {}
         }
         copyAssetToInternal(getApplicationContext(), "test_files/user_contractions.txt");
-        zhuyinTyper = new ZhuyinTyper(getApplicationContext());
-        pinyinTyper = new PinyinTyper(getApplicationContext());
+        if (zhuyinTyper == null) {
+            zhuyinTyper = new ZhuyinTyper(getApplicationContext());
+        }
+
+        if (pinyinTyper == null) {
+            pinyinTyper = new PinyinTyper(getApplicationContext());
+        }
 
         String absPath = getFilesDir().getAbsolutePath() + "/test_files/20k_texting.txt";
         ensureNative();
