@@ -396,6 +396,7 @@ public class CustomKeyboardApp extends InputMethodService
 
             Map.entry(-110, "🖕"),    // 🔥
             Map.entry(-111, "🫶"),    // 🍀
+            Map.entry(-112, "\uD83D\uDE4C"),    //👾
 
             Map.entry(-114, "🪼"),    // 🛸
             Map.entry(-115, "🫪"),    // 👀
