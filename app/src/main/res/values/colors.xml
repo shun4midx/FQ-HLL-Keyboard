@@ -101,6 +101,15 @@
     <color name="shunv5_popup">#B3E4249B</color>
     <color name="shunv5_pressed_border">#E4249B</color>
 
+    <color name="tsunami_yellow">#FFFACA</color>
+    <color name="tsunami_popup">#B3D84893</color>
+    <color name="tsunami_key">#800B1A8F</color>
+    <color name="tsunami_key_border">#0b1a8f</color>
+    <color name="tsunami_letter">#a6cefd</color>
+    <color name="tsunami_pressed">#80D84893</color>
+    <color name="tsunami_pressed_border">#D84893</color>
+    <color name="tsunami_sugg_bar">#0f0e62</color>
+
     <color name="colorblocks_vowel">#03A9F4</color>
     <color name="colorblocks_symbols">#4CAF50</color>
     <color name="colorblocks_numbers">#F44336</color>

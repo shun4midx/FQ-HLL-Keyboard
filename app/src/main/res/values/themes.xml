@@ -145,6 +145,21 @@
         <item name="keyPopupTextColor">?attr/suggestionBarTextColor</item>
     </style>
 
+    <style name="Theme.HLLPPKeyboard.Tsunami" parent="Theme.FQHLLKeyboard">
+        <item name="keyColor">@color/tsunami_key</item>
+        <item name="keyTextColor">@color/tsunami_letter</item>
+        <item name="keyboardBackground">@drawable/tsunami</item>
+        <item name="keyBorderColor">@color/tsunami_key_border</item>
+        <item name="keyPressedColor">@color/tsunami_pressed</item>
+        <item name="keyPressedBorderColor">@color/tsunami_pressed_border</item>
+
+        <item name="suggestionBarColor">@color/tsunami_sugg_bar</item>
+        <item name="suggestionBarTextColor">@color/tsunami_yellow</item>
+
+        <item name="keyPopupBackgroundColor">@color/tsunami_popup</item>
+        <item name="keyPopupTextColor">@color/tsunami_yellow</item>
+    </style>
+
     <style name="Theme.FQHLLKeyboard.DuckyV5" parent="Theme.FQHLLKeyboard">
         <item name="keyColor">@color/teal_gradient_2_transparent_2</item>
         <item name="keyTextColor">@color/custom_cyan</item>
