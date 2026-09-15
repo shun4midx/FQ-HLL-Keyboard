@@ -687,6 +687,8 @@ public class CustomKeyboardApp extends InputMethodService
             ic.commitText(newText, 1);
             ic.endBatchEdit();
 
+            setPreviewLabel(append);
+
             showSuggestions(""); // Clear UI
 
             return true;
@@ -1323,6 +1325,8 @@ public class CustomKeyboardApp extends InputMethodService
 
                         if (!maybeAutoReplace(ic, symbol)) {
                             commitTextAndShowLabel(symbol);
+                        } else {
+                            setPreviewLabel(symbol);
                         }
                     }
                 }
