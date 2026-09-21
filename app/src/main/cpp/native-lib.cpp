@@ -209,10 +209,19 @@ Java_com_fqhll_keyboard_CustomKeyboardApp_nativeAddWord(JNIEnv* env, jclass, jst
     g_ac->add_dictionary(std::vector<std::string>{word});
     g_ac->save_dictionary();
 
-    // Append to dictionary file
+    // Append to main dictionary file
     std::ofstream file(path, std::ios::app);
     if (file.is_open()) {
         file << word << "\n";
+    }
+
+    // Also persist separately as a user-added word
+    std::filesystem::path mainPath(path);
+    std::filesystem::path customPath = mainPath.parent_path() / "user_dictionary.txt";
+
+    std::ofstream customFile(customPath, std::ios::app);
+    if (customFile.is_open()) {
+        customFile << word << "\n";
     }
 }
 

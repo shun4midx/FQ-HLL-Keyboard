@@ -2384,6 +2384,9 @@ public class CustomKeyboardApp extends InputMethodService
                             try {
                                 if (!inDictionary(word)) {
                                     CustomKeyboardApp.nativeAddWord(word, absPath, getContractionPath());
+                                    if (dictCache != null) {
+                                        dictCache.add(word);
+                                    }
                                 }
                             } catch (IOException e) {
                                 throw new RuntimeException(e);
